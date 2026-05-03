@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InKognito — Automatisez vos posts LinkedIn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #070C17;
+  --bg2: #0B1222;
+  --blue: #0A66C2;
+  --blue2: #1a8fff;
+  --blue3: #60aeff;
+  --text: #E8EDF5;
+  --muted: #7c8aa8;
+  --muted2: #4A5A7A;
+  --border: rgba(255,255,255,0.08);
+  --card: rgba(255,255,255,0.025);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:auto}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:400;
+  letter-spacing:-.03em;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+  line-height:1.5;
+}
+
+/* ─── GLOBAL BACKGROUND ─── */
+#global-bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  overflow:hidden;
+  /* Couche GPU isolée : empêche les repaints du canvas d'affecter le reste */
+  transform:translateZ(0);
+  will-change:transform;
+  contain:strict;
+}
+#bg-canvas{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+}
+/* Tout le contenu de la page passe au-dessus du bg */
+body > *:not(#global-bg){
+  position:relative;
+  z-index:2;
+}
+a{color:inherit;text-decoration:none}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:800;
+  height:64px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 6vw;
+  transition:background .3s ease,border-color .3s ease;
+  border-bottom:1px solid transparent;
+}
+nav.scrolled{background:rgba(7,12,23,.92);border-color:var(--border);backdrop-filter:blur(18px)}
+.nav-logo{display:flex;align-items:center;gap:10px;margin-top:52px}
+.nav-logo-mark{height:78px;width:auto;display:block}
+.nav-logo-name{font-size:18px;font-weight:500;letter-spacing:-.3px;color:var(--text)}
+.nav-logo-name span{color:var(--blue2)}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{color:var(--muted);font-size:14px;font-weight:400;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-right{display:flex;gap:10px;align-items:center}
+.btn-ghost{padding:8px 18px;border:1px solid var(--border);border-radius:999px;color:var(--text);font-size:13.5px;font-weight:400;transition:border-color .2s,background .2s}
+.btn-ghost:hover{border-color:rgba(26,143,255,.45);background:rgba(10,102,194,.06)}
+.btn-cta{padding:9px 20px;background:linear-gradient(120deg,#0A66C2 0%,#1a8fff 60%,#60aeff 100%);border-radius:999px;color:#fff;font-size:13.5px;font-weight:500;transition:filter .2s,transform .15s}
+.btn-cta:hover{filter:brightness(1.15);transform:translateY(-1px)}
+
+/* ─── REUSABLE ─── */
+section{padding:120px 6vw;max-width:1200px;margin:0 auto;position:relative}
+.sec-label{display:inline-block;font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--blue3);margin-bottom:18px}
+.sec-h{font-size:clamp(34px,4.5vw,52px);font-weight:500;letter-spacing:-.04em;line-height:1.1;margin-bottom:18px;text-wrap:balance;color:var(--text)}
+.sec-p{font-size:16px;color:var(--muted);max-width:560px;line-height:1.65}
+.section-header{margin-bottom:64px;max-width:680px}
+.section-header.centered{margin-left:auto;margin-right:auto;text-align:center}
+.section-header.centered .sec-p{margin-left:auto;margin-right:auto}
+
+/* ─── HERO ─── */
+#hero{
+  min-height:92vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding-top:140px;padding-bottom:80px;
+  position:relative;
+}
+.hero-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 30%, rgba(10,102,194,.12), transparent 70%);
+}
+.hero-inner{position:relative;z-index:2;max-width:780px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgba(26,143,255,.3);background:rgba(10,102,194,.07);
+  padding:6px 14px;border-radius:999px;font-size:12px;font-weight:500;letter-spacing:.04em;
+  color:var(--blue3);margin-bottom:30px;
+}
+.badge-dot{width:6px;height:6px;background:var(--blue2);border-radius:50%}
+h1.hero-h1{
+  font-size:clamp(42px,6.4vw,76px);
+  font-weight:500;line-height:1.05;letter-spacing:-.045em;
+  margin-bottom:24px;text-wrap:balance;
+}
+/* ── Gradient text utilities ── */
+
+/* Bleu vif → cyan (accent fort, "sans écrire une ligne") */
+.grad-text{
+  background: linear-gradient(110deg, #1a8fff 0%, #60aeff 50%, #93d4ff 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+/* Blanc → bleu très pâle (titres h1/h2/h3) — dégradé subtil mais visible */
+.grad-white{
+  background: linear-gradient(130deg, #ffffff 0%, #c8deff 55%, #9ec4ff 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+/* Bleu clair → bleu vif (labels, numéros) */
+.grad-blue-label{
+  background: linear-gradient(110deg, #93c9ff 0%, #60aeff 45%, #1a8fff 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+/* Prix : blanc éclatant → bleu pâle */
+.grad-price{
+  background: linear-gradient(130deg, #ffffff 0%, #d0e8ff 55%, #90c0ff 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+.hero-sub{
+  font-size:18px;color:var(--muted);max-width:540px;
+  margin:0 auto 38px;line-height:1.65;
+}
+.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-hero{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;
+  background:linear-gradient(120deg,#0A66C2 0%,#1a8fff 55%,#60aeff 100%);
+  border-radius:999px;color:#fff;font-size:15px;font-weight:500;
+  animation:btn-breathe 2.8s ease-in-out infinite;
+  transition:filter .2s,transform .15s;
+}
+.btn-hero:hover{filter:brightness(1.15)}
+@keyframes btn-breathe{
+  0%,100%{box-shadow:0 0 8px 2px rgba(26,143,255,.18)}
+  50%{box-shadow:0 0 24px 8px rgba(26,143,255,.45),0 0 48px 16px rgba(10,102,194,.18)}
+}
+.btn-hero-arrow{display:inline-flex;align-items:center;transition:transform .25s ease}
+.btn-hero-arrow svg{display:block;overflow:visible}
+.btn-hero:hover .btn-hero-arrow{transform:translateX(3px)}
+.btn-hero-out{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border:1px solid var(--border);
+  border-radius:999px;color:var(--text);font-size:15px;font-weight:400;
+  transition:border-color .2s,background .2s;
+}
+.btn-hero-out:hover{border-color:rgba(26,143,255,.4);background:rgba(10,102,194,.05)}
+
+/* ─── HOW IT WORKS — 3 steps ─── */
+#steps3{padding-top:60px}
+.steps-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+}
+.step-card{
+  border:1px solid rgba(255,255,255,.1);border-radius:14px;
+  background:rgba(11,18,34,.72);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  padding:32px 28px;
+  transition:
+    border-color .6s ease,
+    box-shadow .6s ease,
+    background .6s ease,
+    transform .6s ease;
+}
+.step-card:hover{
+  border-color:rgba(26,143,255,.7);
+  background:rgba(11,18,34,.88);
+  transform:translateY(-3px);
+  box-shadow:
+    0 0 0 1px rgba(26,143,255,.25),
+    0 0 16px 3px rgba(26,143,255,.22),
+    0 0 40px 8px rgba(26,143,255,.12),
+    0 0 80px 16px rgba(10,102,194,.07);
+}
+.step-card.reveal{
+  transition:
+    opacity .6s ease,
+    transform .6s ease,
+    border-color .6s ease,
+    box-shadow .6s ease,
+    background .6s ease;
+}
+.step-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:9px;
+  background:rgba(10,102,194,.12);border:1px solid rgba(26,143,255,.25);
+  font-size:14px;font-weight:500;color:var(--blue3);
+  margin-bottom:22px;letter-spacing:.02em;
+}
+.step-title{font-size:20px;font-weight:500;letter-spacing:-.03em;margin-bottom:12px;color:var(--text)}
+.step-desc{font-size:14.5px;color:var(--muted);line-height:1.65}
+
+/* ─── FEATURES ─── */
+.features-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+}
+.feature-card{
+  border:1px solid rgba(255,255,255,.1);border-radius:14px;
+  background:rgba(11,18,34,.72);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  padding:30px 26px;
+  transition:
+    border-color .6s ease,
+    box-shadow .6s ease,
+    background .6s ease,
+    transform .6s ease;
+}
+.feature-card:hover{
+  border-color:rgba(26,143,255,.7);
+  background:rgba(11,18,34,.88);
+  transform:translateY(-3px);
+  box-shadow:
+    0 0 0 1px rgba(26,143,255,.25),
+    0 0 16px 3px rgba(26,143,255,.22),
+    0 0 40px 8px rgba(26,143,255,.12),
+    0 0 80px 16px rgba(10,102,194,.07);
+}
+.feature-icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:40px;height:40px;border-radius:10px;
+  background:rgba(10,102,194,.10);border:1px solid rgba(26,143,255,.2);
+  margin-bottom:20px;color:var(--blue3);
+}
+.feature-title{font-size:17px;font-weight:500;letter-spacing:-.025em;margin-bottom:10px;color:var(--text)}
+.feature-desc{font-size:14px;color:var(--muted);line-height:1.65}
+
+/* ─── PRICING — single card ─── */
+.pricing-solo{
+  display:flex;justify-content:center;
+}
+
+/* Wrapper glow animé */
+.pc-glow-ring{
+  position:relative;
+  border-radius:24px;
+  padding:2px;
+  background:linear-gradient(135deg,
+    rgba(26,143,255,.55) 0%,
+    rgba(96,174,255,.15) 40%,
+    rgba(26,143,255,.08) 60%,
+    rgba(96,174,255,.55) 100%
+  );
+  animation:ring-spin 6s linear infinite;
+  background-size:200% 200%;
+  box-shadow:
+    0 0 0 1px rgba(26,143,255,.18),
+    0 0 40px 8px rgba(26,143,255,.13),
+    0 0 100px 24px rgba(10,102,194,.09);
+  width:520px;
+  max-width:100%;
+}
+@keyframes ring-spin{
+  0%  {background-position:0% 50%}
+  50% {background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* Carte principale */
+.pc-solo{
+  background:rgba(9,15,28,.96);
+  border-radius:22px;
+  padding:38px 48px 34px;
+  display:flex;flex-direction:column;
+  position:relative;
+  overflow:hidden;
+}
+
+/* Halo interne en haut */
+.pc-solo::before{
+  content:'';
+  position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+  width:340px;height:220px;
+  background:radial-gradient(ellipse at 50% 0%, rgba(26,143,255,.18) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+/* Bande de scan lumineuse */
+.pc-solo::after{
+  content:'';
+  position:absolute;top:0;left:-100%;
+  width:60%;height:100%;
+  background:linear-gradient(90deg, transparent 0%, rgba(96,174,255,.04) 50%, transparent 100%);
+  animation:scan-pass 4s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes scan-pass{
+  0%  {left:-60%}
+  100%{left:160%}
+}
+
+.pc-solo-top{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:26px;
+  flex-wrap:wrap;gap:14px;
+}
+.pc-solo-label{
+  font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--blue3);margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.pc-solo-label-dot{
+  width:6px;height:6px;background:var(--blue2);border-radius:50%;
+  box-shadow:0 0 8px 3px rgba(26,143,255,.5);
+  animation:pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot{
+  0%,100%{box-shadow:0 0 6px 2px rgba(26,143,255,.4)}
+  50%{box-shadow:0 0 14px 5px rgba(26,143,255,.8)}
+}
+.pc-solo-price{
+  display:flex;align-items:flex-end;gap:4px;line-height:1;
+}
+.pc-solo-curr{
+  font-size:22px;font-weight:400;color:var(--muted);
+  margin-bottom:10px;
+}
+.pc-solo-amount{
+  font-size:80px;font-weight:500;letter-spacing:-.04em;line-height:.9;
+  background:linear-gradient(130deg,#ffffff 0%,#d0e8ff 50%,#90c0ff 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  padding-right:.22em;margin-right:-.14em;
+  display:inline-block;
+}
+.pc-solo-period{
+  font-size:14px;color:var(--muted);margin-bottom:12px;
+}
+.pc-solo-trial{
+  margin-top:12px;
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(34,216,127,.06);
+  border:1px solid rgba(34,216,127,.18);
+  padding:6px 12px;border-radius:999px;
+  font-size:12px;color:#5fe8a8;font-weight:500;letter-spacing:.03em;
+}
+.pc-solo-trial-icon{font-size:11px}
+
+/* ─── Beta offer block ─── */
+.pc-beta-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(120deg, rgba(26,143,255,.28), rgba(96,174,255,.14));
+  border:1px solid rgba(26,143,255,.65);
+  padding:6px 14px;border-radius:999px;
+  font-size:11px;color:#bcdcff;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  margin-bottom:16px;
+  box-shadow:0 0 24px rgba(26,143,255,.32), inset 0 0 12px rgba(96,174,255,.08);
+  animation:beta-glow 2.6s ease-in-out infinite;
+}
+@keyframes beta-glow{
+  0%,100%{box-shadow:0 0 20px rgba(26,143,255,.28), inset 0 0 12px rgba(96,174,255,.08)}
+  50%{box-shadow:0 0 32px rgba(26,143,255,.5), inset 0 0 14px rgba(96,174,255,.14)}
+}
+.pc-beta-badge-dot{
+  width:6px;height:6px;border-radius:50%;background:#1a8fff;
+  box-shadow:0 0 10px 3px rgba(26,143,255,.75);
+  animation:pulse-dot 2s ease-in-out infinite;
+}
+.pc-beta-old{
+  display:flex;align-items:center;gap:12px;
+  margin-top:14px;
+  font-size:14px;line-height:1;
+  flex-wrap:wrap;
+}
+.pc-beta-old-price{
+  position:relative;
+  color:#8a94aa;
+  font-weight:500;
+  font-size:16px;
+  opacity:.85;
+}
+.pc-beta-old-price::before{
+  content:'';
+  position:absolute;left:-3px;right:-3px;top:50%;
+  height:2px;
+  background:linear-gradient(90deg, rgba(255,90,90,.95), rgba(255,140,140,.8));
+  transform:rotate(-6deg);
+  border-radius:2px;
+  box-shadow:0 0 8px rgba(255,90,90,.4);
+}
+.pc-beta-arrow{
+  display:inline-flex;align-items:center;
+  color:var(--blue3);
+  filter:drop-shadow(0 0 6px rgba(96,174,255,.55));
+}
+.pc-beta-arrow svg{display:block}
+.pc-beta-save{
+  color:#22d87f;font-weight:600;letter-spacing:.02em;font-size:13px;
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 10px;border-radius:999px;
+  background:rgba(34,216,127,.1);
+  border:1px solid rgba(34,216,127,.35);
+  box-shadow:0 0 14px rgba(34,216,127,.18);
+}
+.pc-beta-save::before{
+  content:'';width:6px;height:6px;border-radius:50%;background:#22d87f;
+  box-shadow:0 0 8px 2px rgba(34,216,127,.7);
+}
+.pc-beta-note{
+  margin-top:14px;
+  font-size:11.5px;color:var(--muted);letter-spacing:.02em;
+  display:flex;align-items:center;gap:6px;
+}
+.pc-beta-note::before{
+  content:'✦';color:var(--blue3);font-size:10px;
+}
+
+.pc-solo-desc{
+  font-size:15px;color:var(--muted);line-height:1.55;max-width:260px;
+}
+
+/* Divider */
+.pc-solo-divider{
+  height:1px;
+  background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.08) 20%, rgba(26,143,255,.15) 50%, rgba(255,255,255,.08) 80%, transparent 100%);
+  margin-bottom:32px;
+}
+
+/* Features en 2 colonnes */
+.pc-solo-feats{
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+  margin-bottom:26px;
+}
+.pc-solo-feat{
+  display:flex;align-items:center;gap:10px;
+  padding:7px 0;
+  font-size:14px;color:var(--text);
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.pc-solo-feat:nth-last-child(-n+2){border-bottom:none}
+.pc-check{
+  width:18px;height:18px;border-radius:50%;flex-shrink:0;
+  background:rgba(34,216,127,.1);border:1px solid rgba(34,216,127,.25);
+  display:flex;align-items:center;justify-content:center;
+}
+.pc-check svg{width:9px;height:9px;fill:none;stroke:#22d87f;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;display:block}
+
+/* Bouton CTA */
+.pc-solo-btn{
+  position:relative;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:18px 32px;
+  background:linear-gradient(120deg,#0A66C2 0%,#1a8fff 55%,#60aeff 100%);
+  border-radius:999px;
+  color:#fff;font-size:16px;font-weight:500;
+  overflow:hidden;
+  cursor:pointer;
+  transition:filter .2s,transform .15s;
+  animation:btn-breathe 2.8s ease-in-out infinite;
+}
+.pc-solo-btn:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.pc-solo-btn-shine{
+  position:absolute;top:0;left:-100%;width:50%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+  animation:btn-shine 3.5s ease-in-out infinite;
+}
+@keyframes btn-shine{
+  0%  {left:-60%}
+  100%{left:160%}
+}
+.pc-solo-btn-arrow{
+  display:inline-flex;align-items:center;
+  transition:transform .25s ease;
+  font-style:normal;
+}
+.pc-solo-btn-arrow svg{display:block;overflow:visible}
+.pc-solo-btn:hover .pc-solo-btn-arrow{transform:translateX(3px)}
+.pc-solo-note{
+  text-align:center;margin-top:16px;
+  font-size:12px;color:var(--muted2);letter-spacing:.02em;
+}
+
+/* ─── CTA FINAL ─── */
+#final-cta {
+  padding: 60px 6vw 120px;
+  text-align: center;
+}
+.cta-block {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid rgba(26,143,255,.28);
+  background: linear-gradient(160deg,
+    rgba(8,22,52,.97) 0%,
+    rgba(7,14,34,.99) 45%,
+    rgba(6,10,22,1) 100%
+  );
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  padding: 88px 48px 78px;
+  max-width: 1100px;
+  margin: 0 auto;
+  box-shadow:
+    0 0 0 1px rgba(26,143,255,.10),
+    0 2px 60px rgba(10,60,160,.22),
+    inset 0 1px 0 rgba(255,255,255,.06),
+    inset 0 -1px 0 rgba(10,102,194,.12);
+}
+
+/* ── Grille déco fine ── */
+.cta-block::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(26,143,255,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,143,255,.05) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 30%, transparent 100%);
+  pointer-events: none;
+}
+
+/* ── Halo supérieur ── */
+.cta-block::after {
+  content: '';
+  position: absolute;
+  top: -80px; left: 50%; transform: translateX(-50%);
+  width: 700px; height: 380px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(26,143,255,.22) 0%, rgba(10,60,160,.08) 55%, transparent 75%);
+  pointer-events: none;
+}
+
+/* ── Coins lumineux ── */
+.cta-block-inner { position: relative; z-index: 2; }
+
+/* ── Halo bas-gauche et bas-droit ── */
+.cta-corner-l,
+.cta-corner-r {
+  position: absolute;
+  bottom: -40px;
+  width: 320px; height: 220px;
+  background: radial-gradient(ellipse at center, rgba(26,143,255,.10) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+.cta-corner-l { left: -60px; }
+.cta-corner-r { right: -60px; }
+
+/* ── Ligne de séparation déco ── */
+.cta-divider {
+  width: 120px;
+  height: 1px;
+  margin: 0 auto 36px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(26,143,255,.4) 30%,
+    rgba(96,174,255,.6) 50%,
+    rgba(26,143,255,.4) 70%,
+    transparent 100%
+  );
+}
+
+/* ── Badges de confiance ── */
+.cta-trust-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+.cta-trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.09);
+  background: rgba(255,255,255,.03);
+  font-size: 11.5px;
+  color: var(--muted);
+  letter-spacing: .03em;
+}
+.cta-trust-badge-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--blue3);
+  opacity: .8;
+  flex-shrink: 0;
+}
+.cta-trust-sep {
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.12);
+}
+.cta-h{font-size:clamp(30px,4.2vw,52px);font-weight:500;letter-spacing:-.045em;line-height:1.15;margin-bottom:18px;text-wrap:balance;text-align:center;white-space:nowrap;}
+.cta-sub{font-size:17px;color:var(--muted);max-width:520px;margin:0 auto 40px;line-height:1.65}
+.cta-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+.cta-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.cta-meta-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--blue2);
+  opacity: .7;
+}
+
+/* ─── FAQ ─── */
+#faq { padding: 120px 6vw; }
+
+.faq-list {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.faq-item {
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 14px;
+  background: rgba(11,18,34,.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0 28px;
+  transition: border-color .25s, background .25s;
+}
+.faq-item:hover { border-color: rgba(26,143,255,.25); background: rgba(11,18,34,.82); }
+
+.faq-q {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 0;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 450;
+  letter-spacing: -.01em;
+  text-align: left;
+  transition: color .2s;
+}
+.faq-q:hover { color: var(--blue3); }
+
+.faq-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  transition: border-color .25s, color .25s, transform .35s cubic-bezier(.4,0,.2,1), background .25s;
+}
+.faq-icon svg { width: 14px; height: 14px; display: block; }
+
+.faq-q[aria-expanded="true"] .faq-icon {
+  transform: rotate(180deg);
+  border-color: var(--blue2);
+  color: var(--blue2);
+  background: rgba(26,143,255,.08);
+}
+.faq-q[aria-expanded="true"] { color: var(--text); }
+
+.faq-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .38s cubic-bezier(.4,0,.2,1);
+}
+.faq-a.open { grid-template-rows: 1fr; }
+
+.faq-a > p {
+  overflow: hidden;
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+  padding-bottom: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity .3s .05s, transform .35s .05s cubic-bezier(.4,0,.2,1), padding-bottom .38s cubic-bezier(.4,0,.2,1);
+}
+.faq-a.open > p {
+  opacity: 1;
+  transform: translateY(0);
+  padding-bottom: 26px;
+}
+
+/* ─── FOOTER ─── */
+footer{
+  border-top:1px solid var(--border);
+  padding:40px 6vw;
+  display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  max-width:1200px;margin:0 auto;
+}
+.foot-logo{display:flex;align-items:center;gap:10px}
+.foot-name{font-size:15px;font-weight:500;color:var(--text)}
+.foot-name span{color:var(--blue2)}
+.foot-links{display:flex;gap:28px;list-style:none}
+.foot-links a{font-size:13.5px;color:var(--muted);transition:color .2s}
+.foot-links a:hover{color:var(--text)}
+.foot-legal{font-size:13px;color:var(--muted2)}
+
+/* ─── REVEAL ANIMATIONS (light) ─── */
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease, transform .6s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+/* feature-card.reveal : on fusionne les transitions reveal + hover */
+.feature-card.reveal{
+  transition:
+    opacity .6s ease,
+    transform .6s ease,
+    border-color .6s ease,
+    box-shadow .6s ease,
+    background .6s ease;
+}
+.reveal.d2{transition-delay:.08s}
+.reveal.d3{transition-delay:.16s}
+.reveal.d4{transition-delay:.24s}
+.reveal.d5{transition-delay:.32s}
+.reveal.d6{transition-delay:.4s}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.hero-badge{animation:fadeIn .7s .1s ease both}
+h1.hero-h1{animation:fadeIn .8s .25s ease both}
+.hero-sub{animation:fadeIn .8s .4s ease both}
+.hero-actions{animation:fadeIn .8s .55s ease both}
+
+@media (max-width:900px){
+  section{padding:80px 6vw}
+  .nav-links{display:none}
+  .steps-grid,.features-grid,.pricing-grid{grid-template-columns:1fr;gap:16px}
+  footer{flex-direction:column;align-items:flex-start;text-align:left}
+  .hero-actions{flex-direction:column;align-items:stretch}
+  .btn-hero,.btn-hero-out{justify-content:center}
+}
+@media (min-width:901px) and (max-width:1100px){
+  .features-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- GLOBAL BACKGROUND -->
+<div id="global-bg">
+  <canvas id="bg-canvas"></canvas>
+</div>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a href="#" class="nav-logo">
+    <img class="nav-logo-mark" src="/Users/valentinlacaille/Downloads/Copy_of_Untitled_Design-removebg-preview.png" alt="InKognito">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features" style="font-weight: 500">Fonctionnalités</a></li>
+    <li><a href="#steps3" style="font-weight: 500">Comment ça marche ?</a></li>
+    <li><a href="#pricing" style="font-weight: 500">Tarifs</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="#" class="btn-ghost">Se connecter</a>
+    <a href="Inscription Beta.html" class="btn-cta">Essai gratuit</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Votre LinkedIn en pilote automatique
+    </div>
+    <h1 class="hero-h1">
+      <span class="grad-white">Postez chaque jour.</span><br>
+      <span class="grad-text">Restez vous-même.</span>
+    </h1>
+    <p class="hero-sub" style="font-size: 15.5px">Capturez une idée en 10 secondes. L'IA génère vos posts LinkedIn dans votre style exact et publie automatiquement. Vous restez vous même, sans effort.</p>
+    <div class="hero-actions">
+      <a href="Inscription Beta.html" class="btn-hero">Commencer à poster gratuitement <span class="btn-hero-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- 3 STEPS -->
+<section id="steps3">
+  <div class="section-header reveal">
+    <div class="sec-label grad-blue-label">Comment ça marche</div>
+    <h2 class="sec-h grad-white">3 étapes, c'est tout.</h2>
+    <p class="sec-p">De votre profil LinkedIn à votre prochain post publié, sans friction.</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card reveal">
+      <div class="step-num grad-blue-label">01</div>
+      <h3 class="step-title grad-white">Connectez LinkedIn</h3>
+      <p class="step-desc">Un clic. InKognito se connecte à votre profil via OAuth sécurisé — puis analyse vos posts existants pour extraire votre style d'écriture unique.</p>
+    </div>
+    <div class="step-card reveal d2">
+      <div class="step-num grad-blue-label">02</div>
+      <h3 class="step-title grad-white">L'IA apprend votre voix</h3>
+      <p class="step-desc">L'IA analyse vos patterns d'écriture, votre vocabulaire, vos structures de posts. En quelques minutes, elle sait écrire exactement comme vous.</p>
+    </div>
+    <div class="step-card reveal d3">
+      <div class="step-num grad-blue-label">03</div>
+      <h3 class="step-title grad-white">Publiez, mesurez, progressez</h3>
+      <p class="step-desc">InKognito publie automatiquement, analyse les performances, et améliore votre stratégie en continu. Votre LinkedIn évolue sans vous.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-header reveal">
+    <div class="sec-label grad-blue-label">Fonctionnalités</div>
+    <h2 class="sec-h grad-white" style="font-size: 44px">Six raisons de ne plus<br>écrire vos posts manuellement</h2>
+  </div>
+  <div class="features-grid">
+
+    <div class="feature-card reveal">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <h3 class="feature-title grad-white">Publication entièrement automatique</h3>
+      <p class="feature-desc">Définissez vos créneaux, choisissez le sujet, l'objectif, et ajoutez vos photos. InKognito génère le post et le publie sans que vous ayez à toucher quoi que ce soit.</p>
+    </div>
+
+    <div class="feature-card reveal d2">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 10a7 7 0 0 0 14 0M12 19v3M8 22h8"></path></svg>
+      </div>
+      <h3 class="feature-title grad-white">Capture d'idée ultra-simple</h3>
+      <p class="feature-desc">Enregistrez ce que vous avez à dire en quelques secondes. L'IA analyse votre audio et le transforme instantanément en sujet de contenu prêt à générer.</p>
+    </div>
+
+    <div class="feature-card reveal d3">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+      </div>
+      <h3 class="feature-title grad-white">Votre style, fidèlement retranscrit</h3>
+      <p class="feature-desc">L'IA extrait vos patterns d'écriture, votre ton, vos structures de phrases. Chaque post sonne comme vous — personne ne voit la différence.</p>
+    </div>
+
+    <div class="feature-card reveal d4">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+      </div>
+      <h3 class="feature-title grad-white">L'IA qui s'améliore d'elle-même</h3>
+      <p class="feature-desc">Après chaque post, l'IA analyse les performances, tire des conclusions et les injecte automatiquement dans les prochaines générations. Plus vous publiez, meilleur elle devient.</p>
+    </div>
+
+    <div class="feature-card reveal d5">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      </div>
+      <h3 class="feature-title grad-white">Vrai storytelling, zéro invention</h3>
+      <p class="feature-desc">Transmettez vos vraies expériences. L'IA les utilise telles quelles pour rédiger des posts profondément humains — sans jamais inventer ce que vous n'avez pas vécu.</p>
+    </div>
+
+    <div class="feature-card reveal d6">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+      </div>
+      <h3 class="feature-title grad-white">Analyse qui va au fond des choses</h3>
+      <p class="feature-desc">Vues, engagement, meilleur sujet, meilleure photo, fréquence optimale — InKognito décortique chaque post pour vous dire exactement ce qui marche et ce qu'il faut répliquer.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-header centered reveal">
+    <div class="sec-label grad-blue-label">Tarifs</div>
+    <h2 class="sec-h grad-white">Simple. Transparent. Sans surprise.</h2>
+    <p class="sec-p">14 jours d'essai gratuit. Aucune carte de crédit requise.</p>
+  </div>
+
+  <div class="pricing-solo reveal">
+    <div class="pc-glow-ring">
+      <div class="pc-solo">
+
+        <div class="pc-solo-top">
+          <div class="pc-solo-left">
+            <div class="pc-beta-badge">
+              <span class="pc-beta-badge-dot"></span>
+              Offre Bêta — Tarif à vie
+            </div>
+            <div class="pc-solo-price">
+              <span class="pc-solo-curr">€</span>
+              <span class="pc-solo-amount">19</span>
+              <span class="pc-solo-period">à vie</span>
+            </div>
+            <div class="pc-beta-old">
+              <span class="pc-beta-old-price">49€/mois</span>
+              <span class="pc-beta-arrow" aria-hidden="true"><svg width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4h11.2"/><path d="M9 1l3 3-3 3"/></svg></span>
+              <span class="pc-beta-save">19€ à vie</span>
+            </div>
+            <div class="pc-beta-note">Tarif gelé si souscrit pendant la bêta</div>
+          </div>
+          <div class="pc-solo-desc" style="width: 278px; height: 73px; font-size: 13px">
+            Tout ce qu'il vous faut pour automatiser votre présence LinkedIn et publier chaque jour dans votre voix.
+          </div>
+        </div>
+
+        <div class="pc-solo-divider"></div>
+
+        <div class="pc-solo-feats">
+          <div class="pc-solo-feat">
+            <span class="pc-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"></polyline></svg></span>
+            Posts IA illimités
+          </div>
+          <div class="pc-solo-feat">
+            <span class="pc-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"></polyline></svg></span>
+            Voix IA personnalisée
+          </div>
+          <div class="pc-solo-feat">
+            <span class="pc-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"></polyline></svg></span>
+            Connexion LinkedIn
+          </div>
+          <div class="pc-solo-feat">
+            <span class="pc-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"></polyline></svg></span>
+            Génération/ Publication Auto
+          </div>
+          <div class="pc-solo-feat">
+            <span class="pc-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"></polyline></svg></span>
+            Analytiques avancées
+          </div>
+          <div class="pc-solo-feat">
+            <span class="pc-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"></polyline></svg></span>
+            Contrôle total du contenu
+          </div>
+          <div class="pc-solo-feat">
+            <span class="pc-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"></polyline></svg></span>
+            Capture vocale d'idées
+          </div>
+          <div class="pc-solo-feat">
+            <span class="pc-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"></polyline></svg></span>
+            Support prioritaire
+          </div>
+        </div>
+
+        <a href="Inscription Beta.html" class="pc-solo-btn">
+          <span class="pc-solo-btn-shine"></span>
+          Commencer gratuitement
+          <i class="pc-solo-btn-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></i>
+        </a>
+        <p class="pc-solo-note">Annulez à tout moment · Aucun engagement</p>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-header centered reveal">
+    <span class="sec-label">FAQ</span>
+    <h2 class="sec-h grad-white">Questions fréquentes</h2>
+    <p class="sec-p">Tout ce que vous voulez savoir avant de vous lancer.</p>
+  </div>
+  <div class="faq-list reveal">
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">
+        <span style="font-weight: 500">Comment InKognito apprend ma voix ?</span>
+        <span class="faq-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <div class="faq-a">
+        <p>À chaque post que vous validez ou modifiez, InKognito analyse votre style, votre ton et vos tournures de phrases. Plus vous publiez, plus l'IA affine son modèle de voix unique — jusqu'à devenir indiscernable de vous.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">
+        <span style="font-weight: 500">Mes données LinkedIn sont-elles en sécurité ?</span>
+        <span class="faq-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <div class="faq-a">
+        <p>Vos données ne sont jamais revendues ni partagées. La connexion LinkedIn passe par OAuth officiel — InKognito n'a accès qu'à la publication de posts, jamais à vos messages privés ni à votre réseau.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">
+        <span style="font-weight: 500">Puis-je relire et modifier les posts avant publication ?</span>
+        <span class="faq-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <div class="faq-a">
+        <p>Absolument. Chaque post passe par un éditeur où vous pouvez tout ajuster avant de valider. Vous restez maître du contenu à 100% — la publication automatique est une option, jamais une obligation.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">
+        <span style="font-weight: 500">Combien de temps faut-il pour voir des résultats ?</span>
+        <span class="faq-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <div class="faq-a">
+        <p>La plupart des utilisateurs constatent une augmentation significative de leur portée dès les 2-3 premières semaines. La régularité de publication — facilitée par InKognito — est le principal moteur de croissance sur LinkedIn.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">
+        <span style="font-weight: 500">Est-ce que ça fonctionne si je n'ai pas d'idées ?</span>
+        <span class="faq-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <div class="faq-a">
+        <p>C'est précisément pour ça qu'existe la capture vocale. Une idée floue en 30 secondes de note audio suffit — InKognito la structure, l'enrichit et la transforme en post percutant. Vous n'avez jamais besoin de partir d'une page blanche.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">
+        <span style="font-weight: 500">Puis-je annuler mon abonnement à tout moment ?</span>
+        <span class="faq-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <div class="faq-a">
+        <p>Oui, sans condition ni pénalité. Résiliez en un clic depuis votre tableau de bord. Votre accès reste actif jusqu'à la fin de la période en cours, puis s'arrête proprement.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section id="final-cta">
+  <div class="cta-block reveal">
+    <div class="cta-block-inner">
+      <div class="hero-badge" style="margin: 0 auto 32px;">
+        <span class="badge-dot"></span>
+        Essai gratuit 14 jours — sans CB
+      </div>
+      <h2 class="cta-h" style="max-width: 900px; margin-left: auto; margin-right: auto;"><span class="grad-white">Votre LinkedIn en pilote automatique</span><br><span class="grad-text" style="font-size: 59px">100% votre voix.</span></h2>
+      <p class="cta-sub">Capturez vos idées, publiez sans écrire, mesurez ce qui marche.<br>Rejoignez 2 400+ professionnels qui font confiance à InKognito.</p>
+      <div class="hero-actions">
+        <a href="Inscription Beta.html" class="btn-hero">Démarrer gratuitement <span class="btn-hero-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></a>
+      </div>
+      <div class="cta-meta">
+        <span class="cta-meta-item"><span class="cta-meta-dot"></span>Aucune carte de crédit</span>
+        <span class="cta-meta-item"><span class="cta-meta-dot"></span>Annulation à tout moment</span>
+        <span class="cta-meta-item"><span class="cta-meta-dot"></span>Setup en 2 minutes</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="foot-logo">
+    <svg width="22" height="22" viewBox="0 0 64 64">
+      <rect width="64" height="64" rx="14" fill="url(#logoGrad)"/>
+      <text x="32" y="44" font-family="Space Grotesk, sans-serif" font-size="30" font-weight="500" fill="#fff" text-anchor="middle">IK</text>
+    </svg>
+    <span class="foot-name">In<span>K</span>ognito</span>
+  </a>
+  <ul class="foot-links">
+    <li><a href="#features">Fonctionnalités</a></li>
+    <li><a href="#pricing">Tarifs</a></li>
+    <li><a href="#">Blog</a></li>
+    <li><a href="#">Confidentialité</a></li>
+    <li><a href="#">CGU</a></li>
+  </ul>
+  <div class="foot-legal">© 2025 InKognito. Tous droits réservés.</div>
+</footer>
+
+<script>
+// Nav scroll — passif + idempotent (n'écrit que si l'état change)
+(() => {
+  const nav = document.getElementById('main-nav');
+  let scrolled = false;
+  window.addEventListener('scroll', () => {
+    const next = window.scrollY > 30;
+    if (next !== scrolled) {
+      scrolled = next;
+      nav.classList.toggle('scrolled', next);
+    }
+  }, { passive: true });
+})();
+
+// ─── FAQ accordion ───
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+    // Close all
+    document.querySelectorAll('.faq-q').forEach(b => {
+      b.setAttribute('aria-expanded', 'false');
+      b.nextElementSibling.classList.remove('open');
+    });
+    // Open clicked if it was closed
+    if (!isOpen) {
+      btn.setAttribute('aria-expanded', 'true');
+      btn.nextElementSibling.classList.add('open');
+    }
+  });
+});
+
+// Reveal on scroll
+const revEls = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); } });
+}, { threshold: 0.12 });
+revEls.forEach(el => obs.observe(el));
+
+// ─── BACKGROUND : Ondes parallèles — waveform organisée (optimisé) ───
+(function(){
+  const canvas = document.getElementById('bg-canvas');
+  const ctx    = canvas.getContext('2d', { alpha: true });
+  const LINE_COUNT = 22;
+  const STEPS      = 120;            // moins d'étapes = moins de sin/frame
+  let W = 0, H = 0, raf, t = 0;
+  let lines = [];                     // constantes par ligne, calculées une fois
+  let glowCache = null, fadeCache = null;
+
+  function buildCaches(){
+    lines.length = 0;
+    const spacing = H / (LINE_COUNT + 1);
+    for (let i = 0; i < LINE_COUNT; i++){
+      const baseY        = spacing * (i + 1);
+      const distFromCenter = Math.abs(baseY - H * .42) / (H * .5);
+      const intensity    = Math.max(0, 1 - distFromCenter * 1.4);
+      const amplitude    = intensity * 18 + 2;
+      const lineAlpha    = intensity * .12 + .01;
+      const wavelength   = W / (2.5 + (i % 5) * .4);
+      const phaseBase    = (i / LINE_COUNT) * Math.PI * 2;
+      const lineWidth    = .8 + intensity * .5;
+
+      // Dégradé horizontal mis en cache (constant entre frames)
+      const grad = ctx.createLinearGradient(0, 0, W, 0);
+      grad.addColorStop(0,    'rgba(26,143,255,0)');
+      grad.addColorStop(.08,  `rgba(26,143,255,${lineAlpha})`);
+      grad.addColorStop(.5,   `rgba(96,174,255,${lineAlpha * 1.3})`);
+      grad.addColorStop(.92,  `rgba(26,143,255,${lineAlpha})`);
+      grad.addColorStop(1,    'rgba(26,143,255,0)');
+
+      lines.push({ baseY, amplitude, wavelength, phaseBase, lineWidth, grad });
+    }
+
+    // Halo central
+    const g = ctx.createRadialGradient(W*.5, H*.42, 0, W*.5, H*.42, W*.38);
+    g.addColorStop(0,  'rgba(10,102,194,.06)');
+    g.addColorStop(.6, 'rgba(26,143,255,.02)');
+    g.addColorStop(1,  'rgba(26,143,255,0)');
+    glowCache = g;
+
+    // Fondu bas
+    const f = ctx.createLinearGradient(0, H * .7, 0, H);
+    f.addColorStop(0, 'rgba(7,12,23,0)');
+    f.addColorStop(1, 'rgba(7,12,23,1)');
+    fadeCache = f;
+  }
+
+  function resize(){
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width  = W;
+    canvas.height = H;
+    buildCaches();
+  }
+
+  function render(){
+    ctx.clearRect(0, 0, W, H);
+
+    const tShift = t * .008;
+    const stepX  = W / STEPS;
+
+    for (let i = 0; i < LINE_COUNT; i++){
+      const L = lines[i];
+      const phase  = L.phaseBase + tShift;
+      const phase2 = phase * .6;
+      const invW1  = 1 / L.wavelength;
+      const invW2  = 1 / (L.wavelength * 1.7);
+      const amp2   = L.amplitude * .3;
+
+      ctx.beginPath();
+      let x = 0;
+      let y = L.baseY + Math.sin(phase) * L.amplitude + Math.sin(phase2) * amp2;
+      ctx.moveTo(x, y);
+      for (let s = 1; s <= STEPS; s++){
+        x = s * stepX;
+        y = L.baseY
+          + Math.sin(x * invW1 + phase) * L.amplitude
+          + Math.sin(x * invW2 + phase2) * amp2;
+        ctx.lineTo(x, y);
+      }
+
+      ctx.strokeStyle = L.grad;
+      ctx.lineWidth   = L.lineWidth;
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = glowCache;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.fillStyle = fadeCache;
+    ctx.fillRect(0, H * .7, W, H * .3);
+
+    t++;
+    raf = requestAnimationFrame(render);
+  }
+
+  function init(){
+    resize();
+    cancelAnimationFrame(raf);
+    render();
+  }
+
+  // Resize : debounce léger pour éviter de reconstruire les caches en rafale
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(init, 120);
+  });
+  init();
+})();
+</script>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script>
+/* ─── SMOOTH SCROLL (Lenis) ───
+   Inertie continue, décélération très progressive, pas de coupure brutale.
+   Fonctionne avec molette, trackpad, clavier et tactile. */
+(function () {
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduced) return;
+
+  if (typeof Lenis !== 'function') {
+    console.warn('[smooth-scroll] Lenis non chargé — scroll natif utilisé.');
+    return;
+  }
+
+  const lenis = new Lenis({
+    duration: 1.6,
+    // easeOutQuint — décélération progressive sans coupure brutale
+    easing: t => 1 - Math.pow(1 - t, 5),
+    smoothWheel: true,
+    wheelMultiplier: 0.85,
+    touchMultiplier: 1.6,
+    lerp: 0.07,
+    syncTouch: false,
+    infinite: false,
+  });
+
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  // Smooth scroll sur les ancres internes
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href');
+      if (!id || id === '#') return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      lenis.scrollTo(target, {
+        offset: -80,
+        duration: 1.8,
+        easing: t => 1 - Math.pow(1 - t, 5),
+      });
+    });
+  });
+
+  // Expose pour debug éventuel
+  window.__lenis = lenis;
+})();
+</script>
+</body>
+</html>
