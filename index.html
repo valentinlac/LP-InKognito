@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>InKognito — Automatisez vos posts LinkedIn</title>
+<title>InKognito · Automatisez vos posts LinkedIn</title>
 <meta name="description" content="InKognito automatise vos posts LinkedIn dans votre voix exacte. Capturez une idée en 10 secondes, l'IA génère et publie à votre place.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://inkognito.fr/">
@@ -11,17 +11,19 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://inkognito.fr/">
-<meta property="og:title" content="InKognito — Automatisez vos posts LinkedIn">
+<meta property="og:title" content="InKognito · Automatisez vos posts LinkedIn">
 <meta property="og:description" content="InKognito automatise vos posts LinkedIn dans votre voix exacte. Capturez une idée en 10 secondes, l'IA génère et publie à votre place.">
 <meta property="og:image" content="https://linkedin-saas-sepia.vercel.app/api/og">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="InKognito · automatisez vos posts LinkedIn dans votre voix">
+<meta name="theme-color" content="#070C17">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:site_name" content="InKognito">
 
 <!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="InKognito — Automatisez vos posts LinkedIn">
+<meta name="twitter:title" content="InKognito · Automatisez vos posts LinkedIn">
 <meta name="twitter:description" content="InKognito automatise vos posts LinkedIn dans votre voix exacte. Capturez une idée en 10 secondes, l'IA génère et publie à votre place.">
 <meta name="twitter:image" content="https://linkedin-saas-sepia.vercel.app/api/og">
 
@@ -203,7 +205,7 @@ h1.hero-h1{
 /* ─── HOW IT WORKS — 3 steps ─── */
 #steps3{padding-top:60px}
 .steps-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  display:grid;grid-template-columns:repeat(2,1fr);gap:20px;
 }
 .step-card{
   border:1px solid rgba(255,255,255,.1);border-radius:14px;
@@ -275,8 +277,25 @@ h1.hero-h1{
   background:rgba(10,102,194,.10);border:1px solid rgba(26,143,255,.2);
   margin-bottom:20px;color:var(--blue3);
 }
-.feature-title{font-size:17px;font-weight:500;letter-spacing:-.025em;margin-bottom:10px;color:var(--text)}
+.feature-title{font-size:17px;font-weight:500;letter-spacing:-.025em;line-height:1.3;min-height:2.6em;margin-bottom:10px;color:var(--text);display:flex;align-items:flex-end}
 .feature-desc{font-size:14px;color:var(--muted);line-height:1.65}
+
+/* ─── FEATURE GROUPS (rythme thématique) ─── */
+.feature-group{margin-top:56px}
+.feature-group:first-of-type{margin-top:0}
+.feature-group-label{
+  display:flex;align-items:center;gap:18px;
+  margin-bottom:26px;
+}
+.feature-group-label span{
+  font-size:12px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--blue3);white-space:nowrap;
+  flex-shrink:0;
+}
+.feature-group-label::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg, rgba(26,143,255,.28) 0%, rgba(26,143,255,.05) 60%, transparent 100%);
+}
 
 /* ─── PRICING — single card ─── */
 .pricing-solo{
@@ -779,6 +798,9 @@ footer{
 .reveal.d4{transition-delay:.24s}
 .reveal.d5{transition-delay:.32s}
 .reveal.d6{transition-delay:.4s}
+.reveal.d7{transition-delay:.48s}
+.reveal.d8{transition-delay:.56s}
+.reveal.d9{transition-delay:.64s}
 
 @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .hero-badge{animation:fadeIn .7s .1s ease both}
@@ -786,16 +808,111 @@ h1.hero-h1{animation:fadeIn .8s .25s ease both}
 .hero-sub{animation:fadeIn .8s .4s ease both}
 .hero-actions{animation:fadeIn .8s .55s ease both}
 
+/* ─── STATS STRIP ─── */
+#stats{padding-top:30px;padding-bottom:30px}
+.stats-strip{
+  max-width:1000px;margin:0 auto;
+  display:flex;align-items:stretch;justify-content:center;
+  border:1px solid rgba(255,255,255,.1);border-radius:16px;
+  background:rgba(11,18,34,.6);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  overflow:hidden;
+}
+.stat-item{
+  flex:1;text-align:center;padding:30px 24px;
+  display:flex;flex-direction:column;gap:8px;align-items:center;
+}
+.stat-item + .stat-item{border-left:1px solid rgba(255,255,255,.07)}
+.stat-num{
+  font-size:clamp(30px,4vw,46px);font-weight:600;letter-spacing:-.03em;line-height:1;
+  background:linear-gradient(130deg,#ffffff 0%,#9ec4ff 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.stat-label{font-size:13px;color:var(--muted);max-width:200px;line-height:1.5}
+
+/* ─── SHOWCASE PRODUIT ─── */
+.showcase-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;
+  margin-top:96px;
+}
+.showcase-row:first-of-type{margin-top:0}
+.showcase-row.reverse .showcase-text{order:2}
+.showcase-row.reverse .showcase-frame{order:1}
+.showcase-h{font-size:clamp(23px,2.4vw,30px);font-weight:500;letter-spacing:-.03em;line-height:1.2;margin:6px 0 14px;color:var(--text)}
+.showcase-p{font-size:15px;color:var(--muted);line-height:1.65;max-width:440px}
+.showcase-frame{
+  border:1px solid rgba(255,255,255,.1);border-radius:14px;overflow:hidden;
+  background:rgba(11,18,34,.72);
+  box-shadow:0 24px 64px rgba(0,0,0,.45), 0 0 0 1px rgba(26,143,255,.08);
+}
+.showcase-bar{
+  display:flex;align-items:center;gap:7px;padding:11px 14px;
+  border-bottom:1px solid rgba(255,255,255,.07);background:rgba(7,12,23,.7);
+}
+.showcase-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.14)}
+.showcase-frame img{display:block;width:100%;height:auto}
+
+/* ─── TÉMOIGNAGES (mur d'avis hybride : texte + screenshots) ─── */
+.testi-grid{column-count:3;column-gap:20px}
+.testi-card,.testi-shot{break-inside:avoid;margin-bottom:20px}
+.testi-card{
+  border:1px solid rgba(255,255,255,.1);border-radius:14px;
+  background:rgba(11,18,34,.72);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  padding:28px 26px;display:flex;flex-direction:column;gap:18px;
+  transition:border-color .4s ease, transform .4s ease, box-shadow .4s ease;
+}
+.testi-card:hover,.testi-shot:hover{
+  border-color:rgba(26,143,255,.45);transform:translateY(-3px);
+  box-shadow:0 0 24px 4px rgba(26,143,255,.12);
+}
+/* Carte screenshot */
+.testi-shot{
+  border:1px solid rgba(255,255,255,.1);border-radius:14px;overflow:hidden;
+  background:rgba(11,18,34,.72);
+  box-shadow:0 16px 40px rgba(0,0,0,.35);
+  transition:border-color .4s ease, transform .4s ease, box-shadow .4s ease;
+}
+.testi-shot img{display:block;width:100%;height:auto}
+.testi-shot-cap{
+  padding:12px 16px;font-size:12.5px;color:var(--muted);
+  border-top:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;gap:8px;
+}
+.testi-shot-cap::before{
+  content:'';width:6px;height:6px;border-radius:50%;background:#22d87f;
+  box-shadow:0 0 8px 2px rgba(34,216,127,.55);flex-shrink:0;
+}
+.testi-stars{display:flex;gap:3px;color:#1a8fff;font-size:15px;letter-spacing:2px}
+.testi-quote{font-size:15px;color:var(--text);line-height:1.62;flex:1}
+.testi-author{display:flex;align-items:center;gap:12px}
+.testi-avatar{
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  border:1px solid rgba(26,143,255,.25);background:rgba(26,143,255,.12);
+  object-fit:cover;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:600;color:var(--blue3);font-size:15px;
+}
+.testi-name{font-size:14px;font-weight:500;color:var(--text)}
+.testi-role{font-size:12.5px;color:var(--muted)}
+
 @media (max-width:900px){
   section{padding:80px 6vw}
   .nav-links{display:none}
   .steps-grid,.features-grid,.pricing-grid{grid-template-columns:1fr;gap:16px}
+  .testi-grid{column-count:1}
   footer{flex-direction:column;align-items:flex-start;text-align:left}
   .hero-actions{flex-direction:column;align-items:stretch}
   .btn-hero,.btn-hero-out{justify-content:center}
+  .stats-strip{flex-direction:column}
+  .stat-item + .stat-item{border-left:none;border-top:1px solid rgba(255,255,255,.07)}
+  .showcase-row{grid-template-columns:1fr;gap:28px;margin-top:64px}
+  .showcase-row.reverse .showcase-text{order:1}
+  .showcase-row.reverse .showcase-frame{order:2}
 }
 @media (min-width:901px) and (max-width:1100px){
   .features-grid{grid-template-columns:repeat(2,1fr)}
+  .testi-grid{column-count:2}
 }
 </style>
 
@@ -840,6 +957,64 @@ h1.hero-h1{animation:fadeIn .8s .25s ease both}
 }
 </script>
 
+<!-- FAQ structured data (rich results) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Comment InKognito apprend ma voix ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "À chaque post que vous validez ou modifiez, InKognito analyse votre style, votre ton et vos tournures de phrases. Plus vous publiez, plus l'IA affine son modèle de voix unique, jusqu'à devenir indiscernable de vous."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Mes données LinkedIn sont-elles en sécurité ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Vos données ne sont jamais revendues ni partagées. La connexion LinkedIn passe par OAuth officiel. InKognito n'a accès qu'à la publication de posts, jamais à vos messages privés ni à votre réseau."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Puis-je relire et modifier les posts avant publication ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Absolument. Chaque post passe par un éditeur où vous pouvez tout ajuster avant de valider. Vous restez maître du contenu à 100%. La publication automatique est une option, jamais une obligation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Combien de temps faut-il pour voir des résultats ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "La plupart des utilisateurs constatent une augmentation significative de leur portée dès les 2-3 premières semaines. La régularité de publication, facilitée par InKognito, est le principal moteur de croissance sur LinkedIn."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Est-ce que ça fonctionne si je n'ai pas d'idées ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "C'est précisément pour ça qu'existe la capture vocale. Une idée floue en 30 secondes de note audio suffit. InKognito la structure, l'enrichit et la transforme en post percutant. Vous n'avez jamais besoin de partir d'une page blanche."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Puis-je annuler mon abonnement à tout moment ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui, sans condition ni pénalité. Résiliez en un clic depuis votre tableau de bord. Votre accès reste actif jusqu'à la fin de la période en cours, puis s'arrête proprement."
+      }
+    }
+  ]
+}
+</script>
+
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -863,7 +1038,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- NAV -->
 <nav id="main-nav">
   <a href="#" class="nav-logo">
-    <img class="nav-logo-mark" src="logo.png" alt="InKognito">
+    <img class="nav-logo-mark" src="logo.png" alt="InKognito" width="52" height="52">
   </a>
   <ul class="nav-links">
     <li><a href="#features" style="font-weight: 500">Fonctionnalités</a></li>
@@ -888,33 +1063,56 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <span class="grad-white">Postez chaque jour.</span><br>
       <span class="grad-text">Restez vous-même.</span>
     </h1>
-    <p class="hero-sub" style="font-size: 15.5px">Capturez une idée en 10 secondes. L'IA génère vos posts LinkedIn dans votre style exact et publie automatiquement. Vous restez vous même, sans effort.</p>
+    <p class="hero-sub" style="font-size: 15.5px">InKognito est le copilote IA qui rédige et publie vos posts LinkedIn dans votre voix exacte. Capturez une idée en 10 secondes. L'IA génère et publie automatiquement, sans effort.</p>
     <div class="hero-actions">
       <a href="https://linkedin-saas-sepia.vercel.app/inscription-beta" class="btn-hero">Commencer à poster gratuitement <span class="btn-hero-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></a>
     </div>
   </div>
 </section>
 
-<!-- 3 STEPS -->
+<!-- STATS -->
+<section id="stats">
+  <div class="stats-strip reveal">
+    <div class="stat-item">
+      <div class="stat-num">500 000+</div>
+      <div class="stat-label">impressions générées par les utilisateurs d'InKognito</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">posts illimités, toujours dans votre voix</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">2 min</div>
+      <div class="stat-label">pour connecter LinkedIn et lancer la machine</div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 STEPS -->
 <section id="steps3">
   <div class="section-header reveal">
     <div class="sec-label grad-blue-label">Comment ça marche</div>
-    <h2 class="sec-h grad-white">3 étapes, c'est tout.</h2>
+    <h2 class="sec-h grad-white">Automatisez vos posts LinkedIn en 4 étapes</h2>
     <p class="sec-p">De votre profil LinkedIn à votre prochain post publié, sans friction.</p>
   </div>
   <div class="steps-grid">
     <div class="step-card reveal">
       <div class="step-num grad-blue-label">01</div>
       <h3 class="step-title grad-white">Connectez LinkedIn</h3>
-      <p class="step-desc">Un clic. InKognito se connecte à votre profil via OAuth sécurisé — puis analyse vos posts existants pour extraire votre style d'écriture unique.</p>
+      <p class="step-desc">Un clic. InKognito se connecte à votre profil via l'OAuth officiel LinkedIn, uniquement pour publier en votre nom. Jamais d'accès à vos messages ni à votre réseau.</p>
     </div>
     <div class="step-card reveal d2">
       <div class="step-num grad-blue-label">02</div>
-      <h3 class="step-title grad-white">L'IA apprend votre voix</h3>
-      <p class="step-desc">L'IA analyse vos patterns d'écriture, votre vocabulaire, vos structures de posts. En quelques minutes, elle sait écrire exactement comme vous.</p>
+      <h3 class="step-title grad-white">Installez l'extension</h3>
+      <p class="step-desc">En un clic depuis Chrome. L'extension importe vos posts existants pour que l'IA apprenne votre style, et synchronise vos statistiques (vues, likes, engagement) en continu.</p>
     </div>
     <div class="step-card reveal d3">
       <div class="step-num grad-blue-label">03</div>
+      <h3 class="step-title grad-white">L'IA apprend votre voix</h3>
+      <p class="step-desc">L'IA analyse votre vocabulaire, votre ton et vos structures à partir de vos posts importés et de chaque post que vous validez. En quelques minutes, elle écrit exactement comme vous.</p>
+    </div>
+    <div class="step-card reveal d4">
+      <div class="step-num grad-blue-label">04</div>
       <h3 class="step-title grad-white">Publiez, mesurez, progressez</h3>
       <p class="step-desc">InKognito publie automatiquement, analyse les performances, et améliore votre stratégie en continu. Votre LinkedIn évolue sans vous.</p>
     </div>
@@ -925,56 +1123,190 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section id="features">
   <div class="section-header reveal">
     <div class="sec-label grad-blue-label">Fonctionnalités</div>
-    <h2 class="sec-h grad-white" style="font-size: 44px">Six raisons de ne plus<br>écrire vos posts manuellement</h2>
+    <h2 class="sec-h" style="font-size: 44px"><span class="grad-white">Tout ce qu'il faut pour percer sur LinkedIn,</span><br><span class="grad-text">sans écrire une ligne</span></h2>
+    <p class="sec-p">De la création de contenu à l'analyse de performance, tout pour bâtir votre personal branding sur LinkedIn, en pilote automatique.</p>
   </div>
-  <div class="features-grid">
 
-    <div class="feature-card reveal">
-      <div class="feature-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  <!-- Groupe 1 — Écrire sans effort -->
+  <div class="feature-group">
+    <div class="feature-group-label reveal"><span>Écrire sans effort</span></div>
+    <div class="features-grid">
+
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 10a7 7 0 0 0 14 0M12 19v3M8 22h8"></path></svg>
+        </div>
+        <h3 class="feature-title grad-white">Capture d'idée ultra-simple</h3>
+        <p class="feature-desc">Enregistrez ce que vous avez à dire en quelques secondes. L'IA analyse votre audio et le transforme instantanément en sujet de contenu prêt à générer.</p>
       </div>
-      <h3 class="feature-title grad-white">Publication entièrement automatique</h3>
-      <p class="feature-desc">Définissez vos créneaux, choisissez le sujet, l'objectif, et ajoutez vos photos. InKognito génère le post et le publie sans que vous ayez à toucher quoi que ce soit.</p>
+
+      <div class="feature-card reveal d2">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+        </div>
+        <h3 class="feature-title grad-white">Votre style, fidèlement retranscrit</h3>
+        <p class="feature-desc">Un vrai ghostwriter IA qui extrait vos patterns d'écriture, votre ton et vos structures de phrases. Chaque post sonne comme vous, personne ne voit la différence.</p>
+      </div>
+
+      <div class="feature-card reveal d3">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        </div>
+        <h3 class="feature-title grad-white">Vrai storytelling, zéro invention</h3>
+        <p class="feature-desc">Transmettez vos vraies expériences. L'IA les utilise telles quelles pour rédiger des posts profondément humains, sans jamais inventer ce que vous n'avez pas vécu.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Groupe 2 — Pilote automatique -->
+  <div class="feature-group">
+    <div class="feature-group-label reveal"><span>Pilote automatique</span></div>
+    <div class="features-grid">
+
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <h3 class="feature-title grad-white">Publication entièrement automatique</h3>
+        <p class="feature-desc">Définissez vos créneaux, choisissez le sujet, l'objectif, et ajoutez vos photos. InKognito génère le post et le publie sans que vous ayez à toucher quoi que ce soit.</p>
+      </div>
+
+      <div class="feature-card reveal d2">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        </div>
+        <h3 class="feature-title grad-white">Une régularité sans y penser</h3>
+        <p class="feature-desc">Définissez vos créneaux une seule fois. InKognito remplit votre calendrier éditorial et publie au bon moment, semaine après semaine. La régularité est le vrai moteur de croissance sur LinkedIn.</p>
+      </div>
+
+      <div class="feature-card reveal d3">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1"></circle></svg>
+        </div>
+        <h3 class="feature-title grad-white">Un objectif derrière chaque post</h3>
+        <p class="feature-desc">Attirer des prospects, asseoir votre expertise ou convertir : vous choisissez l'intention, l'IA construit le post pour l'atteindre. Fini les posts qui ne servent à rien.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Groupe 3 — Croissance mesurée -->
+  <div class="feature-group">
+    <div class="feature-group-label reveal"><span>Croissance mesurée</span></div>
+    <div class="features-grid">
+
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        </div>
+        <h3 class="feature-title grad-white">Analyse qui va au fond des choses</h3>
+        <p class="feature-desc">Vues, engagement, meilleur sujet, meilleure photo, fréquence optimale. InKognito décortique chaque post et vous dit exactement ce qui marche et ce qu'il faut répliquer.</p>
+      </div>
+
+      <div class="feature-card reveal d2">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+        </div>
+        <h3 class="feature-title grad-white">L'IA qui s'améliore d'elle-même</h3>
+        <p class="feature-desc">Après chaque post, l'IA analyse les performances, tire des conclusions et les injecte automatiquement dans les prochaines générations. Plus vous publiez, meilleur elle devient.</p>
+      </div>
+
+      <div class="feature-card reveal d3">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+        </div>
+        <h3 class="feature-title grad-white">Vos posts deviennent un levier</h3>
+        <p class="feature-desc">Ajoutez votre offre, votre lead magnet ou votre lien. InKognito le place en premier commentaire pour préserver votre portée tout en transformant vos lecteurs en clients.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SHOWCASE PRODUIT -->
+<section id="showcase">
+  <div class="section-header centered reveal">
+    <div class="sec-label grad-blue-label">En coulisses</div>
+    <h2 class="sec-h grad-white">InKognito en action</h2>
+    <p class="sec-p">Pas de promesse en l'air. Voilà concrètement ce qui se passe une fois connecté.</p>
+  </div>
+
+  <div class="showcase-row reveal">
+    <div class="showcase-text">
+      <div class="sec-label grad-blue-label">Votre voix</div>
+      <h3 class="showcase-h grad-white">L'IA capture votre empreinte stylistique</h3>
+      <p class="showcase-p">InKognito analyse vos posts et dresse le portrait exact de votre voix, de votre ton et de vos tics d'écriture. Chaque post généré sonne comme vous, jamais comme une IA générique.</p>
+    </div>
+    <div class="showcase-frame">
+      <div class="showcase-bar"><span class="showcase-dot"></span><span class="showcase-dot"></span><span class="showcase-dot"></span></div>
+      <img src="screens/mon-style.png" alt="InKognito analyse l'empreinte stylistique et le portrait de voix de l'utilisateur" loading="lazy">
+    </div>
+  </div>
+
+  <div class="showcase-row reverse reveal">
+    <div class="showcase-text">
+      <div class="sec-label grad-blue-label">Pilote automatique</div>
+      <h3 class="showcase-h grad-white">Une semaine de posts planifiée toute seule</h3>
+      <p class="showcase-p">Définissez vos créneaux une seule fois. InKognito génère et publie vos posts au bon moment, chaque semaine, sans que vous ayez à y penser.</p>
+    </div>
+    <div class="showcase-frame">
+      <div class="showcase-bar"><span class="showcase-dot"></span><span class="showcase-dot"></span><span class="showcase-dot"></span></div>
+      <img src="screens/auto-pilot.png" alt="Planning hebdomadaire de génération et publication automatique dans InKognito" loading="lazy">
+    </div>
+  </div>
+
+  <div class="showcase-row reveal">
+    <div class="showcase-text">
+      <div class="sec-label grad-blue-label">Croissance</div>
+      <h3 class="showcase-h grad-white">Des analyses qui pilotent votre stratégie</h3>
+      <p class="showcase-p">Vues, engagement, meilleurs sujets, meilleures photos. InKognito croise chaque métrique avec votre historique pour faire ressortir ce qui fonctionne vraiment.</p>
+    </div>
+    <div class="showcase-frame">
+      <div class="showcase-bar"><span class="showcase-dot"></span><span class="showcase-dot"></span><span class="showcase-dot"></span></div>
+      <img src="screens/insights.png" alt="Tableau de bord d'analyse des performances LinkedIn dans InKognito" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- TÉMOIGNAGES -->
+<section id="testimonials">
+  <div class="section-header centered reveal">
+    <div class="sec-label grad-blue-label">Témoignages</div>
+    <h2 class="sec-h grad-white">Ils ont testé, ils ont adopté</h2>
+    <p class="sec-p">Ce qu'en disent les premiers utilisateurs d'InKognito.</p>
+  </div>
+  <div class="testi-grid">
+
+    <!-- AVIS ÉCRIT (carte texte) -->
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">Travailler avec InKognito a été une excellente surprise. Valentin comprend rapidement les besoins, est extrêmement à l'écoute et possède déjà une vraie mentalité business malgré son jeune âge.<br><br>Son outil est fluide, intelligent et réellement utile au quotidien.</p>
+      <div class="testi-author">
+        <img class="testi-avatar" src="screens/nicolas.jpg" alt="Nicolas Abi Ramia" width="42" height="42" loading="lazy">
+        <div>
+          <div class="testi-name">Nicolas Abi Ramia</div>
+          <div class="testi-role">Fondateur d'Auramotion</div>
+        </div>
+      </div>
     </div>
 
-    <div class="feature-card reveal d2">
-      <div class="feature-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 10a7 7 0 0 0 14 0M12 19v3M8 22h8"></path></svg>
-      </div>
-      <h3 class="feature-title grad-white">Capture d'idée ultra-simple</h3>
-      <p class="feature-desc">Enregistrez ce que vous avez à dire en quelques secondes. L'IA analyse votre audio et le transforme instantanément en sujet de contenu prêt à générer.</p>
+    <!-- AVIS SCREENSHOT 1 -->
+    <div class="testi-shot reveal d2">
+      <img src="screens/avis-1.jpg" alt="Avis d'un utilisateur recommandant InKognito" loading="lazy">
+      <div class="testi-shot-cap">Recommandation publique d'un utilisateur</div>
     </div>
 
-    <div class="feature-card reveal d3">
-      <div class="feature-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-      </div>
-      <h3 class="feature-title grad-white">Votre style, fidèlement retranscrit</h3>
-      <p class="feature-desc">L'IA extrait vos patterns d'écriture, votre ton, vos structures de phrases. Chaque post sonne comme vous — personne ne voit la différence.</p>
+    <!-- AVIS SCREENSHOT 2 -->
+    <div class="testi-shot reveal d3">
+      <img src="screens/avis-2.jpg" alt="Message d'un bêta-testeur d'InKognito" loading="lazy">
+      <div class="testi-shot-cap">Message reçu d'un bêta-testeur</div>
     </div>
 
-    <div class="feature-card reveal d4">
-      <div class="feature-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-      </div>
-      <h3 class="feature-title grad-white">L'IA qui s'améliore d'elle-même</h3>
-      <p class="feature-desc">Après chaque post, l'IA analyse les performances, tire des conclusions et les injecte automatiquement dans les prochaines générations. Plus vous publiez, meilleur elle devient.</p>
-    </div>
-
-    <div class="feature-card reveal d5">
-      <div class="feature-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-      </div>
-      <h3 class="feature-title grad-white">Vrai storytelling, zéro invention</h3>
-      <p class="feature-desc">Transmettez vos vraies expériences. L'IA les utilise telles quelles pour rédiger des posts profondément humains — sans jamais inventer ce que vous n'avez pas vécu.</p>
-    </div>
-
-    <div class="feature-card reveal d6">
-      <div class="feature-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-      </div>
-      <h3 class="feature-title grad-white">Analyse qui va au fond des choses</h3>
-      <p class="feature-desc">Vues, engagement, meilleur sujet, meilleure photo, fréquence optimale — InKognito décortique chaque post pour vous dire exactement ce qui marche et ce qu'il faut répliquer.</p>
+    <!-- AVIS SCREENSHOT 3 -->
+    <div class="testi-shot reveal d4">
+      <img src="screens/avis-3.jpg" alt="Échange autour d'InKognito sur LinkedIn" loading="lazy">
+      <div class="testi-shot-cap">Échange avec un utilisateur</div>
     </div>
 
   </div>
@@ -985,7 +1317,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="section-header centered reveal">
     <div class="sec-label grad-blue-label">Tarifs</div>
     <h2 class="sec-h grad-white">Simple. Transparent. Sans surprise.</h2>
-    <p class="sec-p">14 jours d'essai gratuit. Aucune carte de crédit requise.</p>
+    <p class="sec-p">Tout InKognito pour automatiser votre LinkedIn avec l'IA. 14 jours d'essai gratuit, aucune carte de crédit requise.</p>
   </div>
 
   <div class="pricing-solo reveal">
@@ -996,7 +1328,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="pc-solo-left">
             <div class="pc-beta-badge">
               <span class="pc-beta-badge-dot"></span>
-              Offre Bêta — Tarif à vie
+              Offre Bêta · Tarif à vie
             </div>
             <div class="pc-solo-price">
               <span class="pc-solo-curr">€</span>
@@ -1078,7 +1410,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="faq-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </button>
       <div class="faq-a">
-        <p>À chaque post que vous validez ou modifiez, InKognito analyse votre style, votre ton et vos tournures de phrases. Plus vous publiez, plus l'IA affine son modèle de voix unique — jusqu'à devenir indiscernable de vous.</p>
+        <p>À chaque post que vous validez ou modifiez, InKognito analyse votre style, votre ton et vos tournures de phrases. Plus vous publiez, plus l'IA affine son modèle de voix unique, jusqu'à devenir indiscernable de vous.</p>
       </div>
     </div>
     <div class="faq-item">
@@ -1087,7 +1419,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="faq-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </button>
       <div class="faq-a">
-        <p>Vos données ne sont jamais revendues ni partagées. La connexion LinkedIn passe par OAuth officiel — InKognito n'a accès qu'à la publication de posts, jamais à vos messages privés ni à votre réseau.</p>
+        <p>Vos données ne sont jamais revendues ni partagées. La connexion LinkedIn passe par OAuth officiel. InKognito n'a accès qu'à la publication de posts, jamais à vos messages privés ni à votre réseau.</p>
       </div>
     </div>
     <div class="faq-item">
@@ -1096,7 +1428,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="faq-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </button>
       <div class="faq-a">
-        <p>Absolument. Chaque post passe par un éditeur où vous pouvez tout ajuster avant de valider. Vous restez maître du contenu à 100% — la publication automatique est une option, jamais une obligation.</p>
+        <p>Absolument. Chaque post passe par un éditeur où vous pouvez tout ajuster avant de valider. Vous restez maître du contenu à 100%. La publication automatique est une option, jamais une obligation.</p>
       </div>
     </div>
     <div class="faq-item">
@@ -1105,7 +1437,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="faq-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </button>
       <div class="faq-a">
-        <p>La plupart des utilisateurs constatent une augmentation significative de leur portée dès les 2-3 premières semaines. La régularité de publication — facilitée par InKognito — est le principal moteur de croissance sur LinkedIn.</p>
+        <p>La plupart des utilisateurs constatent une augmentation significative de leur portée dès les 2-3 premières semaines. La régularité de publication, facilitée par InKognito, est le principal moteur de croissance sur LinkedIn.</p>
       </div>
     </div>
     <div class="faq-item">
@@ -1114,7 +1446,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="faq-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </button>
       <div class="faq-a">
-        <p>C'est précisément pour ça qu'existe la capture vocale. Une idée floue en 30 secondes de note audio suffit — InKognito la structure, l'enrichit et la transforme en post percutant. Vous n'avez jamais besoin de partir d'une page blanche.</p>
+        <p>C'est précisément pour ça qu'existe la capture vocale. Une idée floue en 30 secondes de note audio suffit. InKognito la structure, l'enrichit et la transforme en post percutant. Vous n'avez jamais besoin de partir d'une page blanche.</p>
       </div>
     </div>
     <div class="faq-item">
@@ -1135,7 +1467,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="cta-block-inner">
       <div class="hero-badge" style="margin: 0 auto 32px;">
         <span class="badge-dot"></span>
-        Essai gratuit 14 jours — sans CB
+        Essai gratuit 14 jours, sans CB
       </div>
       <h2 class="cta-h" style="max-width: 900px; margin-left: auto; margin-right: auto;"><span class="grad-white">Votre LinkedIn en pilote automatique</span><br><span class="grad-text" style="font-size: 59px">100% votre voix.</span></h2>
       <p class="cta-sub">Capturez vos idées, publiez sans écrire, mesurez ce qui marche.<br>Soyez parmi les 30 premiers à tester</p>
@@ -1167,7 +1499,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <li><a href="#">Confidentialité</a></li>
     <li><a href="#">CGU</a></li>
   </ul>
-  <div class="foot-legal">© 2025 InKognito. Tous droits réservés.</div>
+  <div class="foot-legal">© 2026 InKognito. Tous droits réservés.</div>
 </footer>
 
 <script>
