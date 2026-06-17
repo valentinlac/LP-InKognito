@@ -1066,8 +1066,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- HERO VISUAL · ghostwriter au travail (pur CSS/SVG) -->
 <style>
-.hero-visual{position:relative;z-index:2;margin:60px auto 0;width:min(760px,100%);display:flex;justify-content:center}
-.hv-card{position:relative;z-index:2;width:min(400px,100%);border-radius:20px;text-align:left;overflow:hidden;
+.hero-visual{position:relative;z-index:2;margin:60px auto 0;width:min(800px,100%);display:flex;justify-content:center}
+.hv-card{position:relative;z-index:2;width:min(360px,100%);border-radius:20px;text-align:left;overflow:hidden;
   background:linear-gradient(180deg,rgba(16,24,42,.92),rgba(9,14,26,.94));
   border:1px solid rgba(255,255,255,.09);padding:20px 20px 16px;
   box-shadow:0 30px 70px -20px rgba(0,0,0,.7), inset 0 0 0 1px rgba(26,143,255,.05)}
@@ -1089,7 +1089,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 .hv-pill-dot{width:5px;height:5px;border-radius:50%;background:var(--blue2);animation:hvBlink 2s ease-in-out infinite}
 /* noeuds d'ingredients (externes a la carte) : chacun avec sa propre micro-animation */
 .hv-node{position:absolute;z-index:3;display:flex;align-items:center;gap:9px;white-space:nowrap;
-  padding:9px 13px 9px 9px;border-radius:14px;
+  width:172px;box-sizing:border-box;padding:9px 13px 9px 9px;border-radius:14px;
   border:1px solid rgba(26,143,255,.26);background:rgba(11,18,34,.86);backdrop-filter:blur(7px);
   box-shadow:0 12px 32px -8px rgba(0,0,0,.6), inset 0 0 0 1px rgba(26,143,255,.05)}
 .hv-node-ic{position:relative;width:32px;height:32px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
@@ -1097,9 +1097,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 .hv-node-tx{display:flex;flex-direction:column;gap:1px;line-height:1.15}
 .hv-node-tx b{font-size:11.5px;font-weight:600;letter-spacing:-.01em;color:var(--text)}
 .hv-node-tx em{font-size:9.5px;font-style:normal;letter-spacing:.02em;color:var(--muted)}
-.hv-n1{top:16px;left:0}
-.hv-n2{bottom:20px;left:16px}
-.hv-n3{top:40%;right:0}
+.hv-n1{top:4px;left:0}
+.hv-n2{bottom:4px;left:0}
+.hv-n3{top:38%;right:0}
 /* cable bleu : un courant lumineux y circule jusqu'au bord de la carte */
 .hv-cable{position:absolute;top:50%;height:2px;margin-top:-1px;border-radius:2px;overflow:hidden;pointer-events:none;
   background:linear-gradient(90deg,rgba(26,143,255,.12),rgba(26,143,255,.5))}
@@ -1107,10 +1107,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   background:linear-gradient(90deg,transparent,#cfe8ff,transparent);
   box-shadow:0 0 10px 1px rgba(124,192,255,.85);animation:hvFlow 1.9s linear infinite}
 .hv-n1 .hv-cable,.hv-n2 .hv-cable{left:100%}
-.hv-n1 .hv-cable{width:42px}
-.hv-n2 .hv-cable{width:52px}
+.hv-n1 .hv-cable,.hv-n2 .hv-cable{width:38px}
 .hv-n2 .hv-cable::before{animation-delay:.9s}
-.hv-n3 .hv-cable{right:100%;width:42px;transform:scaleX(-1)}
+.hv-n3 .hv-cable{right:100%;width:38px;transform:scaleX(-1)}
 .hv-n3 .hv-cable::before{animation-delay:1.5s}
 /* STYLE : signature manuscrite qui se dessine */
 .hv-sign{width:22px;height:14px;overflow:visible}
