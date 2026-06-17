@@ -1109,9 +1109,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 .hv-n2 .hv-wire{width:78px}
 .hv-n3 .hv-wire{width:38px}
 .hv-wire .base{stroke:rgba(26,143,255,.32);stroke-width:1.6;fill:none;stroke-linecap:round}
-.hv-wire .flow{stroke:#cfe8ff;stroke-width:2;fill:none;stroke-linecap:round;
-  stroke-dasharray:14 86;stroke-dashoffset:100;filter:drop-shadow(0 0 4px rgba(124,192,255,.95));
-  animation:hvFlow 2.1s linear infinite}
+.hv-wire .flow{stroke:#5fb0ff;stroke-width:2.2;fill:none;stroke-linecap:round;
+  stroke-dasharray:9 91;stroke-dashoffset:100;
+  filter:drop-shadow(0 0 5px rgba(58,150,255,.95)) drop-shadow(0 0 9px rgba(58,150,255,.5));
+  animation:hvFlow 2.4s ease-in-out infinite}
 .hv-n2 .hv-wire .flow{animation-delay:.7s}
 .hv-n3 .hv-wire .flow{animation-delay:1.4s}
 /* STYLE : signature manuscrite qui se dessine */
@@ -1161,7 +1162,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 @keyframes hvGlow{0%,100%{opacity:.65}50%{opacity:1}}
 @keyframes hvBlink{0%,100%{opacity:1}50%{opacity:.25}}
 @keyframes hvCaret{0%,100%{border-color:var(--blue2)}50%{border-color:transparent}}
-@keyframes hvFlow{0%{stroke-dashoffset:100}100%{stroke-dashoffset:0}}
+@keyframes hvFlow{0%{stroke-dashoffset:100;opacity:0}15%{opacity:1}85%{opacity:1}100%{stroke-dashoffset:0;opacity:0}}
 @keyframes hvSign{0%{stroke-dashoffset:64}45%{stroke-dashoffset:0}70%{stroke-dashoffset:0}100%{stroke-dashoffset:-64}}
 @keyframes hvStk{0%,100%{opacity:.25}50%{opacity:1}}
 @keyframes hvBar{0%,100%{transform:scaleY(.28)}50%{transform:scaleY(1)}}
