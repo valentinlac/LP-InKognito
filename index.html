@@ -1117,11 +1117,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 .hv-n3 .hv-wire .flow{animation-delay:1.4s}
 /* STYLE : empreinte digitale qui se scanne (votre signature unique) */
 .hv-print{width:20px;height:20px;overflow:visible}
-.hv-print path{stroke:#8cc8ff;stroke-width:1.5;fill:none;stroke-linecap:round;
-  stroke-dasharray:30;stroke-dashoffset:30;animation:hvPrint 3.6s ease-in-out infinite}
-.hv-print path:nth-child(2){animation-delay:.18s}
-.hv-print path:nth-child(3){animation-delay:.36s}
-.hv-print path:nth-child(4){animation-delay:.54s}
+.hv-print path{stroke:#8cc8ff;stroke-width:1.4;fill:none;stroke-linecap:round;opacity:.3;
+  animation:hvPrint 2.4s ease-in-out infinite}
+.hv-print path:nth-child(2){animation-delay:.2s}
+.hv-print path:nth-child(3){animation-delay:.4s}
+.hv-print path:nth-child(4){animation-delay:.6s}
 /* EXPERIENCES : pile de lignes qui s'allument */
 .hv-stack{display:flex;flex-direction:column;gap:3px;width:17px}
 .hv-stack i{height:3px;border-radius:2px;background:#8cc8ff;opacity:.25}
@@ -1166,7 +1166,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 @keyframes hvBlink{0%,100%{opacity:1}50%{opacity:.25}}
 @keyframes hvCaret{0%,100%{border-color:var(--blue2)}50%{border-color:transparent}}
 @keyframes hvFlow{0%{stroke-dashoffset:100;opacity:0}15%{opacity:1}85%{opacity:1}100%{stroke-dashoffset:0;opacity:0}}
-@keyframes hvPrint{0%{stroke-dashoffset:30}40%{stroke-dashoffset:0}72%{stroke-dashoffset:0}100%{stroke-dashoffset:-30}}
+@keyframes hvPrint{0%,100%{opacity:.3}50%{opacity:1}}
 @keyframes hvStk{0%,100%{opacity:.25}50%{opacity:1}}
 @keyframes hvBar{0%,100%{transform:scaleY(.28)}50%{transform:scaleY(1)}}
 @keyframes hvStage{0%{opacity:1}86%{opacity:1}94%{opacity:0}100%{opacity:0}}
@@ -1183,7 +1183,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 @media (prefers-reduced-motion:reduce){
   .hv-glow,.hv-pill-dot,.hv-stage,.hv-print path,.hv-stack i,.hv-bars b,.hv-wire .flow,.hv-type-text,.hv-line,.hv-rx,.hv-react-count,.hv-spark-path{animation:none}
   .hv-wire .flow{opacity:.4}
-  .hv-print path{stroke-dashoffset:0}.hv-stack i{opacity:1}.hv-bars b{transform:scaleY(.7)}
+  .hv-print path{opacity:1}.hv-stack i{opacity:1}.hv-bars b{transform:scaleY(.7)}
   .hv-beam{opacity:0}
   .hv-type-text{width:100%;border-right:none}
   .hv-line{opacity:1}.hv-l1{width:94%}.hv-l2{width:82%}.hv-l3{width:88%}.hv-l4{width:60%}
@@ -1212,7 +1212,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- Représentation animée : un post qui s'écrit dans votre voix -->
     <div class="hero-visual" aria-hidden="true">
       <div class="hv-node hv-n1">
-        <span class="hv-node-ic"><svg class="hv-print" viewBox="0 0 20 20" fill="none"><path d="M3 12 C3 6 17 6 17 12"/><path d="M5.5 12 C5.5 8.2 14.5 8.2 14.5 12"/><path d="M8 12 C8 10 12 10 12 12"/><path d="M10 12 v4"/></svg></span>
+        <span class="hv-node-ic"><svg class="hv-print" viewBox="0 0 20 20" fill="none"><path d="M3 14 C3 6 17 6 17 14"/><path d="M5.2 14 C5.2 8.5 14.8 8.5 14.8 14"/><path d="M7.4 14 C7.4 11 12.6 11 12.6 14"/><path d="M9.5 14 C9.5 12.6 10.5 12.6 10.5 14"/></svg></span>
         <span class="hv-node-tx"><b>Votre style</b><em>ton &amp; tournures</em></span>
         <svg class="hv-wire" viewBox="0 0 50 70" fill="none"><path class="base" d="M0 35 C20 35 30 50 50 52"/><path class="flow" pathLength="100" d="M0 35 C20 35 30 50 50 52"/></svg>
       </div>
