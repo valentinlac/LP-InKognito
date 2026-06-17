@@ -1125,8 +1125,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   animation:hvSteps 1.9s ease-in-out infinite}
 .hv-steps path:nth-child(2),.hv-steps path:nth-child(3){animation-delay:.95s}
 /* STATS : mini graphe a barres qui monte */
-.hv-bars{display:flex;align-items:flex-end;gap:2.5px;height:16px}
-.hv-bars b{width:3px;height:100%;border-radius:1.5px;transform-origin:bottom;transform:scaleY(.28);
+.hv-bars{display:flex;align-items:flex-end;gap:1.5px;height:16px}
+.hv-bars b{width:3px;height:100%;border-radius:1px;transform-origin:bottom;transform:scaleY(.45);
   background:linear-gradient(180deg,#9fd2ff,#1a8fff)}
 .hv-bars b:nth-child(1){animation:hvBar 2.4s ease-in-out infinite}
 .hv-bars b:nth-child(2){animation:hvBar 2.4s ease-in-out .3s infinite}
@@ -1164,7 +1164,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 @keyframes hvFlow{0%{stroke-dashoffset:100;opacity:0}15%{opacity:1}85%{opacity:1}100%{stroke-dashoffset:0;opacity:0}}
 @keyframes hvPrint{0%,100%{opacity:.45}50%{opacity:1}}
 @keyframes hvSteps{0%,100%{opacity:1}50%{opacity:.3}}
-@keyframes hvBar{0%,100%{transform:scaleY(.28)}50%{transform:scaleY(1)}}
+@keyframes hvBar{0%,100%{transform:scaleY(.45)}50%{transform:scaleY(1)}}
 @keyframes hvStage{0%{opacity:1}86%{opacity:1}94%{opacity:0}100%{opacity:0}}
 @keyframes hvType{0%,6%{width:0}30%{width:100%}100%{width:100%}}
 @keyframes hvL1{0%,26%{width:0;opacity:0}29%{opacity:1}36%{width:94%;opacity:1}100%{width:94%;opacity:1}}
