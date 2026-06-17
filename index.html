@@ -1087,67 +1087,73 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   font-size:10.5px;font-weight:500;letter-spacing:.02em;color:var(--blue3);
   border:1px solid rgba(26,143,255,.3);background:rgba(26,143,255,.08)}
 .hv-pill-dot{width:5px;height:5px;border-radius:50%;background:var(--blue2);animation:hvBlink 2s ease-in-out infinite}
-/* waveform (capture vocale, ambiant) */
-.hv-wave{display:flex;align-items:center;gap:3px;height:18px;margin:16px 0 2px}
-.hv-wave span{flex:1;border-radius:2px;transform:scaleY(.2);
-  background:linear-gradient(180deg,#7cc0ff,#1a8fff);animation:hvWave 1.3s ease-in-out infinite}
-.hv-wave span:nth-child(1){animation-delay:-1.10s}
-.hv-wave span:nth-child(2){animation-delay:-.40s}
-.hv-wave span:nth-child(3){animation-delay:-.85s}
-.hv-wave span:nth-child(4){animation-delay:-.20s}
-.hv-wave span:nth-child(5){animation-delay:-1.25s}
-.hv-wave span:nth-child(6){animation-delay:-.60s}
-.hv-wave span:nth-child(7){animation-delay:-1.00s}
-.hv-wave span:nth-child(8){animation-delay:-.30s}
-.hv-wave span:nth-child(9){animation-delay:-.90s}
-.hv-wave span:nth-child(10){animation-delay:-.50s}
-.hv-wave span:nth-child(11){animation-delay:-1.20s}
-.hv-wave span:nth-child(12){animation-delay:-.70s}
-/* corps : l'accroche s'écrit toute seule */
-.hv-body{margin-top:12px}
+/* stage : fondu propre en fin de boucle (pas de "de-tapage") */
+.hv-stage{animation:hvStage 10s ease-in-out infinite}
+/* phase 1 : les ingredients injectes (votre style, experiences, stats) */
+.hv-feed{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px}
+.hv-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;
+  font-size:10.5px;font-weight:500;letter-spacing:.01em;color:var(--blue3);
+  border:1px solid rgba(26,143,255,.28);background:rgba(26,143,255,.07);
+  opacity:.22;transform:translateY(5px)}
+.hv-chip i{width:5px;height:5px;border-radius:50%;background:#7cc0ff;box-shadow:0 0 6px rgba(124,192,255,.85);flex-shrink:0}
+.hv-k1{animation:hvK1 10s ease-in-out infinite}
+.hv-k2{animation:hvK2 10s ease-in-out infinite}
+.hv-k3{animation:hvK3 10s ease-in-out infinite}
+.hv-conn{position:relative;width:2px;height:14px;margin:9px 0 9px 14px;border-radius:2px;
+  background:linear-gradient(180deg,rgba(26,143,255,.55),rgba(26,143,255,.04));opacity:0;
+  animation:hvConn 10s ease-in-out infinite}
+.hv-conn-dot{position:absolute;left:50%;top:-2px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;
+  background:#a8d6ff;box-shadow:0 0 8px 2px rgba(124,192,255,.75);opacity:0;
+  animation:hvConnDot 10s ease-in-out infinite}
+/* phase 2 : le post s'ecrit */
+.hv-body{margin-top:2px}
 .hv-type{margin-bottom:13px}
 .hv-type-text{display:inline-block;white-space:nowrap;overflow:hidden;width:0;max-width:max-content;
   font-size:13px;font-weight:500;line-height:1.3;letter-spacing:-.01em;color:var(--text);
   border-right:1.6px solid var(--blue2);
-  animation:hvType 9s steps(38,end) infinite, hvCaret .9s step-end infinite}
+  animation:hvType 10s steps(38,end) infinite, hvCaret .9s step-end infinite}
 .hv-line{display:block;height:7px;border-radius:4px;background:rgba(255,255,255,.10);margin-bottom:9px;width:0;opacity:0}
-.hv-l1{animation:hvL1 9s ease-in-out infinite}
-.hv-l2{animation:hvL2 9s ease-in-out infinite}
-.hv-l3{animation:hvL3 9s ease-in-out infinite}
-/* pied : l'engagement monte */
+.hv-l1{animation:hvL1 10s ease-in-out infinite}
+.hv-l2{animation:hvL2 10s ease-in-out infinite}
+.hv-l3{animation:hvL3 10s ease-in-out infinite}
+/* phase 3 : l'engagement monte */
 .hv-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;
   margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.06)}
 .hv-react{display:flex;align-items:center}
 .hv-rx{width:19px;height:19px;border-radius:50%;border:2px solid #0c1322;margin-left:-6px;transform:scale(0);opacity:0}
 .hv-rx:first-child{margin-left:0}
-.hv-rx1{background:linear-gradient(135deg,#1a8fff,#0A66C2);animation:hvPop 9s ease-in-out infinite}
-.hv-rx2{background:linear-gradient(135deg,#60aeff,#1a8fff);animation:hvPop 9s ease-in-out .18s infinite}
-.hv-rx3{background:linear-gradient(135deg,#93d4ff,#60aeff);animation:hvPop 9s ease-in-out .36s infinite}
-.hv-react-count{margin-left:9px;font-size:12.5px;font-weight:600;color:var(--blue3);opacity:0;animation:hvCount 9s ease-in-out infinite}
+.hv-rx1{background:linear-gradient(135deg,#1a8fff,#0A66C2);animation:hvPop 10s ease-in-out infinite}
+.hv-rx2{background:linear-gradient(135deg,#60aeff,#1a8fff);animation:hvPop 10s ease-in-out .18s infinite}
+.hv-rx3{background:linear-gradient(135deg,#93d4ff,#60aeff);animation:hvPop 10s ease-in-out .36s infinite}
+.hv-react-count{margin-left:9px;font-size:12.5px;font-weight:600;color:var(--blue3);opacity:0;animation:hvCount 10s ease-in-out infinite}
 .hv-spark{width:118px;height:34px;flex-shrink:0}
-.hv-spark-path{stroke-dasharray:170;stroke-dashoffset:170;animation:hvSpark 9s ease-in-out infinite}
+.hv-spark-path{stroke-dasharray:170;stroke-dashoffset:170;animation:hvSpark 10s ease-in-out infinite}
 /* keyframes */
-@keyframes hvFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 @keyframes hvGlow{0%,100%{opacity:.65}50%{opacity:1}}
 @keyframes hvBlink{0%,100%{opacity:1}50%{opacity:.25}}
-@keyframes hvWave{0%,100%{transform:scaleY(.2)}50%{transform:scaleY(1)}}
 @keyframes hvCaret{0%,100%{border-color:var(--blue2)}50%{border-color:transparent}}
-@keyframes hvType{0%,10%{width:0}38%{width:100%}86%{width:100%}94%,100%{width:0}}
-@keyframes hvL1{0%,34%{width:0;opacity:0}37%{opacity:1}47%{width:92%;opacity:1}86%{width:92%;opacity:1}93%{width:0;opacity:0}100%{width:0;opacity:0}}
-@keyframes hvL2{0%,42%{width:0;opacity:0}45%{opacity:1}55%{width:80%;opacity:1}86%{width:80%;opacity:1}93%{width:0;opacity:0}100%{width:0;opacity:0}}
-@keyframes hvL3{0%,50%{width:0;opacity:0}53%{opacity:1}62%{width:54%;opacity:1}86%{width:54%;opacity:1}93%{width:0;opacity:0}100%{width:0;opacity:0}}
-@keyframes hvPop{0%,55%{transform:scale(0);opacity:0}63%{transform:scale(1.15);opacity:1}68%{transform:scale(1)}86%{transform:scale(1);opacity:1}93%{transform:scale(.5);opacity:0}100%{opacity:0}}
-@keyframes hvCount{0%,60%{opacity:0;transform:translateY(6px)}68%{opacity:1;transform:translateY(0)}86%{opacity:1}93%{opacity:0}100%{opacity:0}}
-@keyframes hvSpark{0%,52%{stroke-dashoffset:170}72%{stroke-dashoffset:0}88%{stroke-dashoffset:0}94%,100%{stroke-dashoffset:170}}
-@media (max-width:900px){.hero-visual{margin-top:44px;width:min(400px,100%)}}
+@keyframes hvStage{0%{opacity:1}88%{opacity:1}95%{opacity:0}100%{opacity:0}}
+@keyframes hvK1{0%,3%{opacity:.22;transform:translateY(5px)}9%{opacity:1;transform:translateY(0)}100%{opacity:1;transform:translateY(0)}}
+@keyframes hvK2{0%,8%{opacity:.22;transform:translateY(5px)}14%{opacity:1;transform:translateY(0)}100%{opacity:1;transform:translateY(0)}}
+@keyframes hvK3{0%,13%{opacity:.22;transform:translateY(5px)}19%{opacity:1;transform:translateY(0)}100%{opacity:1;transform:translateY(0)}}
+@keyframes hvConn{0%,15%{opacity:0}20%{opacity:1}100%{opacity:1}}
+@keyframes hvConnDot{0%,15%{top:-2px;opacity:0}18%{opacity:1}25%{top:12px;opacity:1}29%,100%{opacity:0}}
+@keyframes hvType{0%,25%{width:0}50%{width:100%}100%{width:100%}}
+@keyframes hvL1{0%,44%{width:0;opacity:0}47%{opacity:1}55%{width:92%;opacity:1}100%{width:92%;opacity:1}}
+@keyframes hvL2{0%,50%{width:0;opacity:0}53%{opacity:1}61%{width:80%;opacity:1}100%{width:80%;opacity:1}}
+@keyframes hvL3{0%,56%{width:0;opacity:0}59%{opacity:1}67%{width:54%;opacity:1}100%{width:54%;opacity:1}}
+@keyframes hvPop{0%,60%{transform:scale(0);opacity:0}67%{transform:scale(1.15);opacity:1}72%{transform:scale(1)}100%{transform:scale(1);opacity:1}}
+@keyframes hvCount{0%,62%{opacity:0;transform:translateY(6px)}70%{opacity:1;transform:translateY(0)}100%{opacity:1;transform:translateY(0)}}
+@keyframes hvSpark{0%,58%{stroke-dashoffset:170}76%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
+@media (max-width:900px){.hero-visual{margin-top:42px;width:min(400px,100%)}}
 @media (prefers-reduced-motion:reduce){
-  .hv-card,.hv-glow,.hv-pill-dot,.hv-wave span{animation:none}
-  .hv-wave span{transform:scaleY(.55)}
-  .hv-type-text{width:100%;border-right:none;animation:none}
-  .hv-line{animation:none;opacity:1}.hv-l1{width:92%}.hv-l2{width:80%}.hv-l3{width:54%}
-  .hv-rx{animation:none;opacity:1;transform:none}
-  .hv-react-count{animation:none;opacity:1;transform:none}
-  .hv-spark-path{animation:none;stroke-dashoffset:0}
+  .hv-glow,.hv-pill-dot,.hv-stage,.hv-chip,.hv-conn,.hv-conn-dot,.hv-type-text,.hv-line,.hv-rx,.hv-react-count,.hv-spark-path{animation:none}
+  .hv-chip{opacity:1;transform:none}
+  .hv-conn{opacity:1}.hv-conn-dot{opacity:0}
+  .hv-type-text{width:100%;border-right:none}
+  .hv-line{opacity:1}.hv-l1{width:92%}.hv-l2{width:80%}.hv-l3{width:54%}
+  .hv-rx{opacity:1;transform:none}.hv-react-count{opacity:1;transform:none}
+  .hv-spark-path{stroke-dashoffset:0}
 }
 </style>
 
@@ -1180,26 +1186,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
           <span class="hv-pill"><span class="hv-pill-dot"></span>Votre voix</span>
         </div>
-        <div class="hv-wave">
-          <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-        </div>
-        <div class="hv-body">
-          <div class="hv-type"><span class="hv-type-text">Ce que j'aurais aimé savoir plus tôt…</span></div>
-          <span class="hv-line hv-l1"></span>
-          <span class="hv-line hv-l2"></span>
-          <span class="hv-line hv-l3"></span>
-        </div>
-        <div class="hv-foot">
-          <div class="hv-react">
-            <span class="hv-rx hv-rx1"></span>
-            <span class="hv-rx hv-rx2"></span>
-            <span class="hv-rx hv-rx3"></span>
-            <span class="hv-react-count">+247</span>
+        <div class="hv-stage">
+          <div class="hv-feed">
+            <span class="hv-chip hv-k1"><i></i>Votre style</span>
+            <span class="hv-chip hv-k2"><i></i>Vos expériences</span>
+            <span class="hv-chip hv-k3"><i></i>Vos vraies stats</span>
           </div>
-          <svg class="hv-spark" viewBox="0 0 118 34" fill="none" preserveAspectRatio="none">
-            <path class="hv-spark-path" d="M2 29 L21 24 L40 26 L59 15 L78 19 L97 7 L116 3" stroke="url(#hvg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-            <defs><linearGradient id="hvg" x1="0" y1="0" x2="118" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#1a8fff"/><stop offset="1" stop-color="#93d4ff"/></linearGradient></defs>
-          </svg>
+          <div class="hv-conn"><span class="hv-conn-dot"></span></div>
+          <div class="hv-body">
+            <div class="hv-type"><span class="hv-type-text">Ce que j'aurais aimé savoir plus tôt…</span></div>
+            <span class="hv-line hv-l1"></span>
+            <span class="hv-line hv-l2"></span>
+            <span class="hv-line hv-l3"></span>
+          </div>
+          <div class="hv-foot">
+            <div class="hv-react">
+              <span class="hv-rx hv-rx1"></span>
+              <span class="hv-rx hv-rx2"></span>
+              <span class="hv-rx hv-rx3"></span>
+              <span class="hv-react-count">+247</span>
+            </div>
+            <svg class="hv-spark" viewBox="0 0 118 34" fill="none" preserveAspectRatio="none">
+              <path class="hv-spark-path" d="M2 29 L21 24 L40 26 L59 15 L78 19 L97 7 L116 3" stroke="url(#hvg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <defs><linearGradient id="hvg" x1="0" y1="0" x2="118" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#1a8fff"/><stop offset="1" stop-color="#93d4ff"/></linearGradient></defs>
+            </svg>
+          </div>
         </div>
       </div>
     </div>
