@@ -1119,12 +1119,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 .hv-print{width:22px;height:22px;overflow:visible}
 .hv-print path{stroke:#8cc8ff;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;
   opacity:.5;animation:hvPrint 2.6s ease-in-out infinite}
-/* EXPERIENCES : pile de lignes qui s'allument */
-.hv-stack{display:flex;flex-direction:column;gap:3px;width:17px}
-.hv-stack i{height:3px;border-radius:2px;background:#8cc8ff;opacity:.25}
-.hv-stack i:nth-child(1){width:100%;animation:hvStk 3s ease-in-out infinite}
-.hv-stack i:nth-child(2){width:68%;animation:hvStk 3s ease-in-out .45s infinite}
-.hv-stack i:nth-child(3){width:88%;animation:hvStk 3s ease-in-out .9s infinite}
+/* EXPERIENCES : empreintes de pas qui avancent (votre parcours, votre vecu) */
+.hv-steps{width:21px;height:21px;overflow:visible}
+.hv-steps path{stroke:#8cc8ff;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:.5;
+  animation:hvSteps 1.9s ease-in-out infinite}
+.hv-steps path:nth-child(2),.hv-steps path:nth-child(3){animation-delay:.95s}
 /* STATS : mini graphe a barres qui monte */
 .hv-bars{display:flex;align-items:flex-end;gap:2.5px;height:16px}
 .hv-bars b{width:3px;height:100%;border-radius:1.5px;transform-origin:bottom;transform:scaleY(.28);
@@ -1164,7 +1163,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 @keyframes hvCaret{0%,100%{border-color:var(--blue2)}50%{border-color:transparent}}
 @keyframes hvFlow{0%{stroke-dashoffset:100;opacity:0}15%{opacity:1}85%{opacity:1}100%{stroke-dashoffset:0;opacity:0}}
 @keyframes hvPrint{0%,100%{opacity:.45}50%{opacity:1}}
-@keyframes hvStk{0%,100%{opacity:.25}50%{opacity:1}}
+@keyframes hvSteps{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes hvBar{0%,100%{transform:scaleY(.28)}50%{transform:scaleY(1)}}
 @keyframes hvStage{0%{opacity:1}86%{opacity:1}94%{opacity:0}100%{opacity:0}}
 @keyframes hvType{0%,6%{width:0}30%{width:100%}100%{width:100%}}
@@ -1178,9 +1177,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 @media (max-width:900px){.hero-visual{margin-top:46px}}
 @media (max-width:920px){.hv-node{display:none}}
 @media (prefers-reduced-motion:reduce){
-  .hv-glow,.hv-pill-dot,.hv-stage,.hv-print path,.hv-stack i,.hv-bars b,.hv-wire .flow,.hv-type-text,.hv-line,.hv-rx,.hv-react-count,.hv-spark-path{animation:none}
+  .hv-glow,.hv-pill-dot,.hv-stage,.hv-print path,.hv-steps path,.hv-bars b,.hv-wire .flow,.hv-type-text,.hv-line,.hv-rx,.hv-react-count,.hv-spark-path{animation:none}
   .hv-wire .flow{opacity:.4}
-  .hv-print path{opacity:1}.hv-stack i{opacity:1}.hv-bars b{transform:scaleY(.7)}
+  .hv-print path{opacity:1}.hv-steps path{opacity:1}.hv-bars b{transform:scaleY(.7)}
   .hv-beam{opacity:0}
   .hv-type-text{width:100%;border-right:none}
   .hv-line{opacity:1}.hv-l1{width:94%}.hv-l2{width:82%}.hv-l3{width:88%}.hv-l4{width:60%}
@@ -1214,7 +1213,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <svg class="hv-wire" viewBox="0 0 100 70" fill="none" preserveAspectRatio="none"><path class="base" d="M0 35 C42 35 58 52 100 50"/><path class="flow" pathLength="100" d="M0 35 C42 35 58 52 100 50"/></svg>
       </div>
       <div class="hv-node hv-n2">
-        <span class="hv-node-ic"><span class="hv-stack"><i></i><i></i><i></i></span></span>
+        <span class="hv-node-ic"><svg class="hv-steps" viewBox="0 0 24 24" fill="none"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"/><path d="M16 17h4"/><path d="M4 13h4"/></svg></span>
         <span class="hv-node-tx"><b>Vos expériences</b><em>votre vécu réel</em></span>
         <svg class="hv-wire" viewBox="0 0 100 70" fill="none" preserveAspectRatio="none"><path class="base" d="M0 35 C42 35 58 16 100 14"/><path class="flow" pathLength="100" d="M0 35 C42 35 58 16 100 14"/></svg>
       </div>
