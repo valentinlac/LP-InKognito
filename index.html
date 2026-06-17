@@ -1064,6 +1064,95 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </nav>
 
+<!-- HERO VISUAL · ghostwriter au travail (pur CSS/SVG) -->
+<style>
+.hero-visual{position:relative;z-index:2;margin:58px auto 0;width:min(420px,100%)}
+.hv-card{position:relative;border-radius:20px;text-align:left;overflow:hidden;
+  background:linear-gradient(180deg,rgba(16,24,42,.92),rgba(9,14,26,.94));
+  border:1px solid rgba(255,255,255,.09);padding:20px 20px 16px;
+  box-shadow:0 30px 70px -20px rgba(0,0,0,.7), inset 0 0 0 1px rgba(26,143,255,.05);
+  animation:hvFloat 7s ease-in-out infinite}
+.hv-glow{position:absolute;top:-45%;left:50%;width:80%;height:65%;transform:translateX(-50%);
+  background:radial-gradient(ellipse at center,rgba(26,143,255,.22),transparent 70%);
+  filter:blur(22px);pointer-events:none;animation:hvGlow 7s ease-in-out infinite}
+.hv-card>*{position:relative;z-index:1}
+/* header */
+.hv-head{display:flex;align-items:center;gap:11px}
+.hv-avatar{width:38px;height:38px;border-radius:50%;flex-shrink:0;color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;letter-spacing:-.02em;
+  background:linear-gradient(135deg,#1a8fff,#0A66C2);box-shadow:0 4px 14px rgba(10,102,194,.45)}
+.hv-id{display:flex;flex-direction:column;gap:6px;flex:1}
+.hv-bar{height:7px;border-radius:4px;background:rgba(255,255,255,.13)}
+.hv-bar-name{width:42%}
+.hv-bar-sub{width:62%;height:6px;background:rgba(255,255,255,.08)}
+.hv-pill{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;padding:4px 9px;border-radius:999px;
+  font-size:10.5px;font-weight:500;letter-spacing:.02em;color:var(--blue3);
+  border:1px solid rgba(26,143,255,.3);background:rgba(26,143,255,.08)}
+.hv-pill-dot{width:5px;height:5px;border-radius:50%;background:var(--blue2);animation:hvBlink 2s ease-in-out infinite}
+/* waveform (capture vocale, ambiant) */
+.hv-wave{display:flex;align-items:center;gap:3px;height:18px;margin:16px 0 2px}
+.hv-wave span{flex:1;border-radius:2px;transform:scaleY(.2);
+  background:linear-gradient(180deg,#7cc0ff,#1a8fff);animation:hvWave 1.3s ease-in-out infinite}
+.hv-wave span:nth-child(1){animation-delay:-1.10s}
+.hv-wave span:nth-child(2){animation-delay:-.40s}
+.hv-wave span:nth-child(3){animation-delay:-.85s}
+.hv-wave span:nth-child(4){animation-delay:-.20s}
+.hv-wave span:nth-child(5){animation-delay:-1.25s}
+.hv-wave span:nth-child(6){animation-delay:-.60s}
+.hv-wave span:nth-child(7){animation-delay:-1.00s}
+.hv-wave span:nth-child(8){animation-delay:-.30s}
+.hv-wave span:nth-child(9){animation-delay:-.90s}
+.hv-wave span:nth-child(10){animation-delay:-.50s}
+.hv-wave span:nth-child(11){animation-delay:-1.20s}
+.hv-wave span:nth-child(12){animation-delay:-.70s}
+/* corps : l'accroche s'écrit toute seule */
+.hv-body{margin-top:12px}
+.hv-type{margin-bottom:13px}
+.hv-type-text{display:inline-block;white-space:nowrap;overflow:hidden;width:0;max-width:100%;
+  font-size:13px;font-weight:500;line-height:1.3;letter-spacing:-.01em;color:var(--text);
+  border-right:1.6px solid var(--blue2);
+  animation:hvType 9s steps(38,end) infinite, hvCaret .9s step-end infinite}
+.hv-line{display:block;height:7px;border-radius:4px;background:rgba(255,255,255,.10);margin-bottom:9px;width:0;opacity:0}
+.hv-l1{animation:hvL1 9s ease-in-out infinite}
+.hv-l2{animation:hvL2 9s ease-in-out infinite}
+.hv-l3{animation:hvL3 9s ease-in-out infinite}
+/* pied : l'engagement monte */
+.hv-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.06)}
+.hv-react{display:flex;align-items:center}
+.hv-rx{width:19px;height:19px;border-radius:50%;border:2px solid #0c1322;margin-left:-6px;transform:scale(0);opacity:0}
+.hv-rx:first-child{margin-left:0}
+.hv-rx1{background:linear-gradient(135deg,#1a8fff,#0A66C2);animation:hvPop 9s ease-in-out infinite}
+.hv-rx2{background:linear-gradient(135deg,#60aeff,#1a8fff);animation:hvPop 9s ease-in-out .18s infinite}
+.hv-rx3{background:linear-gradient(135deg,#93d4ff,#60aeff);animation:hvPop 9s ease-in-out .36s infinite}
+.hv-react-count{margin-left:9px;font-size:12.5px;font-weight:600;color:var(--blue3);opacity:0;animation:hvCount 9s ease-in-out infinite}
+.hv-spark{width:118px;height:34px;flex-shrink:0}
+.hv-spark-path{stroke-dasharray:170;stroke-dashoffset:170;animation:hvSpark 9s ease-in-out infinite}
+/* keyframes */
+@keyframes hvFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes hvGlow{0%,100%{opacity:.65}50%{opacity:1}}
+@keyframes hvBlink{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes hvWave{0%,100%{transform:scaleY(.2)}50%{transform:scaleY(1)}}
+@keyframes hvCaret{0%,100%{border-color:var(--blue2)}50%{border-color:transparent}}
+@keyframes hvType{0%,10%{width:0}38%{width:100%}86%{width:100%}94%,100%{width:0}}
+@keyframes hvL1{0%,34%{width:0;opacity:0}37%{opacity:1}47%{width:92%;opacity:1}86%{width:92%;opacity:1}93%{width:0;opacity:0}100%{width:0;opacity:0}}
+@keyframes hvL2{0%,42%{width:0;opacity:0}45%{opacity:1}55%{width:80%;opacity:1}86%{width:80%;opacity:1}93%{width:0;opacity:0}100%{width:0;opacity:0}}
+@keyframes hvL3{0%,50%{width:0;opacity:0}53%{opacity:1}62%{width:54%;opacity:1}86%{width:54%;opacity:1}93%{width:0;opacity:0}100%{width:0;opacity:0}}
+@keyframes hvPop{0%,55%{transform:scale(0);opacity:0}63%{transform:scale(1.15);opacity:1}68%{transform:scale(1)}86%{transform:scale(1);opacity:1}93%{transform:scale(.5);opacity:0}100%{opacity:0}}
+@keyframes hvCount{0%,60%{opacity:0;transform:translateY(6px)}68%{opacity:1;transform:translateY(0)}86%{opacity:1}93%{opacity:0}100%{opacity:0}}
+@keyframes hvSpark{0%,52%{stroke-dashoffset:170}72%{stroke-dashoffset:0}88%{stroke-dashoffset:0}94%,100%{stroke-dashoffset:170}}
+@media (max-width:900px){.hero-visual{margin-top:44px;width:min(400px,100%)}}
+@media (prefers-reduced-motion:reduce){
+  .hv-card,.hv-glow,.hv-pill-dot,.hv-wave span{animation:none}
+  .hv-wave span{transform:scaleY(.55)}
+  .hv-type-text{width:100%;border-right:none;animation:none}
+  .hv-line{animation:none;opacity:1}.hv-l1{width:92%}.hv-l2{width:80%}.hv-l3{width:54%}
+  .hv-rx{animation:none;opacity:1;transform:none}
+  .hv-react-count{animation:none;opacity:1;transform:none}
+  .hv-spark-path{animation:none;stroke-dashoffset:0}
+}
+</style>
+
 <!-- HERO -->
 <section id="hero">
   <div class="hero-bg"></div>
@@ -1079,6 +1168,42 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p class="hero-sub" style="font-size: 15.5px">InKognito écrit et publie vos posts dans votre voix exacte, et apprend de vos vraies stats LinkedIn pour s'améliorer à chaque post. Un ghostwriter autonome, pas un générateur IA de plus.</p>
     <div class="hero-actions">
       <a href="https://linkedin-saas-sepia.vercel.app/inscription-beta" class="btn-hero">Commencer à poster gratuitement <span class="btn-hero-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></a>
+    </div>
+
+    <!-- Représentation animée : un post qui s'écrit dans votre voix -->
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hv-card">
+        <div class="hv-glow"></div>
+        <div class="hv-head">
+          <div class="hv-avatar">IK</div>
+          <div class="hv-id">
+            <span class="hv-bar hv-bar-name"></span>
+            <span class="hv-bar hv-bar-sub"></span>
+          </div>
+          <span class="hv-pill"><span class="hv-pill-dot"></span>Votre voix</span>
+        </div>
+        <div class="hv-wave">
+          <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="hv-body">
+          <div class="hv-type"><span class="hv-type-text">Ce que j'aurais aimé savoir plus tôt…</span></div>
+          <span class="hv-line hv-l1"></span>
+          <span class="hv-line hv-l2"></span>
+          <span class="hv-line hv-l3"></span>
+        </div>
+        <div class="hv-foot">
+          <div class="hv-react">
+            <span class="hv-rx hv-rx1"></span>
+            <span class="hv-rx hv-rx2"></span>
+            <span class="hv-rx hv-rx3"></span>
+            <span class="hv-react-count">+247</span>
+          </div>
+          <svg class="hv-spark" viewBox="0 0 118 34" fill="none" preserveAspectRatio="none">
+            <path class="hv-spark-path" d="M2 29 L21 24 L40 26 L59 15 L78 19 L97 7 L116 3" stroke="url(#hvg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs><linearGradient id="hvg" x1="0" y1="0" x2="118" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#1a8fff"/><stop offset="1" stop-color="#93d4ff"/></linearGradient></defs>
+          </svg>
+        </div>
+      </div>
     </div>
   </div>
 </section>
