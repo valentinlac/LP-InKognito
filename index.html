@@ -1066,7 +1066,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- HERO VISUAL · ghostwriter au travail (pur CSS/SVG) -->
 <style>
-.hero-visual{position:relative;z-index:2;margin:60px auto 0;width:min(580px,100%);display:flex;justify-content:center}
+.hero-visual{position:relative;z-index:2;margin:60px auto 0;width:min(760px,100%);display:flex;justify-content:center}
 .hv-card{position:relative;z-index:2;width:min(400px,100%);border-radius:20px;text-align:left;overflow:hidden;
   background:linear-gradient(180deg,rgba(16,24,42,.92),rgba(9,14,26,.94));
   border:1px solid rgba(255,255,255,.09);padding:20px 20px 16px;
@@ -1087,20 +1087,43 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   font-size:10.5px;font-weight:500;letter-spacing:.02em;color:var(--blue3);
   border:1px solid rgba(26,143,255,.3);background:rgba(26,143,255,.08)}
 .hv-pill-dot{width:5px;height:5px;border-radius:50%;background:var(--blue2);animation:hvBlink 2s ease-in-out infinite}
-/* sources externes : les ingredients injectes (hors carte) */
-.hv-src{position:absolute;z-index:3;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
-  padding:6px 11px;border-radius:999px;font-size:11px;font-weight:500;color:var(--blue3);
-  border:1px solid rgba(26,143,255,.32);background:rgba(11,18,34,.82);backdrop-filter:blur(6px);
-  box-shadow:0 8px 24px rgba(0,0,0,.45)}
-.hv-src i{width:5px;height:5px;border-radius:50%;background:#7cc0ff;box-shadow:0 0 7px rgba(124,192,255,.9);flex-shrink:0}
-.hv-beam{position:absolute;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;
-  background:#bfe0ff;box-shadow:0 0 9px 2px rgba(124,192,255,.85);opacity:0;pointer-events:none}
-.hv-s1{top:10px;left:0;animation:hvFloatA 5.5s ease-in-out infinite}
-.hv-s2{top:47%;left:-6px;animation:hvFloatB 6.5s ease-in-out infinite}
-.hv-s3{bottom:40px;right:0;animation:hvFloatA 6s ease-in-out infinite}
-.hv-s1 .hv-beam,.hv-s2 .hv-beam{right:-3px;animation:hvBeamR 3.2s ease-in-out infinite}
-.hv-s2 .hv-beam{animation-delay:1.1s}
-.hv-s3 .hv-beam{left:-3px;animation:hvBeamL 3.2s ease-in-out 2.1s infinite}
+/* noeuds d'ingredients (externes a la carte) : chacun avec sa propre micro-animation */
+.hv-node{position:absolute;z-index:3;display:flex;align-items:center;gap:9px;white-space:nowrap;
+  padding:9px 13px 9px 9px;border-radius:14px;
+  border:1px solid rgba(26,143,255,.26);background:rgba(11,18,34,.86);backdrop-filter:blur(7px);
+  box-shadow:0 12px 32px -8px rgba(0,0,0,.6), inset 0 0 0 1px rgba(26,143,255,.05)}
+.hv-node-ic{position:relative;width:32px;height:32px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  border-radius:9px;background:rgba(26,143,255,.12);border:1px solid rgba(26,143,255,.24);overflow:hidden}
+.hv-node-tx{display:flex;flex-direction:column;gap:1px;line-height:1.15}
+.hv-node-tx b{font-size:11.5px;font-weight:600;letter-spacing:-.01em;color:var(--text)}
+.hv-node-tx em{font-size:9.5px;font-style:normal;letter-spacing:.02em;color:var(--muted)}
+.hv-n1{top:14px;left:0;animation:hvFloatA 6s ease-in-out infinite}
+.hv-n2{bottom:18px;left:18px;animation:hvFloatB 7s ease-in-out infinite}
+.hv-n3{top:40%;right:0;animation:hvFloatA 6.5s ease-in-out infinite}
+/* particule qui file du noeud vers la carte */
+.hv-node::after{content:"";position:absolute;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;
+  background:#bfe0ff;box-shadow:0 0 11px 2px rgba(124,192,255,.85);opacity:0}
+.hv-n1::after,.hv-n2::after{right:-4px;animation:hvBeamR 3.4s ease-in-out infinite}
+.hv-n2::after{animation-delay:1.3s}
+.hv-n3::after{left:-4px;animation:hvBeamL 3.4s ease-in-out 2.4s infinite}
+/* STYLE : signature manuscrite qui se dessine */
+.hv-sign{width:22px;height:14px;overflow:visible}
+.hv-sign path{stroke:#8cc8ff;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:64;stroke-dashoffset:64;animation:hvSign 3.4s ease-in-out infinite}
+/* EXPERIENCES : pile de lignes qui s'allument */
+.hv-stack{display:flex;flex-direction:column;gap:3px;width:17px}
+.hv-stack i{height:3px;border-radius:2px;background:#8cc8ff;opacity:.25}
+.hv-stack i:nth-child(1){width:100%;animation:hvStk 3s ease-in-out infinite}
+.hv-stack i:nth-child(2){width:68%;animation:hvStk 3s ease-in-out .45s infinite}
+.hv-stack i:nth-child(3){width:88%;animation:hvStk 3s ease-in-out .9s infinite}
+/* STATS : mini graphe a barres qui monte */
+.hv-bars{display:flex;align-items:flex-end;gap:2.5px;height:16px}
+.hv-bars b{width:3px;height:100%;border-radius:1.5px;transform-origin:bottom;transform:scaleY(.28);
+  background:linear-gradient(180deg,#9fd2ff,#1a8fff)}
+.hv-bars b:nth-child(1){animation:hvBar 2.4s ease-in-out infinite}
+.hv-bars b:nth-child(2){animation:hvBar 2.4s ease-in-out .3s infinite}
+.hv-bars b:nth-child(3){animation:hvBar 2.4s ease-in-out .6s infinite}
+.hv-bars b:nth-child(4){animation:hvBar 2.4s ease-in-out .9s infinite}
 /* post : l'accroche s'ecrit (interieur carte), independant des sources */
 .hv-stage{animation:hvStage 10s ease-in-out infinite}
 .hv-body{margin-top:14px}
@@ -1131,8 +1154,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 @keyframes hvCaret{0%,100%{border-color:var(--blue2)}50%{border-color:transparent}}
 @keyframes hvFloatA{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 @keyframes hvFloatB{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
-@keyframes hvBeamR{0%{transform:translateX(0);opacity:0}12%{opacity:1}55%{transform:translateX(84px);opacity:0}100%{opacity:0}}
-@keyframes hvBeamL{0%{transform:translateX(0);opacity:0}12%{opacity:1}55%{transform:translateX(-84px);opacity:0}100%{opacity:0}}
+@keyframes hvBeamR{0%{transform:translateX(0);opacity:0}10%{opacity:1}55%{transform:translateX(128px);opacity:0}100%{opacity:0}}
+@keyframes hvBeamL{0%{transform:translateX(0);opacity:0}10%{opacity:1}55%{transform:translateX(-128px);opacity:0}100%{opacity:0}}
+@keyframes hvSign{0%{stroke-dashoffset:64}45%{stroke-dashoffset:0}70%{stroke-dashoffset:0}100%{stroke-dashoffset:-64}}
+@keyframes hvStk{0%,100%{opacity:.25}50%{opacity:1}}
+@keyframes hvBar{0%,100%{transform:scaleY(.28)}50%{transform:scaleY(1)}}
 @keyframes hvStage{0%{opacity:1}86%{opacity:1}94%{opacity:0}100%{opacity:0}}
 @keyframes hvType{0%,8%{width:0}36%{width:100%}100%{width:100%}}
 @keyframes hvL1{0%,30%{width:0;opacity:0}33%{opacity:1}42%{width:92%;opacity:1}100%{width:92%;opacity:1}}
@@ -1142,9 +1168,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 @keyframes hvCount{0%,58%{opacity:0;transform:translateY(6px)}66%{opacity:1;transform:translateY(0)}100%{opacity:1;transform:translateY(0)}}
 @keyframes hvSpark{0%,54%{stroke-dashoffset:170}72%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
 @media (max-width:900px){.hero-visual{margin-top:46px}}
-@media (max-width:620px){.hv-src{display:none}}
+@media (max-width:860px){.hv-node{display:none}}
 @media (prefers-reduced-motion:reduce){
-  .hv-glow,.hv-pill-dot,.hv-stage,.hv-src,.hv-beam,.hv-type-text,.hv-line,.hv-rx,.hv-react-count,.hv-spark-path{animation:none}
+  .hv-glow,.hv-pill-dot,.hv-stage,.hv-node,.hv-sign path,.hv-stack i,.hv-bars b,.hv-type-text,.hv-line,.hv-rx,.hv-react-count,.hv-spark-path{animation:none}
+  .hv-node::after{display:none}
+  .hv-sign path{stroke-dashoffset:0}.hv-stack i{opacity:1}.hv-bars b{transform:scaleY(.7)}
   .hv-beam{opacity:0}
   .hv-type-text{width:100%;border-right:none}
   .hv-line{opacity:1}.hv-l1{width:92%}.hv-l2{width:80%}.hv-l3{width:54%}
@@ -1172,9 +1200,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <!-- Représentation animée : un post qui s'écrit dans votre voix -->
     <div class="hero-visual" aria-hidden="true">
-      <span class="hv-src hv-s1"><i></i>Votre style<span class="hv-beam"></span></span>
-      <span class="hv-src hv-s2"><i></i>Vos expériences<span class="hv-beam"></span></span>
-      <span class="hv-src hv-s3"><i></i>Vos vraies stats<span class="hv-beam"></span></span>
+      <div class="hv-node hv-n1">
+        <span class="hv-node-ic"><svg class="hv-sign" viewBox="0 0 22 14" fill="none"><path d="M1 9 C3 3 6 3 7 8 S11 13 13 8 S17 2 21 5"/></svg></span>
+        <span class="hv-node-tx"><b>Votre style</b><em>ton &amp; tournures</em></span>
+      </div>
+      <div class="hv-node hv-n2">
+        <span class="hv-node-ic"><span class="hv-stack"><i></i><i></i><i></i></span></span>
+        <span class="hv-node-tx"><b>Vos expériences</b><em>votre vécu réel</em></span>
+      </div>
+      <div class="hv-node hv-n3">
+        <span class="hv-node-ic"><span class="hv-bars"><b></b><b></b><b></b><b></b></span></span>
+        <span class="hv-node-tx"><b>Vos vraies stats</b><em>vues, engagement</em></span>
+      </div>
       <div class="hv-card">
         <div class="hv-glow"></div>
         <div class="hv-head">
