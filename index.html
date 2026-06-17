@@ -1116,12 +1116,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 .hv-n2 .hv-wire .flow{animation-delay:.7s}
 .hv-n3 .hv-wire .flow{animation-delay:1.4s}
 /* STYLE : empreinte digitale qui se scanne (votre signature unique) */
-.hv-print{width:20px;height:20px;overflow:visible}
-.hv-print path{stroke:#8cc8ff;stroke-width:1.4;fill:none;stroke-linecap:round;opacity:.3;
-  animation:hvPrint 2.4s ease-in-out infinite}
-.hv-print path:nth-child(2){animation-delay:.2s}
-.hv-print path:nth-child(3){animation-delay:.4s}
-.hv-print path:nth-child(4){animation-delay:.6s}
+.hv-print{width:22px;height:22px;overflow:visible}
+.hv-print path{stroke:#8cc8ff;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;
+  opacity:.5;animation:hvPrint 2.6s ease-in-out infinite}
 /* EXPERIENCES : pile de lignes qui s'allument */
 .hv-stack{display:flex;flex-direction:column;gap:3px;width:17px}
 .hv-stack i{height:3px;border-radius:2px;background:#8cc8ff;opacity:.25}
@@ -1166,7 +1163,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 @keyframes hvBlink{0%,100%{opacity:1}50%{opacity:.25}}
 @keyframes hvCaret{0%,100%{border-color:var(--blue2)}50%{border-color:transparent}}
 @keyframes hvFlow{0%{stroke-dashoffset:100;opacity:0}15%{opacity:1}85%{opacity:1}100%{stroke-dashoffset:0;opacity:0}}
-@keyframes hvPrint{0%,100%{opacity:.3}50%{opacity:1}}
+@keyframes hvPrint{0%,100%{opacity:.45}50%{opacity:1}}
 @keyframes hvStk{0%,100%{opacity:.25}50%{opacity:1}}
 @keyframes hvBar{0%,100%{transform:scaleY(.28)}50%{transform:scaleY(1)}}
 @keyframes hvStage{0%{opacity:1}86%{opacity:1}94%{opacity:0}100%{opacity:0}}
@@ -1212,7 +1209,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- Représentation animée : un post qui s'écrit dans votre voix -->
     <div class="hero-visual" aria-hidden="true">
       <div class="hv-node hv-n1">
-        <span class="hv-node-ic"><svg class="hv-print" viewBox="0 0 20 20" fill="none"><path d="M6.5 17.5 C1.5 15 1.5 3.5 10 3.5 C18.5 3.5 18.5 15 13.5 17.5"/><path d="M8 16 C4 14 4 6.5 10 6.5 C16 6.5 16 14 12 16"/><path d="M9 14.5 C6.8 13.5 6.8 9.5 10 9.5 C13.2 9.5 13.2 13.5 11 14.5"/><path d="M10 12 v3"/></svg></span>
+        <span class="hv-node-ic"><svg class="hv-print" viewBox="0 0 24 24" fill="none"><path d="M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4"/><path d="M5 19.5C5.5 18 6 15 6 12c0-.7.12-1.37.34-2"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M9 6.8a6 6 0 0 1 9 5.2c0 .47 0 1.17-.02 2"/></svg></span>
         <span class="hv-node-tx"><b>Votre style</b><em>ton &amp; tournures</em></span>
         <svg class="hv-wire" viewBox="0 0 50 70" fill="none"><path class="base" d="M0 35 C20 35 30 50 50 52"/><path class="flow" pathLength="100" d="M0 35 C20 35 30 50 50 52"/></svg>
       </div>
