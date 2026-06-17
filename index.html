@@ -1078,9 +1078,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 .hv-card>*{position:relative;z-index:1}
 /* header */
 .hv-head{display:flex;align-items:center;gap:11px}
-.hv-avatar{width:38px;height:38px;border-radius:50%;flex-shrink:0;color:#fff;
-  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;letter-spacing:-.02em;
+.hv-avatar{width:38px;height:38px;border-radius:50%;flex-shrink:0;overflow:hidden;
   background:linear-gradient(135deg,#1a8fff,#0A66C2);box-shadow:0 4px 14px rgba(10,102,194,.45)}
+.hv-avatar img{width:100%;height:100%;object-fit:cover;display:block}
 .hv-id{display:flex;flex-direction:column;gap:6px;flex:1}
 .hv-bar{height:7px;border-radius:4px;background:rgba(255,255,255,.13)}
 .hv-bar-name{width:42%}
@@ -1175,7 +1175,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="hv-card">
         <div class="hv-glow"></div>
         <div class="hv-head">
-          <div class="hv-avatar">IK</div>
+          <div class="hv-avatar"><img src="screens/avatar-hero.jpg" alt="" loading="lazy"></div>
           <div class="hv-id">
             <span class="hv-bar hv-bar-name"></span>
             <span class="hv-bar hv-bar-sub"></span>
