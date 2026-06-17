@@ -1089,18 +1089,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   border:1px solid rgba(26,143,255,.3);background:rgba(26,143,255,.08)}
 .hv-pill-dot{width:5px;height:5px;border-radius:50%;background:var(--blue2);animation:hvBlink 2s ease-in-out infinite}
 /* noeuds d'ingredients (externes a la carte) : chacun avec sa propre micro-animation */
-.hv-node{position:absolute;z-index:3;display:flex;align-items:center;gap:9px;white-space:nowrap;
-  width:172px;box-sizing:border-box;padding:9px 13px 9px 9px;border-radius:14px;
+.hv-node{position:absolute;z-index:3;display:flex;align-items:center;gap:11px;white-space:nowrap;
+  width:196px;box-sizing:border-box;padding:11px 15px 11px 11px;border-radius:16px;
   border:1px solid rgba(26,143,255,.26);background:rgba(11,18,34,.86);backdrop-filter:blur(7px);
   box-shadow:0 12px 32px -8px rgba(0,0,0,.6), inset 0 0 0 1px rgba(26,143,255,.05)}
-.hv-node-ic{position:relative;width:32px;height:32px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
-  border-radius:9px;background:rgba(26,143,255,.12);border:1px solid rgba(26,143,255,.24);overflow:hidden}
+.hv-node-ic{position:relative;width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  border-radius:11px;background:rgba(26,143,255,.12);border:1px solid rgba(26,143,255,.24);overflow:hidden}
 .hv-node-tx{display:flex;flex-direction:column;gap:1px;line-height:1.15}
-.hv-node-tx b{font-size:11.5px;font-weight:600;letter-spacing:-.01em;color:var(--text)}
-.hv-node-tx em{font-size:9.5px;font-style:normal;letter-spacing:.02em;color:var(--muted)}
-.hv-n1{top:2px;left:-30px}
-.hv-n2{bottom:10px;left:-58px}
-.hv-n3{top:38%;right:-20px}
+.hv-node-tx b{font-size:13px;font-weight:600;letter-spacing:-.01em;color:var(--text)}
+.hv-node-tx em{font-size:10.5px;font-style:normal;letter-spacing:.02em;color:var(--muted)}
+.hv-n1{top:2px;left:-54px}
+.hv-n2{bottom:10px;left:-82px}
+.hv-n3{top:38%;right:-44px}
 /* cable courbe : un courant lumineux suit la courbe jusqu'au bord de la carte */
 .hv-wire{position:absolute;top:50%;transform:translateY(-50%);height:70px;pointer-events:none;overflow:visible}
 .hv-n1 .hv-wire,.hv-n2 .hv-wire{left:100%}
@@ -1116,16 +1116,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 .hv-n2 .hv-wire .flow{animation-delay:.7s}
 .hv-n3 .hv-wire .flow{animation-delay:1.4s}
 /* STYLE : empreinte digitale qui se scanne (votre signature unique) */
-.hv-print{width:22px;height:22px;overflow:visible}
+.hv-print{width:26px;height:26px;overflow:visible}
 .hv-print path{stroke:#8cc8ff;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;
   opacity:.5;animation:hvPrint 2.6s ease-in-out infinite}
 /* EXPERIENCES : empreintes de pas qui avancent (votre parcours, votre vecu) */
-.hv-steps{width:21px;height:21px;overflow:visible}
+.hv-steps{width:25px;height:25px;overflow:visible}
 .hv-steps path{stroke:#8cc8ff;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:.5;
   animation:hvSteps 1.9s ease-in-out infinite}
 .hv-steps path:nth-child(2),.hv-steps path:nth-child(3){animation-delay:.95s}
 /* STATS : mini graphe a barres qui monte */
-.hv-bars{display:flex;align-items:flex-end;gap:2px;height:16px}
+.hv-bars{display:flex;align-items:flex-end;gap:2px;height:19px}
 .hv-bars b{width:3px;height:100%;border-radius:1px;transform-origin:bottom;transform:scaleY(.45);
   background:linear-gradient(180deg,#9fd2ff,#1a8fff)}
 .hv-bars b:nth-child(1){animation:hvBar 2.4s ease-in-out infinite}
@@ -1165,7 +1165,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 @keyframes hvPrint{0%,100%{opacity:.45}50%{opacity:1}}
 @keyframes hvSteps{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes hvBar{0%,100%{transform:scaleY(.45)}50%{transform:scaleY(1)}}
-@keyframes hvStage{0%{opacity:1}86%{opacity:1}94%{opacity:0}100%{opacity:0}}
+@keyframes hvStage{0%,4%{opacity:0}8%{opacity:1}86%{opacity:1}93%{opacity:0}100%{opacity:0}}
 @keyframes hvType{0%,6%{width:0}30%{width:100%}100%{width:100%}}
 @keyframes hvL1{0%,26%{width:0;opacity:0}29%{opacity:1}36%{width:94%;opacity:1}100%{width:94%;opacity:1}}
 @keyframes hvL2{0%,32%{width:0;opacity:0}35%{opacity:1}42%{width:82%;opacity:1}100%{width:82%;opacity:1}}
@@ -1194,13 +1194,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="hero-inner">
     <div class="hero-badge">
       <span class="badge-dot"></span>
-      Le ghostwriter IA qui vous ressemble
+      Le seul ghostwriter IA qui apprend de vos vraies stats LinkedIn
     </div>
     <h1 class="hero-h1">
       <span class="grad-white">Votre voix sur LinkedIn.</span><br>
       <span class="grad-text" style="white-space:nowrap">Chaque jour, sans effort.</span>
     </h1>
-    <p class="hero-sub" style="font-size: 15.5px">InKognito écrit et publie vos posts dans votre voix exacte, et apprend de vos vraies stats LinkedIn pour s'améliorer à chaque post. Un ghostwriter autonome, pas un générateur IA de plus.</p>
+    <p class="hero-sub" style="font-size: 15.5px">InKognito écrit et publie vos posts dans votre voix exacte, et apprend de vos vraies stats LinkedIn pour s'améliorer à chaque post. Les autres IA écrivent à l'aveugle.</p>
     <div class="hero-actions">
       <a href="https://linkedin-saas-sepia.vercel.app/inscription-beta" class="btn-hero">Commencer à poster gratuitement <span class="btn-hero-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></a>
     </div>
@@ -1570,26 +1570,39 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
 
+    <!-- AVIS ÉCRIT (carte texte) -->
+    <div class="testi-card reveal d2">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">InKognito m'a permis de ne même plus penser à quand poster. J'en avais vraiment marre de devoir poster manuellement, c'est devenu un vrai gain de temps grâce à cet outil.<br><br>Et en plus, les posts performent vraiment bien !</p>
+      <div class="testi-author">
+        <img class="testi-avatar" src="screens/raphael.jpg" alt="Raphaël Gérard" width="42" height="42" loading="lazy">
+        <div>
+          <div class="testi-name">Raphaël Gérard</div>
+          <div class="testi-role">Utilisateur d'InKognito</div>
+        </div>
+      </div>
+    </div>
+
     <!-- AVIS SCREENSHOT 1 -->
-    <div class="testi-shot reveal d2">
+    <div class="testi-shot reveal d3">
       <img src="screens/avis-1.jpg" alt="Avis d'un utilisateur recommandant InKognito" loading="lazy">
       <div class="testi-shot-cap">Recommandation publique d'un utilisateur</div>
     </div>
 
     <!-- AVIS SCREENSHOT 2 -->
-    <div class="testi-shot reveal d3">
+    <div class="testi-shot reveal d4">
       <img src="screens/avis-2.jpg" alt="Message d'un early adopter d'InKognito" loading="lazy">
       <div class="testi-shot-cap">Message reçu d'un early adopter</div>
     </div>
 
     <!-- AVIS SCREENSHOT 3 -->
-    <div class="testi-shot reveal d4">
+    <div class="testi-shot reveal d5">
       <img src="screens/avis-3.jpg" alt="Échange autour d'InKognito sur LinkedIn" loading="lazy">
       <div class="testi-shot-cap">Échange avec un utilisateur</div>
     </div>
 
     <!-- AVIS SCREENSHOT 4 -->
-    <div class="testi-shot reveal d5">
+    <div class="testi-shot reveal d6">
       <img src="screens/avis-4.png" alt="Retour d'un utilisateur sur l'engagement généré par InKognito" loading="lazy">
       <div class="testi-shot-cap">Retour d'un utilisateur sur son engagement</div>
     </div>
