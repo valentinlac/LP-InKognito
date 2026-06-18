@@ -1820,6 +1820,52 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="foot-legal">© 2026 InKognito. Tous droits réservés.</div>
 </footer>
 
+<!-- CTA flottant -->
+<style>
+.floating-cta{position:fixed;left:50%;bottom:20px;transform:translate(-50%,140%);z-index:120;
+  display:flex;align-items:center;gap:14px;padding:9px 9px 9px 20px;border-radius:999px;
+  background:linear-gradient(180deg,rgba(16,24,42,.96),rgba(9,14,26,.98));
+  border:1px solid rgba(26,143,255,.28);
+  box-shadow:0 20px 50px -12px rgba(0,0,0,.7), inset 0 0 0 1px rgba(26,143,255,.06), 0 0 30px -8px rgba(26,143,255,.4);
+  backdrop-filter:blur(10px);opacity:0;pointer-events:none;
+  transition:transform .45s cubic-bezier(.2,.8,.2,1), opacity .45s ease}
+.floating-cta.show{transform:translate(-50%,0);opacity:1;pointer-events:auto}
+.floating-cta-label{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap}
+.floating-cta-label b{color:var(--blue3);font-weight:600}
+.floating-cta-btn{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;
+  padding:10px 18px;border-radius:999px;font-size:14px;font-weight:600;color:#fff;
+  background:linear-gradient(135deg,#1a8fff,#0A66C2);box-shadow:0 6px 18px -4px rgba(10,102,194,.6)}
+.floating-cta-btn svg{display:block}
+@media (max-width:560px){
+  .floating-cta{left:12px;right:12px;bottom:12px;transform:translateY(140%);justify-content:space-between;padding:8px 8px 8px 16px;gap:10px}
+  .floating-cta.show{transform:translateY(0)}
+  .floating-cta-label{font-size:13px}
+  .floating-cta-btn{padding:9px 15px;font-size:13px}
+}
+</style>
+<a id="floating-cta" class="floating-cta" href="https://linkedin-saas-sepia.vercel.app/inscription-beta">
+  <span class="floating-cta-label">InKognito · <b>19€ à vie</b></span>
+  <span class="floating-cta-btn">Obtenir mon accès <span aria-hidden="true"><svg width="16" height="9" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></span>
+</a>
+<script>
+(() => {
+  const fc = document.getElementById('floating-cta');
+  const finalCta = document.getElementById('final-cta');
+  if(!fc) return;
+  let shown = false;
+  const update = () => {
+    const past = window.scrollY > (window.innerHeight * 0.85);
+    let nearEnd = false;
+    if(finalCta){ nearEnd = finalCta.getBoundingClientRect().top < window.innerHeight * 0.9; }
+    const next = past && !nearEnd;
+    if(next !== shown){ shown = next; fc.classList.toggle('show', next); }
+  };
+  window.addEventListener('scroll', update, { passive:true });
+  window.addEventListener('resize', update, { passive:true });
+  update();
+})();
+</script>
+
 <script>
 // Nav scroll — passif + idempotent (n'écrit que si l'état change)
 (() => {
