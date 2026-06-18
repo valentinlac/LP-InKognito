@@ -1864,19 +1864,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
 (() => {
   const fc = document.getElementById('floating-cta');
-  const finalCta = document.getElementById('final-cta');
   if(!fc) return;
-  let shown = false;
-  const update = () => {
-    const past = window.scrollY > (window.innerHeight * 0.85);
-    let nearEnd = false;
-    if(finalCta){ nearEnd = finalCta.getBoundingClientRect().top < window.innerHeight * 0.9; }
-    const next = past && !nearEnd;
-    if(next !== shown){ shown = next; fc.classList.toggle('show', next); }
-  };
-  window.addEventListener('scroll', update, { passive:true });
-  window.addEventListener('resize', update, { passive:true });
-  update();
+  const hero = document.getElementById('hero');
+  const finalCta = document.getElementById('final-cta');
+  let pastHero = !hero, atEnd = false;
+  const apply = () => fc.classList.toggle('show', pastHero && !atEnd);
+  if(hero) new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; apply(); }, { threshold: 0 }).observe(hero);
+  if(finalCta) new IntersectionObserver(([e]) => { atEnd = e.isIntersecting; apply(); }, { threshold: 0 }).observe(finalCta);
+  apply();
 })();
 </script>
 
