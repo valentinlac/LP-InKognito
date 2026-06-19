@@ -1836,14 +1836,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- CTA flottant -->
 <style>
-.floating-cta{position:fixed;left:50%;bottom:20px;transform:translate(-50%,140%);z-index:120;
+.floating-cta{position:fixed;left:50%;bottom:20px;transform:translate(-50%,0);z-index:120;
   display:flex;align-items:center;gap:14px;padding:9px 9px 9px 20px;border-radius:999px;
   background:linear-gradient(180deg,rgba(16,24,42,.96),rgba(9,14,26,.98));
   border:1px solid rgba(26,143,255,.28);
   box-shadow:0 20px 50px -12px rgba(0,0,0,.7), inset 0 0 0 1px rgba(26,143,255,.06), 0 0 30px -8px rgba(26,143,255,.4);
-  backdrop-filter:blur(10px);opacity:0;pointer-events:none;
+  backdrop-filter:blur(10px);opacity:1;pointer-events:auto;
   transition:transform .45s cubic-bezier(.2,.8,.2,1), opacity .45s ease}
-.floating-cta.show{transform:translate(-50%,0);opacity:1;pointer-events:auto}
+.floating-cta.hidden{transform:translate(-50%,140%);opacity:0;pointer-events:none}
 .floating-cta-label{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap}
 .floating-cta-label b{color:var(--blue3);font-weight:600}
 .floating-cta-btn{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;
@@ -1851,8 +1851,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   background:linear-gradient(135deg,#1a8fff,#0A66C2);box-shadow:0 6px 18px -4px rgba(10,102,194,.6)}
 .floating-cta-btn svg{display:block}
 @media (max-width:560px){
-  .floating-cta{left:12px;right:12px;bottom:12px;transform:translateY(140%);justify-content:space-between;padding:8px 8px 8px 16px;gap:10px}
-  .floating-cta.show{transform:translateY(0)}
+  .floating-cta{left:12px;right:12px;bottom:12px;transform:translateY(0);justify-content:space-between;padding:8px 8px 8px 16px;gap:10px}
+  .floating-cta.hidden{transform:translateY(140%)}
   .floating-cta-label{font-size:13px}
   .floating-cta-btn{padding:9px 15px;font-size:13px}
 }
@@ -1867,10 +1867,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   if(!fc) return;
   const hero = document.getElementById('hero');
   const finalCta = document.getElementById('final-cta');
-  let pastHero = !hero, atEnd = false;
-  const apply = () => fc.classList.toggle('show', pastHero && !atEnd);
-  if(hero) new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; apply(); }, { threshold: 0 }).observe(hero);
-  if(finalCta) new IntersectionObserver(([e]) => { atEnd = e.isIntersecting; apply(); }, { threshold: 0 }).observe(finalCta);
+  let heroVisible = !!hero, endVisible = false;
+  const apply = () => fc.classList.toggle('hidden', heroVisible || endVisible);
+  if(hero) new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; apply(); }, { threshold: 0 }).observe(hero);
+  if(finalCta) new IntersectionObserver(([e]) => { endVisible = e.isIntersecting; apply(); }, { threshold: 0 }).observe(finalCta);
   apply();
 })();
 </script>
