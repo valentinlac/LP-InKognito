@@ -84,7 +84,7 @@ body{
   width:100%;height:100%;
 }
 /* Tout le contenu de la page passe au-dessus du bg */
-body > *:not(#global-bg){
+body > *:not(#global-bg):not(#floating-cta){
   position:relative;
   z-index:2;
 }
@@ -1867,10 +1867,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   if(!fc) return;
   const hero = document.getElementById('hero');
   const finalCta = document.getElementById('final-cta');
-  let heroVisible = !!hero, endVisible = false;
-  const apply = () => fc.classList.toggle('hidden', heroVisible || endVisible);
+  const footer = document.querySelector('footer');
+  let heroVisible = !!hero, endVisible = false, footVisible = false;
+  const apply = () => fc.classList.toggle('hidden', heroVisible || endVisible || footVisible);
   if(hero) new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; apply(); }, { threshold: 0 }).observe(hero);
   if(finalCta) new IntersectionObserver(([e]) => { endVisible = e.isIntersecting; apply(); }, { threshold: 0 }).observe(finalCta);
+  if(footer) new IntersectionObserver(([e]) => { footVisible = e.isIntersecting; apply(); }, { threshold: 0 }).observe(footer);
   apply();
 })();
 </script>
