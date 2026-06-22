@@ -922,7 +922,34 @@ h1.hero-h1{animation:fadeIn .8s .25s ease both}
   .cta-h .grad-text{font-size:inherit !important}
   .nav-links{display:none}
   .steps-grid,.features-grid,.pricing-grid{grid-template-columns:1fr;gap:16px}
-  .testi-grid{column-count:1}
+  .testi-grid{
+    column-count:unset;
+    display:flex;
+    flex-direction:row;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    gap:14px;
+    padding-bottom:16px;
+    scrollbar-width:none;
+  }
+  .testi-grid::-webkit-scrollbar{display:none}
+  .testi-card{
+    flex:0 0 80vw;
+    max-width:320px;
+    scroll-snap-align:start;
+    margin-bottom:0;
+  }
+  .testi-shots-col{
+    flex:0 0 72vw;
+    max-width:300px;
+    scroll-snap-align:start;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    align-self:flex-start;
+  }
+  .testi-shot{margin-bottom:0}
   footer{flex-direction:column;align-items:flex-start;text-align:left}
   .hero-actions{flex-direction:column;align-items:stretch}
   .btn-hero,.btn-hero-out{justify-content:center}
@@ -932,6 +959,7 @@ h1.hero-h1{animation:fadeIn .8s .25s ease both}
   .showcase-row.reverse .showcase-text{order:1}
   .showcase-row.reverse .showcase-frame{order:2}
 }
+@media (min-width:901px){.testi-shots-col{display:contents}}
 @media (min-width:901px) and (max-width:1100px){
   .features-grid{grid-template-columns:repeat(2,1fr)}
   .testi-grid{column-count:2}
@@ -1219,6 +1247,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <img class="hero-proof-av" src="screens/raphael.jpg" alt="" width="34" height="34" loading="lazy">
         <img class="hero-proof-av" src="screens/nicolas.jpg" alt="" width="34" height="34" loading="lazy">
         <img class="hero-proof-av" src="screens/francois.jpg" alt="" width="34" height="34" loading="lazy">
+        <img class="hero-proof-av" src="screens/jonathan.jpg" alt="" width="34" height="34" loading="lazy">
       </div>
       <div class="hero-proof-meta">
         <div class="hero-proof-stars">★★★★★</div>
@@ -1617,28 +1646,45 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
 
-    <!-- AVIS SCREENSHOT 1 -->
-    <div class="testi-shot reveal d4">
-      <img src="screens/avis-1.jpg" alt="Avis d'un utilisateur recommandant InKognito" loading="lazy">
-      <div class="testi-shot-cap">Recommandation publique d'un utilisateur</div>
+    <!-- AVIS ÉCRIT (carte texte) -->
+    <div class="testi-card reveal d4">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">InKognito reproduit parfaitement ma voix, sans effet générique.<br><br>Données ultra précises (+42% d'engagement sur mon contenu par rapport au mois dernier).<br><br>Résultat : des posts optimisés qui performent vraiment.</p>
+      <div class="testi-author">
+        <img class="testi-avatar" src="screens/jonathan.jpg" alt="Jonathan Curtatone" width="42" height="42" loading="lazy">
+        <div>
+          <div class="testi-name">Jonathan Curtatone</div>
+          <div class="testi-role">Fondateur de Sidian</div>
+        </div>
+      </div>
     </div>
 
-    <!-- AVIS SCREENSHOT 2 -->
-    <div class="testi-shot reveal d5">
-      <img src="screens/avis-2.jpg" alt="Message d'un early adopter d'InKognito" loading="lazy">
-      <div class="testi-shot-cap">Message reçu d'un early adopter</div>
+    <!-- SCREENSHOTS groupe 1 -->
+    <div class="testi-shots-col">
+      <div class="testi-shot reveal d5">
+        <img src="screens/avis-1.jpg" alt="Avis d'un utilisateur recommandant InKognito" loading="lazy">
+        <div class="testi-shot-cap">Recommandation publique d'un utilisateur</div>
+      </div>
+      <div class="testi-shot reveal d6">
+        <img src="screens/avis-2.jpg" alt="Message d'un early adopter d'InKognito" loading="lazy">
+        <div class="testi-shot-cap">Message reçu d'un early adopter</div>
+      </div>
     </div>
 
-    <!-- AVIS SCREENSHOT 3 -->
-    <div class="testi-shot reveal d6">
-      <img src="screens/avis-3.jpg" alt="Échange autour d'InKognito sur LinkedIn" loading="lazy">
-      <div class="testi-shot-cap">Échange avec un utilisateur</div>
-    </div>
-
-    <!-- AVIS SCREENSHOT 4 -->
-    <div class="testi-shot reveal d7">
-      <img src="screens/avis-4.png" alt="Retour d'un utilisateur sur l'engagement généré par InKognito" loading="lazy">
-      <div class="testi-shot-cap">Retour d'un utilisateur sur son engagement</div>
+    <!-- SCREENSHOTS groupe 2 -->
+    <div class="testi-shots-col">
+      <div class="testi-shot reveal d7">
+        <img src="screens/avis-3.jpg" alt="Échange autour d'InKognito sur LinkedIn" loading="lazy">
+        <div class="testi-shot-cap">Échange avec un utilisateur</div>
+      </div>
+      <div class="testi-shot reveal d8">
+        <img src="screens/avis-4.png" alt="Retour d'un utilisateur sur l'engagement généré par InKognito" loading="lazy">
+        <div class="testi-shot-cap">Retour d'un utilisateur sur son engagement</div>
+      </div>
+      <div class="testi-shot reveal d9">
+        <img src="screens/avis-5.png" alt="Message reçu sur InKognito" loading="lazy">
+        <div class="testi-shot-cap">Message reçu d'un utilisateur</div>
+      </div>
     </div>
 
   </div>
