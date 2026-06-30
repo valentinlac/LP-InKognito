@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InKognito — Automatisez vos posts LinkedIn</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700" rel="stylesheet">
+<style>
+:root {
+  --bg: #070C17;
+  --bg2: #0B1222;
+  --blue: #0A66C2;
+  --blue2: #0047d9;
+  --glow: rgba(10,102,194,0.4);
+  --text: #E8EDF5;
+  --muted: #4A5A7A;
+  --border: rgba(255,255,255,0.065);
+  --card: rgba(255,255,255,0.032);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
+h1,h2,h3,h4,h5{font-family:'Space Grotesk',sans-serif}
+
+
+
+
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:800;height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;transition:background .4s,border-color .4s,backdrop-filter .4s;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(7,12,23,.88);border-color:var(--border);backdrop-filter:blur(22px)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo-mark{width:32px;height:32px}
+.nav-logo-name{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;letter-spacing:-.5px;color:var(--text)}
+.nav-logo-name span{color:#1a8fff}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-right{display:flex;gap:10px;align-items:center}
+.btn-ghost{padding:8px 18px;border:1px solid var(--border);border-radius:8px;color:var(--text);text-decoration:none;font-size:13.5px;font-weight:500;font-family:'Space Grotesk',sans-serif;transition:border-color .2s,background .2s;background:transparent}
+.btn-ghost:hover{border-color:rgba(10,102,194,.5);background:rgba(10,102,194,.08)}
+.btn-cta{padding:9px 22px;background:linear-gradient(135deg,var(--blue),var(--blue2));border:none;border-radius:8px;color:#fff;text-decoration:none;font-size:13.5px;font-weight:600;font-family:'Space Grotesk',sans-serif;transition:box-shadow .25s,transform .2s;box-shadow:0 0 0 rgba(10,102,194,0)}
+.btn-cta:hover{box-shadow:0 0 28px rgba(10,102,194,.55);transform:translateY(-1px)}
+
+/* ─── HERO ─── */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:130px 5vw 0}
+.hero-grid{position:absolute;inset:0;background-image:radial-gradient(rgba(26,143,255,.07) 1px,transparent 1px);background-size:40px 40px;mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,black 0%,transparent 100%)}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none}
+.o1{width:500px;height:500px;background:radial-gradient(circle,rgba(10,102,194,.22),transparent 70%);top:-120px;left:calc(50% - 360px);animation:orbf 14s ease-in-out infinite}
+.o2{width:400px;height:400px;background:radial-gradient(circle,rgba(0,47,217,.18),transparent 70%);top:-80px;right:calc(50% - 360px);animation:orbf 16s ease-in-out infinite reverse}
+@keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes orbf{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.06)}}
+
+/* ─── HERO CONTENT ─── */
+.hero-inner{position:relative;z-index:10;text-align:center;max-width:700px;width:100%;padding:0 20px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(10,102,194,.4);background:rgba(10,102,194,.09);padding:6px 16px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.06em;color:#60aeff;margin-bottom:28px;opacity:0;animation:fu .7s .2s forwards}
+.badge-dot{width:6px;height:6px;background:#1a8fff;border-radius:50%;animation:bpulse 1.8s infinite}
+@keyframes bpulse{0%,100%{box-shadow:0 0 0 0 rgba(26,143,255,.6)}60%{box-shadow:0 0 0 6px rgba(26,143,255,0)}}
+
+/* big headline */
+h1.hero-h1{font-size:clamp(46px,7vw,88px);font-weight:700;line-height:1.04;letter-spacing:-.045em;margin-bottom:22px;opacity:0;animation:fu .8s .34s forwards;text-wrap:balance}
+.grad-text{background:linear-gradient(135deg,#60aeff 0%,#1a8fff 40%,#0A66C2 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+.hero-sub{font-size:clamp(15px,1.6vw,19px);color:var(--muted);max-width:480px;margin:0 auto 36px;line-height:1.75;opacity:0;animation:fu .8s .52s forwards}
+.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fu .8s .68s forwards;margin-bottom:20px}
+.btn-hero{display:inline-flex;align-items:center;gap:8px;padding:15px 32px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 100%);border:none;border-radius:10px;color:#fff;font-size:15.5px;font-weight:700;font-family:'Space Grotesk',sans-serif;text-decoration:none;box-shadow:0 0 44px rgba(10,102,194,.38);transition:box-shadow .3s,transform .2s;position:relative;overflow:hidden}
+.btn-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.13) 0%,transparent 55%);opacity:0;transition:opacity .25s}
+.btn-hero:hover{box-shadow:0 0 72px rgba(10,102,194,.6);transform:translateY(-2px)}
+.btn-hero:hover::before{opacity:1}
+.btn-hero-arrow{font-size:17px;transition:transform .2s}
+.btn-hero:hover .btn-hero-arrow{transform:translateX(3px)}
+.btn-hero-out{display:inline-flex;align-items:center;gap:8px;padding:15px 32px;border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:15.5px;font-weight:500;font-family:'Space Grotesk',sans-serif;text-decoration:none;transition:border-color .25s,background .25s;background:rgba(255,255,255,.03);backdrop-filter:blur(10px)}
+.btn-hero-out:hover{border-color:rgba(26,143,255,.4);background:rgba(10,102,194,.08)}
+
+.hero-social-proof{display:flex;align-items:center;justify-content:center;gap:14px;opacity:0;animation:fu .8s .84s forwards;margin-bottom:64px}
+.avatars{display:flex}
+.av{width:26px;height:26px;border-radius:50%;border:2px solid var(--bg);margin-left:-7px;background:linear-gradient(135deg,var(--blue),var(--blue2));display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff}
+.av:first-child{margin-left:0}
+.proof-text{font-size:12.5px;color:var(--muted)}
+.proof-text strong{color:var(--text);font-weight:600}
+
+/* ─── HERO SPRITES (floating chips around title) ─── */
+.hero-sprites{position:absolute;inset:0;pointer-events:none;z-index:3}
+.sprite{position:absolute;display:flex;align-items:center;gap:7px;background:rgba(11,18,34,.88);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:8px 12px;backdrop-filter:blur(16px);box-shadow:0 8px 32px rgba(0,0,0,.4);opacity:0;white-space:nowrap}
+/* positions — restreints aux extrêmes gauche/droite */
+.sp1{top:20%;left:3%}
+.sp2{top:18%;right:3%}
+.sp3{top:42%;left:1%}
+.sp4{top:40%;right:1%}
+.sp5{top:63%;left:3%}
+.sp6{top:61%;right:3%}
+/* animations */
+.sp1{animation:spIn .6s .9s cubic-bezier(.34,1.56,.64,1) forwards,spFloat1 7s 1.5s ease-in-out infinite}
+.sp2{animation:spIn .6s 1.1s cubic-bezier(.34,1.56,.64,1) forwards,spFloat2 8s 1.7s ease-in-out infinite}
+.sp3{animation:spIn .6s 1.3s cubic-bezier(.34,1.56,.64,1) forwards,spFloat1 9s 1.9s ease-in-out infinite reverse}
+.sp4{animation:spIn .6s 1.0s cubic-bezier(.34,1.56,.64,1) forwards,spFloat2 6s 1.6s ease-in-out infinite}
+.sp5{animation:spIn .6s 1.5s cubic-bezier(.34,1.56,.64,1) forwards,spFloat1 10s 2.1s ease-in-out infinite}
+.sp6{animation:spIn .6s 1.2s cubic-bezier(.34,1.56,.64,1) forwards,spFloat2 7.5s 1.8s ease-in-out infinite reverse}
+@keyframes spIn{from{opacity:0;transform:translateY(10px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes spFloat1{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes spFloat2{0%,100%{transform:translateY(0)}50%{transform:translateY(9px)}}
+.sprite{will-change:transform}
+.sp-icon{font-size:14px;flex-shrink:0}
+.sp-content{}
+.sp-val{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--text);line-height:1.2}
+.sp-sub{font-size:10px;color:var(--muted);line-height:1.2}
+.sp-dot-green{width:7px;height:7px;border-radius:50%;background:#22d87f;box-shadow:0 0 7px rgba(34,216,127,.6);flex-shrink:0;animation:bpulse 2s infinite}
+.sp-dot-blue{width:7px;height:7px;border-radius:50%;background:#1a8fff;box-shadow:0 0 7px rgba(26,143,255,.6);flex-shrink:0;animation:bpulse 2.4s infinite}
+.sp-bar-wrap{display:flex;align-items:flex-end;gap:2px;height:18px}
+.sp-bar{width:4px;border-radius:2px 2px 0 0;background:linear-gradient(to top,var(--blue),#60aeff)}
+
+/* ─── PRODUCT PREVIEW ─── */
+.hero-preview{position:relative;z-index:2;width:100%;max-width:960px;margin:0 auto;opacity:0;animation:fu .9s 1s forwards}
+.preview-tabs{display:flex;gap:4px;justify-content:center;margin-bottom:0;position:relative;z-index:1}
+.ptab{padding:9px 20px;border-radius:8px 8px 0 0;font-size:13px;font-weight:500;color:var(--muted);cursor:none;transition:color .2s,background .2s;border:1px solid transparent;border-bottom:none;background:transparent}
+.ptab.active{color:var(--text);background:rgba(11,18,34,.95);border-color:var(--border)}
+.preview-window{background:rgba(11,18,34,.95);border:1px solid var(--border);border-radius:0 16px 0 0;overflow:hidden;box-shadow:0 0 0 1px rgba(10,102,194,.08),0 40px 120px rgba(0,0,0,.6);position:relative}
+.preview-bar{display:flex;align-items:center;gap:8px;padding:12px 18px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
+.wdot{width:10px;height:10px;border-radius:50%}
+.wd1{background:#FF5F57}.wd2{background:#FFBD2E}.wd3{background:#28CA41}
+.preview-url{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:11px;color:var(--muted);text-align:center;margin:0 16px}
+.preview-body{display:grid;grid-template-columns:200px 1fr;min-height:380px}
+.preview-sidebar{border-right:1px solid var(--border);padding:16px 12px;display:flex;flex-direction:column;gap:4px}
+.psb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:12px;color:var(--muted);transition:background .2s,color .2s;cursor:none}
+.psb-item.active{background:rgba(10,102,194,.12);color:#60aeff}
+.psb-item svg{width:14px;height:14px;flex-shrink:0;opacity:.7}
+.psb-item.active svg{opacity:1}
+.psb-sep{height:1px;background:var(--border);margin:8px 0}
+.preview-main{padding:24px;display:flex;flex-direction:column;gap:16px}
+.pm-header{display:flex;align-items:center;justify-content:space-between}
+.pm-title{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:var(--text)}
+.pm-btn{padding:6px 14px;background:linear-gradient(135deg,var(--blue),var(--blue2));border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:600;font-family:'Space Grotesk',sans-serif;cursor:none}
+.post-card-prev{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.pcp-head{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.pcp-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue2));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.pcp-name{font-size:12px;font-weight:600;color:var(--text)}
+.pcp-time{font-size:10px;color:var(--muted)}
+.pcp-body{font-size:12px;color:rgba(232,237,245,.7);line-height:1.6;margin-bottom:10px}
+.pcp-tags{display:flex;gap:6px;flex-wrap:wrap}
+.pcp-tag{font-size:10px;color:#60aeff;background:rgba(10,102,194,.1);padding:2px 8px;border-radius:999px}
+.pcp-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.pcp-stat{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px}
+.pcp-status{font-size:10px;font-weight:600;padding:2px 8px;border-radius:999px}
+.pcp-status.live{background:rgba(34,216,127,.12);color:#22d87f}
+.pcp-status.sched{background:rgba(26,143,255,.12);color:#60aeff}
+.pm-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pm-stat-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.pm-stat-num{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--text);letter-spacing:-.03em}
+.pm-stat-label{font-size:10px;color:var(--muted);margin-top:2px}
+.pm-stat-change{font-size:10px;color:#22d87f;font-weight:600}
+
+/* ─── FLOATING POSTS (kept for other scroll usage — hidden in hero now) ─── */
+.hero-posts{display:none}
+.fp-head,.fp-av,.fp-name,.fp-role,.fp-body,.fp-foot,.fp-ft,.fp-tag,.fp-sparkle{display:none}
+
+/* ─── TICKER ─── */
+.ticker{padding:20px 0;background:rgba(10,102,194,.07);border-top:1px solid rgba(10,102,194,.15);border-bottom:1px solid rgba(10,102,194,.15);overflow:hidden;position:relative}
+.ticker::before,.ticker::after{content:'';position:absolute;top:0;bottom:0;width:100px;z-index:2;pointer-events:none}
+.ticker::before{left:0;background:linear-gradient(to right,var(--bg),transparent)}
+.ticker::after{right:0;background:linear-gradient(to left,var(--bg),transparent)}
+.ticker-track{display:flex;gap:48px;animation:tick 28s linear infinite;white-space:nowrap;width:max-content}
+.ticker-item{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500;color:rgba(232,237,245,.35);letter-spacing:.02em;flex-shrink:0}
+.ticker-dot{width:4px;height:4px;background:rgba(10,102,194,.6);border-radius:50%;flex-shrink:0}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ─── STATS ─── */
+#stats{padding:80px 5vw}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--border);border:1px solid var(--border);border-radius:20px;overflow:hidden}
+.stat-box{background:var(--bg2);padding:42px 32px;display:flex;flex-direction:column;gap:8px}
+.stat-num{font-family:'Space Grotesk',sans-serif;font-size:clamp(32px,3.5vw,48px);font-weight:700;letter-spacing:-.04em;background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,.6) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-num .blue-num{background:linear-gradient(135deg,#60aeff,#0A66C2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:14px;color:var(--muted);line-height:1.4}
+
+/* ─── FEATURES BENTO ─── */
+#features{padding:100px 5vw}
+.ft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.ft-card-wide{grid-column:span 2}
+.ft-card-full{grid-column:span 3}
+.ft-card{background:linear-gradient(160deg,#0d1525 0%,#080d18 100%);border:1px solid var(--border);border-radius:24px;padding:40px 40px 0;overflow:hidden;display:flex;flex-direction:column;position:relative;transition:border-color .3s,transform .35s,box-shadow .35s}
+.ft-card:hover{border-color:rgba(10,102,194,.3);transform:translateY(-4px);box-shadow:0 32px 80px rgba(0,0,0,.35)}
+.ft-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(26,143,255,.3),transparent);opacity:0;transition:opacity .3s}
+.ft-card:hover::before{opacity:1}
+.ft-card-text{margin-bottom:32px}
+.ft-title{font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:500;letter-spacing:0px;color:var(--text);margin-bottom:10px}
+.ft-desc{font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--muted);line-height:1.7;max-width:380px}
+.ft-illus{border-radius:16px 16px 0 0;background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.07);border-bottom:none;padding:20px 20px 0;margin:0 -40px;position:relative;overflow:hidden}
+.ft-illus::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,102,194,.06) 0%,transparent 60%);pointer-events:none}
+/* Gen illustration */
+.fti-gen-window{background:rgba(7,12,23,.95);border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.5)}
+.fti-gen-top{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02)}
+.fti-gen-dot{width:9px;height:9px;border-radius:50%}
+.fti-gen-label{font-family:'Space Grotesk',sans-serif;font-size:10px;color:var(--muted);margin-left:6px;letter-spacing:.02em}
+.fti-gen-prompt{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.05)}
+.fti-prompt-tag{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:#60aeff;background:rgba(10,102,194,.15);padding:2px 8px;border-radius:999px;flex-shrink:0}
+.fti-prompt-text{font-family:'Space Grotesk',sans-serif;font-size:11px;color:var(--text);opacity:.8}
+.fti-gen-output{padding:14px 14px 8px;display:flex;flex-direction:column;gap:7px;min-height:64px;position:relative}
+.fti-gen-line{height:9px;border-radius:999px;background:linear-gradient(to right,rgba(232,237,245,.12),rgba(232,237,245,.06));animation:genline 3s ease-in-out infinite}
+.fti-l1{width:92%;animation-delay:0s}.fti-l2{width:78%;animation-delay:.15s}.fti-l3{width:85%;animation-delay:.3s}.fti-l4{width:55%;animation-delay:.45s}
+@keyframes genline{0%,100%{opacity:.5}50%{opacity:1}}
+.fti-gen-cursor{width:2px;height:12px;background:#1a8fff;border-radius:1px;animation:blink .9s infinite;position:absolute;bottom:14px;left:calc(14px + 57%)}
+.fti-gen-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-top:1px solid rgba(255,255,255,.05)}
+.fti-gen-tags{display:flex;gap:5px}
+.fti-tag{font-family:'Space Grotesk',sans-serif;font-size:9px;color:#60aeff;background:rgba(10,102,194,.12);padding:2px 7px;border-radius:999px;border:1px solid rgba(10,102,194,.2)}
+.fti-gen-btn{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;padding:5px 12px;border-radius:6px}
+/* Radar illustration */
+.fti-radar{position:relative;width:200px;height:200px;margin:0 auto;display:flex;align-items:center;justify-content:center}
+.fti-ring{position:absolute;border-radius:50%;border:1px solid rgba(26,143,255,.15)}
+.r1{width:100%;height:100%;animation:ringpulse 3s ease-in-out infinite}
+.r2{width:68%;height:68%;animation:ringpulse 3s .4s ease-in-out infinite}
+.r3{width:38%;height:38%;background:rgba(10,102,194,.06);animation:ringpulse 3s .8s ease-in-out infinite}
+@keyframes ringpulse{0%,100%{border-color:rgba(26,143,255,.12)}50%{border-color:rgba(26,143,255,.35);box-shadow:0 0 20px rgba(26,143,255,.08)}}
+.fti-radar-center{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(10,102,194,.3),rgba(0,47,217,.2));border:1px solid rgba(26,143,255,.3);display:flex;align-items:center;justify-content:center;position:relative;z-index:2;box-shadow:0 0 24px rgba(10,102,194,.3)}
+.fti-scan{position:absolute;width:50%;height:50%;top:0;left:50%;transform-origin:bottom left;background:linear-gradient(to right,transparent,rgba(26,143,255,.1));border-top:1px solid rgba(26,143,255,.25);animation:scan 3s linear infinite;border-radius:0 100% 0 0}
+@keyframes scan{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.fti-orbit-tag{position:absolute;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;color:#60aeff;background:rgba(10,102,194,.15);border:1px solid rgba(10,102,194,.25);padding:3px 10px;border-radius:999px;white-space:nowrap;z-index:3}
+.ot1{top:5%;left:55%}.ot2{top:50%;left:2%}.ot3{bottom:8%;left:50%}.ot4{top:20%;right:0%}
+/* Calendar illustration */
+.fti-cal{background:rgba(7,12,23,.9);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:14px}
+.fti-cal-month{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:var(--text);display:block;margin-bottom:8px}
+.fti-cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
+.fti-cal-days span{font-family:'Space Grotesk',sans-serif;font-size:9px;color:var(--muted);text-align:center;font-weight:600}
+.fti-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.fti-day{font-family:'Space Grotesk',sans-serif;font-size:10px;color:rgba(232,237,245,.3);text-align:center;padding:5px 2px;border-radius:6px}
+.fti-day.muted{color:rgba(232,237,245,.1)}
+.fti-day-today{background:rgba(255,255,255,.08);color:var(--text)!important;font-weight:600}
+.fti-day-post{color:var(--text)!important;border-radius:6px;font-weight:600}
+.fti-dp1{background:rgba(10,102,194,.25);box-shadow:0 0 8px rgba(10,102,194,.3)}
+.fti-dp2{background:rgba(26,143,255,.2)}
+.fti-dp3{background:rgba(10,102,194,.3);box-shadow:0 0 10px rgba(10,102,194,.35)}
+.fti-dp4{background:rgba(34,216,127,.15)}
+.fti-cal-legend{display:flex;gap:14px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.05)}
+.fti-leg{display:flex;align-items:center;gap:5px;font-family:'Space Grotesk',sans-serif;font-size:10px;color:var(--muted)}
+.fti-leg-dot{width:7px;height:7px;border-radius:50%}
+/* Analytics illustration */
+.fti-analytics{display:flex;flex-direction:column;gap:16px}
+.fti-an-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fti-an-stat{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px 12px}
+.fti-an-val{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:var(--text);letter-spacing:-.03em}
+.fti-an-label{font-family:'Space Grotesk',sans-serif;font-size:9.5px;color:var(--muted);margin-top:2px}
+.fti-an-change{font-family:'Space Grotesk',sans-serif;font-size:9.5px;color:#22d87f;font-weight:600;margin-top:3px}
+.fti-an-chart{background:rgba(7,12,23,.7);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:14px;overflow:hidden}
+.chart-line-anim{stroke-dasharray:600;stroke-dashoffset:600;animation:drawline 2s .5s ease-out forwards}
+.chart-fill-anim{opacity:0;animation:fillup .8s 2s ease-out forwards}
+@keyframes drawline{to{stroke-dashoffset:0}}
+@keyframes fillup{to{opacity:1}}
+/* ─── ILLUSTRATION: Word constellation ─── */
+.illus-words{position:relative;height:200px;width:100%}
+.iw-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.iw-particle{position:absolute;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;color:rgba(26,143,255,0.55);background:rgba(10,102,194,0.1);border:1px solid rgba(26,143,255,0.2);padding:3px 9px;border-radius:999px;animation:iwfloat 6s ease-in-out infinite;white-space:nowrap}
+.iw-p1{top:8%;left:2%;animation-delay:0s}.iw-p2{top:5%;right:5%;animation-delay:.5s}.iw-p3{top:40%;left:1%;animation-delay:1s}.iw-p4{top:72%;left:4%;animation-delay:1.5s}.iw-p5{bottom:8%;left:20%;animation-delay:.3s}.iw-p6{bottom:5%;right:8%;animation-delay:.8s}.iw-p7{top:35%;right:2%;animation-delay:1.2s}.iw-p8{top:68%;right:5%;animation-delay:.6s}
+@keyframes iwfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.iw-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px;z-index:2}
+.iw-post-card{background:rgba(11,18,34,.95);border:1px solid rgba(26,143,255,.3);border-radius:10px;padding:10px 14px;width:120px;box-shadow:0 0 30px rgba(10,102,194,.25)}
+.iw-post-line{height:7px;border-radius:999px;background:linear-gradient(to right,rgba(232,237,245,.15),rgba(232,237,245,.06));margin-bottom:5px;animation:genline 2.5s ease-in-out infinite}
+.iw-pl1{width:90%;animation-delay:0s}.iw-pl2{width:75%;animation-delay:.2s}.iw-pl3{width:55%;animation-delay:.4s}
+.iw-cursor-blink{width:2px;height:10px;background:#1a8fff;border-radius:1px;animation:blink .9s infinite;margin-top:2px}
+.iw-label{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(26,143,255,.6)}
+
+/* ─── ILLUSTRATION: DNA Voice ─── */
+.illus-dna{display:flex;flex-direction:column;gap:14px;overflow:hidden}
+.dna-svg{width:100%;height:auto;mask-image:linear-gradient(to right,transparent 0%,black 15%,black 85%,transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0%,black 15%,black 85%,transparent 100%)}
+.dna-tags{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
+.dna-tags{display:none}
+.dna-tag{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;color:#60aeff;background:rgba(10,102,194,.12);border:1px solid rgba(10,102,194,.22);padding:3px 10px;border-radius:999px;animation:dnatag 3s ease-in-out infinite}
+.dna-ot{position:absolute;transform:translateX(-50%);pointer-events:none;white-space:nowrap}
+@keyframes dnatag{0%,100%{opacity:.7;transform:translateX(-50%) translateY(0)}50%{opacity:1;transform:translateX(-50%) translateY(-3px)}}
+
+/* ─── ILLUSTRATION: Clock ─── */
+.illus-clock{display:flex;align-items:center;gap:20px}
+.clock-svg{width:180px;height:auto;flex-shrink:0}
+.clock-labels{display:flex;flex-direction:column;gap:10px;flex:1}
+.clock-label{display:flex;align-items:center;gap:8px}
+.cl-dot{width:8px;height:8px;border-radius:50%;background:#1a8fff;box-shadow:0 0 8px rgba(26,143,255,.5);flex-shrink:0}
+.cl-time{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.02em}
+.cl-reach{font-family:'Space Grotesk',sans-serif;font-size:10px;color:var(--muted);margin-top:1px}
+
+/* ─── ILLUSTRATION: Growth ─── */
+.illus-growth{display:flex;flex-direction:column;gap:12px}
+.growth-hero{text-align:center;padding:6px 0}
+.growth-num{font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:900;color:var(--text);letter-spacing:-.05em;line-height:1}
+.growth-label{font-family:'Space Grotesk',sans-serif;font-size:11px;color:var(--muted);margin-top:4px}
+.growth-change{font-family:'Space Grotesk',sans-serif;font-size:11px;color:#22d87f;font-weight:600;margin-top:2px}
+.growth-chart{width:100%;height:auto}
+.growth-pills{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.growth-pill{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:8px 10px;text-align:center}
+.gp-val{display:block;font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.03em}
+.gp-label{display:block;font-family:'Space Grotesk',sans-serif;font-size:9px;color:var(--muted);margin-top:2px}
+.ins-shell{background:#070d1a;border:1px solid rgba(255,255,255,.07);border-radius:12px;overflow:hidden;font-family:'Space Grotesk',sans-serif}
+.ins-nav{display:flex;align-items:center;gap:10px;padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(10,20,40,.8)}
+.ins-nav-logo{display:flex;align-items:center;gap:5px;font-size:9px;font-weight:700;color:var(--text);flex-shrink:0;margin-right:4px}
+.ins-nav-items{display:flex;gap:2px;overflow:hidden;flex:1}
+.ins-nav-items span{font-size:8px;color:rgba(255,255,255,.4);white-space:nowrap;padding:3px 6px;border-radius:5px}
+.ins-nav-active{color:#1a8fff!important;background:rgba(26,143,255,.15)!important;font-weight:600}
+.ins-nav-avatar{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue2));display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;flex-shrink:0}
+.ins-filters{display:flex;align-items:center;gap:4px;padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(255,255,255,.015)}
+.ins-filter-label{font-size:7px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.3);text-transform:uppercase;margin-right:4px}
+.ins-filter-tab{font-size:7.5px;padding:2px 7px;border-radius:4px;color:rgba(255,255,255,.35);border:1px solid transparent;cursor:default}
+.ins-filter-active{background:rgba(26,143,255,.18);color:#60aeff;border-color:rgba(26,143,255,.25)!important}
+.ins-filter-btn{font-size:7.5px;color:rgba(255,255,255,.3);padding:2px 7px;border:1px solid rgba(255,255,255,.08);border-radius:4px;margin-left:2px}
+/* stat cards */
+.ins-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+.ins-stat-card{background:#070d1a;padding:8px 10px;position:relative}
+.ins-stat-top{display:flex;align-items:center;gap:4px;margin-bottom:3px}
+.ins-stat-icon{font-size:8px}
+.ins-stat-label{font-size:6.5px;font-weight:700;letter-spacing:.09em;color:rgba(255,255,255,.4);text-transform:uppercase;flex:1}
+.ins-stat-badge{font-size:6.5px;font-weight:700;color:#22d87f;background:rgba(34,216,127,.1);padding:1px 5px;border-radius:999px;white-space:nowrap}
+.ins-stat-val{font-size:18px;font-weight:900;color:var(--text);letter-spacing:-.04em;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums}
+.ins-stat-sub{font-size:7px;color:rgba(255,255,255,.3)}
+.ins-sparkline{width:100%;height:16px;margin-top:5px}
+/* main area */
+.ins-main{display:grid;grid-template-columns:1fr 140px;gap:1px;background:rgba(255,255,255,.05)}
+.ins-charts-col{display:flex;flex-direction:column;gap:1px;background:rgba(255,255,255,.04)}
+.ins-chart-panel{background:#070d1a;padding:10px}
+.ins-chart-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.ins-chart-title{font-size:8.5px;font-weight:600;color:var(--text);margin-bottom:2px}
+.ins-chart-subtitle{font-size:7px;color:rgba(255,255,255,.3)}
+.ins-chart-bigval{font-size:13px;font-weight:900;color:var(--text);letter-spacing:-.03em;text-align:right}
+.ins-chart-bigval-sub{font-size:6.5px;font-weight:400;color:rgba(255,255,255,.3);letter-spacing:.05em;display:block}
+.ins-barchart-wrap{display:flex;gap:6px;height:52px}
+.ins-barchart-yaxis{display:flex;flex-direction:column;justify-content:space-between;padding:0 4px 10px 0}
+.ins-barchart-yaxis span{font-size:6px;color:rgba(255,255,255,.2);text-align:right}
+.ins-barchart-bars{display:flex;align-items:flex-end;gap:4px;flex:1}
+.ins-bc-col{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1}
+.ins-bc-bar{width:100%;border-radius:2px 2px 0 0;background:rgba(26,143,255,.2)}
+.ins-bc-active{background:linear-gradient(to top,#0A66C2,#60aeff)!important;box-shadow:0 0 8px rgba(26,143,255,.5)}
+.ins-bc-col span{font-size:6.5px;color:rgba(255,255,255,.3)}
+.ins-bc-active-label{color:#60aeff!important;font-weight:700}
+/* engagement chart */
+.ins-eng-tabs{display:flex;gap:3px}
+.ins-eng-tab{font-size:7px;padding:2px 6px;border-radius:4px;color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.08)}
+.ins-eng-active{background:rgba(34,216,127,.15);color:#22d87f;border-color:rgba(34,216,127,.25)!important}
+.ins-linechart-wrap{position:relative}
+.ins-linechart-xaxis{display:flex;justify-content:space-between;margin-top:2px}
+.ins-linechart-xaxis span{font-size:6.5px;color:rgba(255,255,255,.25)}
+/* classements */
+.ins-rank-panel{background:#070d1a;padding:10px;display:flex;flex-direction:column;gap:6px}
+.ins-rank-head{display:flex;align-items:center;gap:4px;margin-bottom:2px}
+.ins-rank-icon{font-size:9px}
+.ins-rank-title{font-size:8.5px;font-weight:700;color:var(--text)}
+.ins-rank-sub{font-size:7px;color:rgba(255,255,255,.3);margin-left:2px}
+.ins-rank-tabs-row{display:flex;gap:2px;flex-wrap:wrap}
+.ins-rtab2{font-size:7px;padding:2px 5px;border-radius:3px;color:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.06);cursor:default}
+.ins-rtab2.active{background:rgba(26,143,255,.15);color:#60aeff;border-color:rgba(26,143,255,.2)}
+.ins-rank-subtabs{display:flex;gap:2px}
+.ins-rsubtab{font-size:7px;padding:2px 7px;border-radius:3px;color:rgba(255,255,255,.3);background:rgba(255,255,255,.04)}
+.ins-rsubtab.active{background:rgba(26,143,255,.2);color:#60aeff}
+.ins-rank-metrics{display:flex;gap:2px;flex-wrap:wrap}
+.ins-rm{font-size:6.5px;padding:1px 5px;border-radius:3px;color:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.05)}
+.ins-rm.active{color:#1a8fff;border-color:rgba(26,143,255,.3)}
+.ins-rank-list2{display:flex;flex-direction:column;gap:4px}
+.ins-rank-item{display:flex;align-items:flex-start;gap:5px;padding:5px 6px;background:rgba(255,255,255,.025);border-radius:5px;border:1px solid rgba(255,255,255,.04)}
+.ins-rank-num{font-size:8px;font-weight:700;color:rgba(255,255,255,.25);flex-shrink:0;margin-top:1px}
+.ins-rank-content{flex:1;min-width:0}
+.ins-rank-text2{font-size:7.5px;color:rgba(232,237,245,.7);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ins-rank-meta{font-size:6.5px;color:rgba(255,255,255,.25);margin-top:2px}
+.ins-score-pill{font-size:9px;font-weight:900;flex-shrink:0;letter-spacing:-.02em}
+.ins-score-pill span{font-size:6.5px;font-weight:400;color:rgba(255,255,255,.3)}
+.ins-score-green{color:#22d87f}
+.ins-score-yellow{color:#f59e0b}
+
+/* ─── ILLUSTRATION: Auto Flow ─── */
+.auto-flow{display:flex;align-items:center;justify-content:center;gap:0;padding:16px 0 24px}
+.af-node{display:flex;flex-direction:column;align-items:center;gap:10px;flex-shrink:0}
+.af-circle{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+.af-c1{background:linear-gradient(135deg,rgba(10,102,194,.2),rgba(0,47,217,.12));border:1px solid rgba(26,143,255,.3);box-shadow:0 0 24px rgba(10,102,194,.2);animation:afpulse 3s ease-in-out infinite}
+.af-c2{background:linear-gradient(135deg,rgba(10,102,194,.25),rgba(0,47,217,.15));border:1px solid rgba(26,143,255,.4);box-shadow:0 0 32px rgba(10,102,194,.3);animation:afpulse 3s .5s ease-in-out infinite}
+.af-c3{background:linear-gradient(135deg,rgba(34,216,127,.15),rgba(0,180,80,.08));border:1px solid rgba(34,216,127,.35);box-shadow:0 0 28px rgba(34,216,127,.2);animation:afpulse3 3s 1s ease-in-out infinite}
+@keyframes afpulse{0%,100%{box-shadow:0 0 24px rgba(10,102,194,.2)}50%{box-shadow:0 0 40px rgba(10,102,194,.4)}}
+@keyframes afpulse3{0%,100%{box-shadow:0 0 28px rgba(34,216,127,.2)}50%{box-shadow:0 0 44px rgba(34,216,127,.4)}}
+.af-arrow{flex-shrink:0;display:flex;align-items:center}
+.af-label{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.02em;text-align:center}
+.af-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;padding-top:20px;border-top:1px solid rgba(255,255,255,.05)}
+.af-metric{text-align:center}
+.af-mval{display:block;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--text);letter-spacing:-.03em}
+.af-msub{display:block;font-family:'Space Grotesk',sans-serif;font-size:10px;color:var(--muted);margin-top:3px}
+
+/* ─── ILLUSTRATION: Post Builder ─── */
+.illus-builder{display:flex;flex-direction:column;gap:0;background:rgba(7,12,23,.95);border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.5)}
+.ib-topbar{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02)}
+.ib-dot{width:9px;height:9px;border-radius:50%}
+.ib-title{font-family:'Space Grotesk',sans-serif;font-size:10px;color:var(--muted);margin-left:6px;letter-spacing:.02em}
+.ib-fields{display:flex;flex-direction:column;gap:0}
+.ib-row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.04)}
+.ib-label{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.3);text-transform:uppercase;width:46px;flex-shrink:0}
+.ib-value{font-family:'Space Grotesk',sans-serif;font-size:11px;color:var(--text);flex:1;opacity:.85}
+.ib-badge{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;padding:2px 8px;border-radius:999px;flex-shrink:0}
+.ib-toggle{width:26px;height:14px;background:linear-gradient(135deg,var(--blue),#60aeff);border-radius:999px;position:relative;flex-shrink:0}
+.ib-toggle::after{content:'';position:absolute;right:2px;top:2px;width:10px;height:10px;background:#fff;border-radius:50%}
+.ib-photo-chip{display:flex;align-items:center;gap:5px;background:rgba(26,143,255,.1);border:1px solid rgba(26,143,255,.2);border-radius:6px;padding:3px 8px;font-family:'Space Grotesk',sans-serif;font-size:9px;color:#60aeff}
+.ib-generate{display:flex;align-items:center;justify-content:center;padding:11px 14px;background:linear-gradient(135deg,var(--blue),var(--blue2));font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:#fff;gap:6px;cursor:default}
+.ib-output{padding:12px 14px;border-top:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.015);min-height:56px;position:relative}
+.ib-out-label{font-family:'Space Grotesk',sans-serif;font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1a8fff;margin-bottom:7px}
+.ib-out-line{height:8px;border-radius:999px;background:linear-gradient(to right,rgba(232,237,245,.14),rgba(232,237,245,.06));margin-bottom:5px;animation:genline 2.5s ease-in-out infinite}
+.ib-ol1{width:94%;animation-delay:0s}.ib-ol2{width:82%;animation-delay:.2s}.ib-ol3{width:88%;animation-delay:.4s}.ib-ol4{width:62%;animation-delay:.6s}
+
+/* ─── ILLUSTRATION: Voice Capture ─── */
+.illus-voice{display:flex;flex-direction:column;align-items:center;gap:16px}
+.vc-mic{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,rgba(10,102,194,.3),rgba(0,47,217,.2));border:1px solid rgba(26,143,255,.4);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 0 28px rgba(10,102,194,.3)}
+.vc-mic-ring{position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(26,143,255,.2);animation:ringpulse 2s ease-in-out infinite}
+.vc-waves{display:flex;align-items:center;gap:2px;height:32px}
+.vc-bar{width:3px;border-radius:999px;background:linear-gradient(to top,#0A66C2,#60aeff);animation:vpulse 1.4s ease-in-out infinite alternate}
+.vc-arrow{font-size:18px;color:rgba(26,143,255,.5)}
+.vc-result{background:rgba(10,102,194,.08);border:1px solid rgba(10,102,194,.2);border-radius:10px;padding:9px 14px;width:100%}
+.vc-result-label{font-family:'Space Grotesk',sans-serif;font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1a8fff;margin-bottom:5px}
+.vc-result-text{font-family:'Space Grotesk',sans-serif;font-size:11px;color:var(--text);line-height:1.5}
+
+/* ─── ILLUSTRATION: Self-Learning Loop ─── */
+.illus-loop{position:relative;width:100%;display:flex;align-items:center;justify-content:center;min-height:140px}
+.loop-node{position:absolute;display:flex;flex-direction:column;align-items:center;gap:4px}
+.ln-circle{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,rgba(10,102,194,.25),rgba(0,47,217,.15));border:1px solid rgba(26,143,255,.35);display:flex;align-items:center;justify-content:center;font-size:14px}
+.ln-label{font-family:'Space Grotesk',sans-serif;font-size:8.5px;font-weight:600;color:rgba(232,237,245,.55);text-align:center;max-width:60px;line-height:1.3}
+.loop-arrow{position:absolute;color:rgba(26,143,255,.4);font-size:13px}
+
+/* ─── ILLUSTRATION: Story Flow ─── */
+.story-flow{display:flex;align-items:center;justify-content:center;gap:4px;padding:8px 0 24px;min-height:130px}
+.sf-inputs{display:flex;flex-direction:column;justify-content:space-between;height:120px;flex-shrink:0}
+.sf-exp{display:flex;align-items:center;gap:8px;font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:500;color:rgba(232,237,245,.5)}
+.sf-exp-dot{width:7px;height:7px;border-radius:50%;background:rgba(26,143,255,.5);flex-shrink:0;box-shadow:0 0 8px rgba(26,143,255,.4)}
+.sf-e1{animation:sfloat 4s ease-in-out infinite}
+.sf-e2{animation:sfloat 4s 0.6s ease-in-out infinite}
+.sf-e3{animation:sfloat 4s 1.2s ease-in-out infinite}
+@keyframes sfloat{0%,100%{opacity:.5;transform:translateY(0)}50%{opacity:.85;transform:translateY(-3px)}}
+.sf-lines{flex-shrink:0}
+.sf-center{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0}
+.sf-core{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(10,102,194,.25),rgba(0,47,217,.15));border:1px solid rgba(26,143,255,.4);display:flex;align-items:center;justify-content:center;box-shadow:0 0 32px rgba(10,102,194,.3);animation:afpulse 3s ease-in-out infinite}
+.sf-core-label{font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;color:var(--text)}
+.sf-core-sub{font-family:'Space Grotesk',sans-serif;font-size:9px;color:#22d87f;font-weight:600}
+
+/* ─── ILLUSTRATION: Insight Flow ─── */
+.insight-flow{width:100%;padding:0;min-height:280px;position:relative;overflow:hidden}
+.if-svg-stage{width:100%;height:280px;display:block}
+/* floating insight pills over SVG */
+.if-pills{position:absolute;inset:0;pointer-events:none}
+.if-pill{position:absolute;display:flex;flex-direction:column;gap:3px;padding:10px 15px;background:rgba(10,18,35,.92);border:1px solid rgba(26,143,255,.22);border-radius:12px;backdrop-filter:blur(12px);box-shadow:0 6px 28px rgba(0,0,0,.45)}
+.if-pill-val{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.03em;line-height:1}
+.if-pill-label{font-family:'Space Grotesk',sans-serif;font-size:9.5px;color:var(--muted);letter-spacing:.02em}
+.ifp1{top:14%;right:3.5%;animation:ifloat 4s ease-in-out infinite}
+.ifp2{top:50%;right:2.5%;transform:translateY(-50%);animation:ifloat 4s .6s ease-in-out infinite}
+.ifp3{bottom:14%;right:4%;animation:ifloat 4s 1.1s ease-in-out infinite}
+.ifp4{top:16%;left:3.5%;animation:ifloat 4.5s .3s ease-in-out infinite}
+.ifp5{bottom:16%;left:4%;animation:ifloat 4.5s .9s ease-in-out infinite}
+@keyframes ifloat{0%,100%{transform:translateY(0);opacity:.9}50%{transform:translateY(-5px);opacity:1}}
+.ifp2{top:50%;right:2.5%}/* override transform for mid */
+@media(max-width:900px){.insight-flow,.if-svg-stage{height:200px;min-height:200px}.if-pill{padding:7px 10px}.if-pill-val{font-size:11px}.if-pill-label{font-size:8px}}
+
+/* ─── ILLUSTRATION: Data Insights (old, kept for CSS ref) ─── */
+.data-insights{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:0;padding:32px 40px 40px}
+.di-sep{background:rgba(255,255,255,.06);width:1px}
+.di-panel{display:flex;flex-direction:column;gap:20px;padding:0 32px}
+.di-panel:first-child{padding-left:0}
+.di-panel:last-child{padding-right:0}
+.di-visual{flex:1;display:flex;align-items:flex-end}
+/* Bar chart */
+.di-bars{display:flex;align-items:flex-end;gap:5px;height:72px;width:100%}
+.di-bar{flex:1;border-radius:3px 3px 0 0;background:rgba(26,143,255,.12);height:var(--h);animation:barrise 1.2s ease-out forwards;transform-origin:bottom;transform:scaleY(0)}
+.di-bar-hot{background:linear-gradient(to top,#0A66C2,#60aeff);box-shadow:0 0 8px rgba(26,143,255,.3)}
+.di-bar-labels{display:flex;gap:5px;margin-top:6px;width:100%}
+.di-bar-labels span{flex:1;font-family:'Space Grotesk',sans-serif;font-size:8.5px;color:var(--muted);text-align:center}
+/* Format bars */
+.di-formats{display:flex;flex-direction:column;gap:10px;width:100%}
+.di-fmt{display:flex;flex-direction:column;gap:4px}
+.di-fmt-bar{height:6px;border-radius:999px;background:rgba(255,255,255,.06);width:100%;overflow:hidden}
+.di-fmt-fill{height:100%;border-radius:999px;background:rgba(26,143,255,.3);animation:barrise 1.4s ease-out forwards;transform-origin:left;transform:scaleX(0)}
+.di-fmt-winner{background:linear-gradient(to right,#0A66C2,#60aeff);box-shadow:0 0 8px rgba(26,143,255,.3)}
+.di-fmt-label{font-family:'Space Grotesk',sans-serif;font-size:9.5px;color:var(--muted)}
+/* KPI rings */
+.di-kpis{display:flex;gap:16px;align-items:center;justify-content:center;width:100%}
+.di-kpi{display:flex;flex-direction:column;align-items:center;gap:6px}
+.di-kpi-ring{position:relative;display:flex;align-items:center;justify-content:center}
+.di-kpi-num{position:absolute;font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:800;color:var(--text);letter-spacing:-.02em}
+.di-kpi-label{font-family:'Space Grotesk',sans-serif;font-size:8.5px;color:var(--muted);text-align:center}
+/* Insight footer */
+.di-insight{border-top:1px solid rgba(255,255,255,.05);padding-top:16px}
+.di-insight-val{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:800;color:var(--text);letter-spacing:-.03em}
+.di-insight-label{font-family:'Space Grotesk',sans-serif;font-size:10px;color:var(--muted);margin-top:3px}
+
+@media(max-width:900px){.data-insights{grid-template-columns:1fr;gap:24px}.di-sep{display:none}.di-panel{padding:0!important}}
+
+/* ─── ILLUSTRATION: Storytelling (old) ─── */
+.illus-story{display:flex;flex-direction:column;gap:8px;width:100%}
+.story-exp{display:flex;align-items:flex-start;gap:9px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:9px 11px}
+.story-dot{width:8px;height:8px;border-radius:50%;background:rgba(26,143,255,.5);flex-shrink:0;margin-top:2px}
+.story-exp-text{font-family:'Space Grotesk',sans-serif;font-size:10.5px;color:rgba(232,237,245,.7);line-height:1.4}
+.story-exp-date{font-family:'Space Grotesk',sans-serif;font-size:9px;color:var(--muted);margin-top:2px}
+.story-arrow-row{display:flex;align-items:center;gap:8px;padding:4px 0}
+.story-arrow-line{flex:1;height:1px;background:linear-gradient(to right,rgba(26,143,255,.3),rgba(26,143,255,.05))}
+.story-arrow-txt{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;letter-spacing:.08em;color:rgba(26,143,255,.5);text-transform:uppercase;white-space:nowrap}
+.story-post{background:rgba(10,102,194,.07);border:1px solid rgba(10,102,194,.2);border-radius:10px;padding:9px 12px}
+.story-post-line{height:7px;border-radius:999px;background:linear-gradient(to right,rgba(232,237,245,.15),rgba(232,237,245,.06));margin-bottom:5px;animation:genline 3s ease-in-out infinite}
+.spl1{width:96%}.spl2{width:80%;animation-delay:.2s}.spl3{width:55%;animation-delay:.4s}
+.story-badge{display:inline-flex;align-items:center;gap:4px;font-family:'Space Grotesk',sans-serif;font-size:8px;font-weight:700;color:#22d87f;margin-top:3px}
+
+@media(max-width:900px){.ft-grid{grid-template-columns:1fr}.ft-card-wide,.ft-card-full{grid-column:span 1}}
+
+/* ─── SECTION DIVIDER ─── */
+.s3-header .sec-h{font-family:'Space Grotesk',sans-serif;font-size:clamp(34px,4vw,54px);font-weight:700;letter-spacing:-.04em}
+.s3-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:linear-gradient(135deg,rgba(10,102,194,.15),rgba(0,47,217,.08),rgba(26,143,255,.12));border-radius:26px;padding:2px;overflow:hidden}
+.s3-card{background:linear-gradient(160deg,#0d1525 0%,#080d18 100%);border-radius:24px;padding:36px 32px 32px;display:flex;flex-direction:column;gap:0;position:relative;overflow:hidden;transition:background .3s}
+.s3-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(26,143,255,.4),transparent);opacity:0;transition:opacity .3s}
+.s3-card:hover::after{opacity:1}
+.s3-card:hover{background:linear-gradient(160deg,#0f1a2e 0%,#0a1020 100%)}
+.s3-card-featured{background:linear-gradient(160deg,#0d1d38 0%,#091320 100%)}
+.s3-card-featured::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;background:radial-gradient(circle,rgba(10,102,194,.2),transparent 70%);pointer-events:none}
+.s3-step-label{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(26,143,255,.6);margin-bottom:24px}
+
+.s3-illustration{margin-bottom:28px;border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.07);padding:22px;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;overflow:hidden;position:relative}
+.s3-illustration::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,102,194,.04) 0%,transparent 60%);pointer-events:none}
+
+/* connect illustration */
+.s3-connect-box{display:flex;align-items:center;gap:14px}
+.s3-li-icon,.s3-app-icon{border-radius:12px;overflow:hidden;flex-shrink:0;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.s3-cable-wrap{flex-shrink:0;display:flex;align-items:center}
+.s3-connect-status{display:flex;align-items:center;gap:8px;font-family:'Space Grotesk',sans-serif;font-size:11px;color:var(--muted)}
+.s3-status-dot{width:7px;height:7px;border-radius:50%;background:#22d87f;box-shadow:0 0 10px rgba(34,216,127,.7);flex-shrink:0;animation:bpulse 1.8s infinite}
+
+/* voice bars */
+.s3-ai-box{width:100%;display:flex;flex-direction:column;gap:14px}
+.s3-ai-label-top{display:flex;align-items:center;gap:8px;font-family:'Space Grotesk',sans-serif;font-size:11px;color:var(--muted)}
+.s3-voice-bars{display:flex;align-items:flex-end;gap:3px;height:56px}
+.vbar{flex:1;border-radius:3px 3px 0 0;background:linear-gradient(to top,#0A66C2,#60aeff);height:var(--h);animation:vpulse 1.8s ease-in-out infinite alternate;box-shadow:0 0 6px rgba(26,143,255,.3)}
+@keyframes vpulse{0%{opacity:.4;transform:scaleY(.55)}100%{opacity:1;transform:scaleY(1)}}
+.s3-voice-tags{display:flex;gap:6px;flex-wrap:wrap}
+.s3-vtag{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:500;color:#60aeff;background:rgba(10,102,194,.14);padding:3px 10px;border-radius:999px;border:1px solid rgba(10,102,194,.2)}
+
+/* schedule illustration */
+.s3-sched-box{width:100%;display:flex;flex-direction:column;gap:7px}
+.s3-sched-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;transition:background .2s}
+.s3-sched-live{border-color:rgba(34,216,127,.18);background:rgba(34,216,127,.04)}
+.s3-sched-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.s3-sched-dot.green{background:#22d87f;box-shadow:0 0 10px rgba(34,216,127,.7);animation:bpulse 1.8s infinite}
+.s3-sched-dot.blue{background:#1a8fff;box-shadow:0 0 6px rgba(26,143,255,.4)}
+.s3-sched-info{flex:1;min-width:0}
+.s3-sched-title{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s3-sched-time{font-family:'Space Grotesk',sans-serif;font-size:10px;color:var(--muted);margin-top:2px}
+.s3-sched-badge{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;letter-spacing:.07em;padding:2px 9px;border-radius:999px;flex-shrink:0}
+.s3-sched-badge.live{background:rgba(34,216,127,.14);color:#22d87f}
+.s3-sched-badge.sched{background:rgba(26,143,255,.14);color:#60aeff}
+
+.s3-title{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:500;letter-spacing:0px;margin-bottom:10px;color:var(--text)}
+.s3-desc{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--muted);line-height:1.7}
+
+@media(max-width:900px){.s3-grid{grid-template-columns:1fr;background:none;gap:14px;padding:0}.s3-card{border:1px solid var(--border)}}
+.sec-h{font-size:clamp(30px,4vw,50px);font-weight:700;letter-spacing:-.035em;line-height:1.12;margin-bottom:14px}
+.sec-p{font-size:16px;color:var(--muted);line-height:1.7}
+</style>
+<template id="__bundler_thumbnail" data-bg-color="#070C17">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#070C17"/>
+    <circle cx="600" cy="400" r="180" fill="rgba(10,102,194,0.15)"/>
+    <circle cx="600" cy="400" r="120" fill="rgba(10,102,194,0.2)"/>
+    <text x="600" y="430" font-family="sans-serif" font-size="120" font-weight="700" fill="#1a8fff" text-anchor="middle">IK</text>
+  </svg>
+</template>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a href="#" class="nav-logo">
+    <img src="uploads/Untitled_design-removebg-preview.png" class="nav-logo-mark" alt="InKognito">
+    <span class="nav-logo-name">In<span>K</span>ognito</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Fonctionnalités</a></li>
+    <li><a href="#how">Comment ça marche</a></li>
+    <li><a href="#pricing">Tarifs</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="#" class="btn-ghost">Se connecter</a>
+    <a href="#" class="btn-cta">Essai gratuit</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+
+  <!-- Sprites flottants autour du titre -->
+  <div class="hero-sprites">
+    <!-- gauche haut -->
+    <div class="sprite sp1">
+      <span class="sp-dot-green"></span>
+      <div class="sp-content">
+        <div class="sp-val">Post publié</div>
+        <div class="sp-sub">il y a 2 min · 1 248 vues</div>
+      </div>
+    </div>
+    <!-- droite haut -->
+    <div class="sprite sp2">
+      <div class="sp-content">
+        <div class="sp-val" style="color:#22d87f">+420%</div>
+        <div class="sp-sub">Vues de profil ce mois</div>
+      </div>
+      <div class="sp-bar-wrap">
+        <div class="sp-bar" style="height:40%"></div>
+        <div class="sp-bar" style="height:65%"></div>
+        <div class="sp-bar" style="height:50%"></div>
+        <div class="sp-bar" style="height:90%"></div>
+        <div class="sp-bar" style="height:75%"></div>
+      </div>
+    </div>
+    <!-- gauche milieu -->
+    <div class="sprite sp3">
+      <span class="sp-icon">🤖</span>
+      <div class="sp-content">
+        <div class="sp-val">IA entraînée</div>
+        <div class="sp-sub">sur votre style d'écriture</div>
+      </div>
+    </div>
+    <!-- droite milieu -->
+    <div class="sprite sp4">
+      <span class="sp-dot-blue"></span>
+      <div class="sp-content">
+        <div class="sp-val">Prochain post</div>
+        <div class="sp-sub">Demain · 09:00 · optimal</div>
+      </div>
+    </div>
+    <!-- gauche bas -->
+    <div class="sprite sp5">
+      <span class="sp-icon">⚡</span>
+      <div class="sp-content">
+        <div class="sp-val">Généré en 28s</div>
+        <div class="sp-sub">Prêt à publier</div>
+      </div>
+    </div>
+    <!-- droite bas -->
+    <div class="sprite sp6">
+      <div class="sp-content">
+        <div class="sp-val">2 400+</div>
+        <div class="sp-sub">pros utilisent InKognito</div>
+      </div>
+      <div class="avatars" style="margin-left:6px">
+        <div class="av" style="width:20px;height:20px;font-size:7px">ML</div>
+        <div class="av" style="width:20px;height:20px;font-size:7px">TK</div>
+        <div class="av" style="width:20px;height:20px;font-size:7px;background:linear-gradient(135deg,#7c3aed,#4f46e5)">SA</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenu centré -->
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Votre LinkedIn en pilote automatique
+    </div>
+    <h1 class="hero-h1" style="font-size: 57px; font-family:'Space Grotesk',sans-serif; font-weight: 500">
+      Postez tous les jours<br>
+      <span class="grad-text">sans écrire une ligne</span>
+    </h1>
+    <p class="hero-sub">Capturez une idée en 10 secondes. L'IA rédige dans votre style exact, publie au bon moment, et s'améliore à chaque post.</p>
+    <div class="hero-actions">
+      <a href="#" class="btn-hero" style="font-family:'Space Grotesk',sans-serif; font-weight: 400">Commencer gratuitement <span class="btn-hero-arrow">→</span></a>
+      <a href="#" class="btn-hero-out" style="font-family:'Space Grotesk',sans-serif">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.6"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
+        Voir la démo
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Product preview -->
+  <div class="hero-preview">
+    <div class="preview-window" style="border-radius:16px">
+      <div class="preview-bar">
+        <div class="wdot wd1"></div>
+        <div class="wdot wd2"></div>
+        <div class="wdot wd3"></div>
+        <div class="preview-url">app.inkognito.io/posts</div>
+      </div>
+      <div class="preview-body">
+        <!-- Sidebar -->
+        <div class="preview-sidebar">
+          <div class="psb-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Mes posts
+          </div>
+          <div class="psb-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Calendrier
+          </div>
+          <div class="psb-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Analytiques
+          </div>
+          <div class="psb-sep"></div>
+          <div class="psb-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M2 12h2M20 12h2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41"/></svg>
+            IA Voix
+          </div>
+          <div class="psb-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Profil
+          </div>
+        </div>
+        <!-- Main -->
+        <div class="preview-main">
+          <div class="pm-header">
+            <div class="pm-title">Posts récents</div>
+            <button class="pm-btn">+ Nouveau post</button>
+          </div>
+          <div class="post-card-prev">
+            <div class="pcp-head">
+              <div class="pcp-av">TK</div>
+              <div>
+                <div class="pcp-name">Thomas Kern</div>
+                <div class="pcp-time">Aujourd'hui · 09:00</div>
+              </div>
+            </div>
+            <div class="pcp-body">J'ai closé 5 deals en 30 jours grâce à une seule habitude : publier sur LinkedIn chaque semaine. Voici le framework exact que j'utilise ↓</div>
+            <div class="pcp-tags">
+              <span class="pcp-tag">#B2BSales</span>
+              <span class="pcp-tag">#LinkedIn</span>
+              <span class="pcp-tag">#GrowthHacking</span>
+            </div>
+            <div class="pcp-foot">
+              <div style="display:flex;gap:14px">
+                <span class="pcp-stat">👁 12 481 vues</span>
+                <span class="pcp-stat">❤️ 342 réactions</span>
+                <span class="pcp-stat">💬 67 commentaires</span>
+              </div>
+              <span class="pcp-status live">PUBLIÉ</span>
+            </div>
+          </div>
+          <div class="post-card-prev" style="opacity:.65">
+            <div class="pcp-head">
+              <div class="pcp-av">TK</div>
+              <div>
+                <div class="pcp-name">Thomas Kern</div>
+                <div class="pcp-time">Demain · 09:00</div>
+              </div>
+            </div>
+            <div class="pcp-body">Le secret des fondateurs qui recrutent facilement ? Leur marque personnelle. 3 posts par semaine suffisent à devenir la référence de votre secteur.</div>
+            <div class="pcp-foot">
+              <div></div>
+              <span class="pcp-status sched">PLANIFIÉ</span>
+            </div>
+          </div>
+          <div class="pm-stats-row">
+            <div class="pm-stat-box">
+              <div class="pm-stat-num">48.2k</div>
+              <div class="pm-stat-label">Impressions / mois</div>
+              <div class="pm-stat-change">↑ +34%</div>
+            </div>
+            <div class="pm-stat-box">
+              <div class="pm-stat-num">4.8%</div>
+              <div class="pm-stat-label">Taux d'engagement</div>
+              <div class="pm-stat-change">↑ +1.2%</div>
+            </div>
+            <div class="pm-stat-box">
+              <div class="pm-stat-num">12</div>
+              <div class="pm-stat-label">Leads inbound</div>
+              <div class="pm-stat-change">↑ ce mois</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- 3 STEPS -->
+<section id="steps3">
+  <div class="s3-header reveal">
+    <div class="sec-label">Comment ça marche</div>
+    <h2 class="sec-h">3 étapes, c'est tout.</h2>
+  </div>
+  <div class="s3-grid">
+
+    <!-- Step 1 -->
+    <div class="s3-card reveal rd1">
+      <div class="s3-step-label">Étape 01</div>
+      <div class="s3-illustration">
+        <div class="s3-connect-box">
+          <div class="s3-li-icon">
+            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+              <rect width="40" height="40" rx="8" fill="#0A66C2"/>
+              <path d="M10 15h5v15h-5zM12.5 13a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM17 15h5v2s1.5-2.5 5-2.5c4 0 6 2.5 6 7V30h-5v-7.5c0-2-.5-3.5-2.5-3.5s-3 1.5-3 3.5V30h-5V15z" fill="white"/>
+            </svg>
+          </div>
+          <div class="s3-cable-wrap">
+            <svg width="72" height="18" viewBox="0 0 72 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="cableGrad" x1="0" y1="0" x2="72" y2="0" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#0A66C2" stop-opacity="0.2"/>
+                  <stop offset="40%" stop-color="#1a8fff" stop-opacity="1"/>
+                  <stop offset="60%" stop-color="#60aeff" stop-opacity="1"/>
+                  <stop offset="100%" stop-color="#0A66C2" stop-opacity="0.2"/>
+                  <animateTransform attributeName="gradientTransform" type="translate" from="-72 0" to="72 0" dur="1.6s" repeatCount="indefinite"/>
+                </linearGradient>
+                <linearGradient id="cableBase" x1="0" y1="0" x2="72" y2="0" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#0A66C2" stop-opacity="0.15"/>
+                  <stop offset="50%" stop-color="#1a8fff" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#0A66C2" stop-opacity="0.15"/>
+                </linearGradient>
+              </defs>
+              <rect x="0" y="7" width="6" height="4" rx="1" fill="rgba(26,143,255,0.5)"/>
+              <rect x="6" y="8" width="60" height="2" rx="1" fill="url(#cableBase)"/>
+              <rect x="6" y="8" width="60" height="2" rx="1" fill="url(#cableGrad)"/>
+              <rect x="66" y="7" width="6" height="4" rx="1" fill="rgba(26,143,255,0.5)"/>
+              <rect x="6" y="7.5" width="60" height="3" rx="1.5" fill="url(#cableGrad)" opacity="0.4" filter="blur(2px)"/>
+            </svg>
+          </div>
+          <div class="s3-app-icon">
+            <svg width="38" height="38" viewBox="0 0 120 120" fill="none">
+              <rect width="120" height="120" rx="24" fill="rgba(10,102,194,0.15)"/>
+              <circle cx="60" cy="38" r="20" fill="url(#s3lg1)"/>
+              <path d="M68 32 Q75 28 77 38 Q74 44 62 44" fill="rgba(255,255,255,0.2)"/>
+              <rect x="26" y="66" width="68" height="18" rx="9" fill="url(#s3lg2)"/>
+              <rect x="36" y="90" width="48" height="12" rx="6" fill="rgba(26,143,255,0.2)"/>
+              <defs>
+                <linearGradient id="s3lg1" x1="40" y1="18" x2="80" y2="58" gradientUnits="userSpaceOnUse"><stop stop-color="#1a8fff"/><stop offset="1" stop-color="#0033cc"/></linearGradient>
+                <linearGradient id="s3lg2" x1="26" y1="66" x2="94" y2="84" gradientUnits="userSpaceOnUse"><stop stop-color="#0A66C2"/><stop offset="1" stop-color="#0033cc"/></linearGradient>
+              </defs>
+            </svg>
+          </div>
+        </div>
+        <div class="s3-connect-status">
+          <div class="s3-status-dot"></div>
+          <span>Connexion sécurisée via OAuth</span>
+        </div>
+      </div>
+      <h3 class="s3-title">Connectez LinkedIn</h3>
+      <p class="s3-desc">Un clic. InKognito se connecte à votre profil via OAuth sécurisé — puis analyse vos posts existants pour extraire votre style d'écriture unique.</p>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="s3-card s3-card-featured reveal rd2">
+      <div class="s3-step-label">Étape 02</div>
+      <div class="s3-illustration">
+        <div class="s3-ai-box">
+          <div class="s3-ai-label-top">
+            <div class="s3-status-dot"></div>
+            Extraction de votre ADN rédactionnel…
+          </div>
+          <div class="s3-voice-bars">
+            <div class="vbar" style="--h:40%;animation-delay:0s"></div>
+            <div class="vbar" style="--h:75%;animation-delay:.1s"></div>
+            <div class="vbar" style="--h:55%;animation-delay:.2s"></div>
+            <div class="vbar" style="--h:90%;animation-delay:.3s"></div>
+            <div class="vbar" style="--h:60%;animation-delay:.4s"></div>
+            <div class="vbar" style="--h:80%;animation-delay:.5s"></div>
+            <div class="vbar" style="--h:45%;animation-delay:.6s"></div>
+            <div class="vbar" style="--h:70%;animation-delay:.7s"></div>
+            <div class="vbar" style="--h:50%;animation-delay:.8s"></div>
+            <div class="vbar" style="--h:85%;animation-delay:.9s"></div>
+            <div class="vbar" style="--h:65%;animation-delay:1s"></div>
+            <div class="vbar" style="--h:95%;animation-delay:1.1s"></div>
+          </div>
+          <div class="s3-voice-tags">
+            <span class="s3-vtag">Ton direct ✓</span>
+            <span class="s3-vtag">Hooks courts ✓</span>
+            <span class="s3-vtag">Storytelling ✓</span>
+          </div>
+        </div>
+      </div>
+      <h3 class="s3-title">L'IA apprend votre voix</h3>
+      <p class="s3-desc">L'IA analyse vos patterns d'écriture, votre vocabulaire, vos structures de posts. En quelques minutes, elle sait écrire exactement comme vous.</p>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="s3-card reveal rd3">
+      <div class="s3-step-label">Étape 03</div>
+      <div class="s3-illustration">
+        <div class="s3-sched-box">
+          <div class="s3-sched-row s3-sched-live">
+            <div class="s3-sched-dot green"></div>
+            <div class="s3-sched-info">
+              <div class="s3-sched-title">Idée capturée → Post généré</div>
+              <div class="s3-sched-time">Aujourd'hui 09:00 · Publié · 8.7k vues</div>
+            </div>
+            <div class="s3-sched-badge live">AUTO</div>
+          </div>
+          <div class="s3-sched-row">
+            <div class="s3-sched-dot blue"></div>
+            <div class="s3-sched-info">
+              <div class="s3-sched-title">Expérience client → Storytelling</div>
+              <div class="s3-sched-time">Demain · 09:00 · créneau optimal ✦</div>
+            </div>
+            <div class="s3-sched-badge sched">AUTO</div>
+          </div>
+          <div class="s3-sched-row" style="opacity:.5">
+            <div class="s3-sched-dot blue"></div>
+            <div class="s3-sched-info">
+              <div class="s3-sched-title">Analyse perf → Post amélioré</div>
+              <div class="s3-sched-time">Jeu · 17:00 · IA optimisée ✦</div>
+            </div>
+            <div class="s3-sched-badge sched">AUTO</div>
+          </div>
+        </div>
+      </div>
+      <h3 class="s3-title">Publiez, mesurez, progressez</h3>
+      <p class="s3-desc">InKognito publie automatiquement, analyse les performances, et améliore votre stratégie en continu. Votre LinkedIn évolue sans vous.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-header reveal" style="margin-bottom:56px">
+    <div class="sec-label">Fonctionnalités</div>
+    <h2 class="sec-h" style="font-family:'Space Grotesk',sans-serif">Six raisons de ne plus<br>écrire vos posts manuellement</h2>
+  </div>
+
+  <div class="ft-grid">
+
+    <!-- Card 1: Publication automatique (wide) -->
+    <div class="ft-card ft-card-wide reveal rd1">
+      <div class="ft-card-text">
+        <h3 class="ft-title">Publication entièrement automatique</h3>
+        <p class="ft-desc">Définissez vos créneaux, choisissez le sujet, l'objectif, si vous voulez un CTA, et ajoutez vos photos. InKognito génère le post et le publie sans que vous ayez à toucher quoi que ce soit.</p>
+      </div>
+      <div class="ft-illus" style="padding:32px 20px 0">
+        <div class="auto-flow">
+          <!-- Node 1: Idée -->
+          <div class="af-node">
+            <div class="af-circle af-c1">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#60aeff" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/></svg>
+            </div>
+            <span class="af-label">Idée capturée</span>
+          </div>
+          <!-- Arrow 1 -->
+          <div class="af-arrow">
+            <svg width="80" height="20" viewBox="0 0 80 20" fill="none">
+              <line x1="0" y1="10" x2="64" y2="10" stroke="rgba(26,143,255,0.25)" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <circle r="3" fill="#1a8fff" opacity="0.9">
+                <animateMotion dur="1.8s" repeatCount="indefinite" path="M0 10 L64 10"/>
+                <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite"/>
+              </circle>
+              <polyline points="60,6 68,10 60,14" stroke="#1a8fff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+            </svg>
+          </div>
+          <!-- Node 2: IA -->
+          <div class="af-node">
+            <div class="af-circle af-c2">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#60aeff" stroke-width="1.8" stroke-linecap="round"><path d="M12 2a4 4 0 014 4v1h1a3 3 0 010 6h-1v1a4 4 0 01-8 0v-1H7a3 3 0 010-6h1V6a4 4 0 014-4z"/></svg>
+            </div>
+            <span class="af-label">IA rédige</span>
+          </div>
+          <!-- Arrow 2 -->
+          <div class="af-arrow">
+            <svg width="80" height="20" viewBox="0 0 80 20" fill="none">
+              <line x1="0" y1="10" x2="64" y2="10" stroke="rgba(26,143,255,0.25)" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <circle r="3" fill="#1a8fff" opacity="0.9">
+                <animateMotion dur="1.8s" begin="0.6s" repeatCount="indefinite" path="M0 10 L64 10"/>
+                <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" begin="0.6s" repeatCount="indefinite"/>
+              </circle>
+              <polyline points="60,6 68,10 60,14" stroke="#1a8fff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+            </svg>
+          </div>
+          <!-- Node 3: Publié -->
+          <div class="af-node">
+            <div class="af-circle af-c3">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22d87f" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span class="af-label" style="color:#22d87f">Publié auto.</span>
+          </div>
+        </div>
+        <!-- Metrics below -->
+        <div class="af-metrics">
+          <div class="af-metric">
+            <span class="af-mval">09:00</span>
+            <span class="af-msub">Heure optimale</span>
+          </div>
+          <div class="af-metric">
+            <span class="af-mval">×4/sem</span>
+            <span class="af-msub">Fréquence IA</span>
+          </div>
+          <div class="af-metric">
+            <span class="af-mval">0 min</span>
+            <span class="af-msub">Temps passé</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Capture d'idée -->
+    <div class="ft-card reveal rd2">
+      <div class="ft-card-text">
+        <h3 class="ft-title">Capture d'idée ultra-simple</h3>
+        <p class="ft-desc">Enregistrez ce que vous avez à dire en quelques secondes. L'IA analyse votre audio et le transforme instantanément en sujet de contenu prêt à générer.</p>
+      </div>
+      <div class="ft-illus">
+        <div class="illus-voice">
+          <div class="vc-mic">
+            <div class="vc-mic-ring"></div>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60aeff" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0014 0M12 19v3M8 22h8"/></svg>
+          </div>
+          <div class="vc-waves">
+            <div class="vc-bar" style="height:14px;animation-delay:0s"></div>
+            <div class="vc-bar" style="height:24px;animation-delay:.1s"></div>
+            <div class="vc-bar" style="height:18px;animation-delay:.2s"></div>
+            <div class="vc-bar" style="height:30px;animation-delay:.3s"></div>
+            <div class="vc-bar" style="height:20px;animation-delay:.4s"></div>
+            <div class="vc-bar" style="height:26px;animation-delay:.5s"></div>
+            <div class="vc-bar" style="height:12px;animation-delay:.6s"></div>
+            <div class="vc-bar" style="height:28px;animation-delay:.7s"></div>
+            <div class="vc-bar" style="height:16px;animation-delay:.8s"></div>
+            <div class="vc-bar" style="height:22px;animation-delay:.9s"></div>
+          </div>
+          <div class="vc-arrow">↓</div>
+          <div class="vc-result">
+            <div class="vc-result-label">Sujet détecté</div>
+            <div class="vc-result-text">Ma stratégie cold email qui m'a rapporté 3 clients en 2 semaines</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Style parfait (DNA) -->
+    <div class="ft-card reveal rd3">
+      <div class="ft-card-text">
+        <h3 class="ft-title">Votre style, fidèlement retranscrit</h3>
+        <p class="ft-desc">L'IA extrait vos patterns d'écriture, votre ton, vos structures de phrases. Chaque post sonne comme vous — personne ne voit la différence.</p>
+      </div>
+      <div class="ft-illus">
+        <div class="illus-dna">
+          <div style="position:relative">
+            <svg class="dna-svg" viewBox="0 0 280 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs><linearGradient id="dnaGrad2" x1="0" y1="0" x2="280" y2="0"><stop stop-color="#0A66C2"/><stop offset="1" stop-color="#60aeff"/></linearGradient></defs>
+              <path d="M0 80 C35 40 70 40 105 80 C140 120 175 120 210 80 C245 40 280 40 315 80" stroke="url(#dnaGrad2)" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.9"/>
+              <path d="M0 80 C35 120 70 120 105 80 C140 40 175 40 210 80 C245 120 280 120 315 80" stroke="rgba(26,143,255,0.4)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <line x1="26" y1="60" x2="26" y2="100" stroke="rgba(26,143,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="52" y1="46" x2="52" y2="114" stroke="rgba(26,143,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="78" y1="48" x2="78" y2="112" stroke="rgba(96,164,255,0.4)" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="131" y1="112" x2="131" y2="48" stroke="rgba(26,143,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="157" y1="120" x2="157" y2="40" stroke="rgba(96,164,255,0.4)" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="183" y1="112" x2="183" y2="48" stroke="rgba(26,143,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="236" y1="48" x2="236" y2="112" stroke="rgba(26,143,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="262" y1="42" x2="262" y2="118" stroke="rgba(96,164,255,0.35)" stroke-width="1.5" stroke-linecap="round"/>
+              <circle r="4" fill="#60aeff" opacity="0.9">
+                <animateMotion dur="4s" repeatCount="indefinite" path="M0 80 C35 40 70 40 105 80 C140 120 175 120 210 80 C245 40 280 40 315 80"/>
+                <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+            <span class="dna-tag dna-ot" style="left:27.9%;top:calc(30% - 26px);animation-delay:0s">Ton direct</span>
+            <span class="dna-tag dna-ot" style="left:46.8%;top:70%;animation-delay:.4s">Hooks courts</span>
+            <span class="dna-tag dna-ot" style="left:56.1%;top:calc(25% - 26px);animation-delay:.8s">Storytelling</span>
+            <span class="dna-tag dna-ot" style="left:65.4%;top:70%;animation-delay:1.2s">Vocabulaire</span>
+            <span class="dna-tag dna-ot" style="left:84.3%;top:calc(30% - 26px);animation-delay:1.6s">Authenticité</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: IA auto-apprenante -->
+    <div class="ft-card reveal rd4">
+      <div class="ft-card-text">
+        <h3 class="ft-title">L'IA qui s'améliore d'elle-même</h3>
+        <p class="ft-desc">Après chaque post, l'IA analyse les performances, tire des conclusions et les injecte automatiquement dans les prochaines générations. Plus vous publiez, meilleur elle devient.</p>
+      </div>
+      <div class="ft-illus">
+        <div class="illus-loop">
+          <!-- Center glow -->
+          <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,rgba(10,102,194,.2),rgba(0,47,217,.1));border:1px solid rgba(26,143,255,.3);display:flex;align-items:center;justify-content:center;position:relative;z-index:2;box-shadow:0 0 24px rgba(10,102,194,.25)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60aeff" stroke-width="1.8" stroke-linecap="round" style="animation:spin 3s linear infinite"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+          </div>
+          <!-- Nodes around -->
+          <div class="loop-node" style="top:6px;left:50%;transform:translateX(-50%)">
+            <div class="ln-circle" style="width:34px;height:34px;font-size:12px">✦</div>
+            <span class="ln-label">Post généré</span>
+          </div>
+          <div class="loop-node" style="top:50%;right:4%;transform:translateY(-50%)">
+            <div class="ln-circle" style="width:34px;height:34px;font-size:12px">📊</div>
+            <span class="ln-label">Analyse perfs</span>
+          </div>
+          <div class="loop-node" style="bottom:6px;left:50%;transform:translateX(-50%)">
+            <div class="ln-circle" style="width:34px;height:34px;font-size:12px">🧠</div>
+            <span class="ln-label">Apprentissage</span>
+          </div>
+          <div class="loop-node" style="top:50%;left:4%;transform:translateY(-50%)">
+            <div class="ln-circle" style="width:34px;height:34px;font-size:12px">↑</div>
+            <span class="ln-label">Post amélioré</span>
+          </div>
+          <!-- SVG arrows ring -->
+          <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 220 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="110" cy="70" rx="80" ry="50" stroke="rgba(26,143,255,0.12)" stroke-width="1" stroke-dasharray="6 4">
+              <animateTransform attributeName="transform" type="rotate" from="0 110 70" to="360 110 70" dur="12s" repeatCount="indefinite"/>
+            </ellipse>
+            <ellipse cx="110" cy="70" rx="60" ry="36" stroke="rgba(26,143,255,0.08)" stroke-width="1" stroke-dasharray="4 6">
+              <animateTransform attributeName="transform" type="rotate" from="360 110 70" to="0 110 70" dur="8s" repeatCount="indefinite"/>
+            </ellipse>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5: Vrai storytelling -->
+    <div class="ft-card reveal rd5">
+      <div class="ft-card-text">
+        <h3 class="ft-title">Vrai storytelling, zéro invention</h3>
+        <p class="ft-desc">Transmettez vos vraies expériences. L'IA les utilise telles quelles pour rédiger des posts profondément humains — sans jamais inventer ce que vous n'avez pas vécu.</p>
+      </div>
+      <div class="ft-illus" style="padding:28px 20px 0">
+        <div class="story-flow">
+          <!-- Experience inputs -->
+          <div class="sf-inputs">
+            <div class="sf-exp sf-e1">
+              <div class="sf-exp-dot"></div>
+              <span>Échec · Rebond</span>
+            </div>
+            <div class="sf-exp sf-e2">
+              <div class="sf-exp-dot"></div>
+              <span>Décision difficile</span>
+            </div>
+            <div class="sf-exp sf-e3">
+              <div class="sf-exp-dot"></div>
+              <span>Leçon apprise</span>
+            </div>
+          </div>
+          <!-- Converging lines SVG -->
+          <div class="sf-lines">
+            <svg width="60" height="120" viewBox="0 0 60 120" fill="none">
+              <path d="M0 20 Q40 20 56 60" stroke="rgba(26,143,255,0.25)" stroke-width="1.5" fill="none" stroke-dasharray="4 3">
+                <animate attributeName="stroke-opacity" values="0.2;0.6;0.2" dur="2.4s" repeatCount="indefinite"/>
+              </path>
+              <path d="M0 60 L56 60" stroke="rgba(26,143,255,0.3)" stroke-width="1.5" fill="none" stroke-dasharray="4 3">
+                <animate attributeName="stroke-opacity" values="0.25;0.7;0.25" dur="2s" repeatCount="indefinite"/>
+              </path>
+              <path d="M0 100 Q40 100 56 60" stroke="rgba(26,143,255,0.25)" stroke-width="1.5" fill="none" stroke-dasharray="4 3">
+                <animate attributeName="stroke-opacity" values="0.2;0.6;0.2" dur="2.8s" repeatCount="indefinite"/>
+              </path>
+              <!-- Flowing dots -->
+              <circle r="2.5" fill="#60aeff" opacity="0.8">
+                <animateMotion dur="2s" repeatCount="indefinite" path="M0 20 Q40 20 56 60"/>
+                <animate attributeName="opacity" values="0;0.8;0" dur="2s" repeatCount="indefinite"/>
+              </circle>
+              <circle r="2.5" fill="#60aeff" opacity="0.8">
+                <animateMotion dur="1.6s" begin="0.5s" repeatCount="indefinite" path="M0 60 L56 60"/>
+                <animate attributeName="opacity" values="0;0.9;0" dur="1.6s" begin="0.5s" repeatCount="indefinite"/>
+              </circle>
+              <circle r="2.5" fill="#60aeff" opacity="0.8">
+                <animateMotion dur="2s" begin="1s" repeatCount="indefinite" path="M0 100 Q40 100 56 60"/>
+                <animate attributeName="opacity" values="0;0.8;0" dur="2s" begin="1s" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+          </div>
+          <!-- Central node -->
+          <div class="sf-center">
+            <div class="sf-core">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60aeff" stroke-width="1.8" stroke-linecap="round"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <span class="sf-core-label">Post authentique</span>
+            <span class="sf-core-sub">0% inventé</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 6: Analyse des données (full width) -->
+    <div class="ft-card ft-card-full reveal rd1" style="padding-bottom:40px">
+      <div class="ft-card-text" style="max-width:560px">
+        <h3 class="ft-title">Analyse qui va au fond des choses</h3>
+        <p class="ft-desc">Vues, engagement, meilleur sujet, meilleure photo, fréquence optimale — InKognito décortique chaque post pour vous dire exactement ce qui marche et ce qu'il faut répliquer.</p>
+      </div>
+      <div class="ft-illus" style="margin:0 -40px;padding:0">
+        <div class="insight-flow">
+          <!-- Full-width SVG animation stage -->
+          <svg class="if-svg-stage" viewBox="0 0 1400 280" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="ifLineGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="rgba(26,143,255,0)"/>
+                <stop offset="50%" stop-color="rgba(26,143,255,0.55)"/>
+                <stop offset="100%" stop-color="rgba(26,143,255,0)"/>
+              </linearGradient>
+              <linearGradient id="ifGreenLine" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="rgba(34,216,127,0)"/>
+                <stop offset="50%" stop-color="rgba(34,216,127,0.5)"/>
+                <stop offset="100%" stop-color="rgba(34,216,127,0)"/>
+              </linearGradient>
+              <linearGradient id="ifSweep" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="rgba(96,174,255,0)"/>
+                <stop offset="50%" stop-color="rgba(96,174,255,0.55)"/>
+                <stop offset="100%" stop-color="rgba(96,174,255,0)"/>
+              </linearGradient>
+              <radialGradient id="ifCoreGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(10,102,194,0.55)"/>
+                <stop offset="100%" stop-color="rgba(10,102,194,0)"/>
+              </radialGradient>
+              <radialGradient id="ifGreenGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(34,216,127,0.4)"/>
+                <stop offset="100%" stop-color="rgba(34,216,127,0)"/>
+              </radialGradient>
+              <filter id="ifBlur"><feGaussianBlur stdDeviation="3"/></filter>
+              <filter id="ifBlur2"><feGaussianBlur stdDeviation="14"/></filter>
+            </defs>
+
+            <!-- ── Background trend lines (full width, very faint) ── -->
+            <line x1="0" y1="60" x2="1400" y2="60" stroke="rgba(26,143,255,0.04)" stroke-width="1" stroke-dasharray="2 9"/>
+            <line x1="0" y1="140" x2="1400" y2="140" stroke="rgba(26,143,255,0.05)" stroke-width="1" stroke-dasharray="2 9"/>
+            <line x1="0" y1="220" x2="1400" y2="220" stroke="rgba(26,143,255,0.04)" stroke-width="1" stroke-dasharray="2 9"/>
+
+            <!-- ── LEFT ZONE: input data constellation (x: 30–380) ── -->
+            <g>
+              <!-- Top band -->
+              <circle cx="48" cy="48" r="2.5" fill="rgba(26,143,255,0.42)"><animate attributeName="opacity" values="0.2;0.85;0.2" dur="2.4s" begin="0s" repeatCount="indefinite"/></circle>
+              <circle cx="100" cy="32" r="2" fill="rgba(96,164,255,0.35)"><animate attributeName="opacity" values="0.2;0.75;0.2" dur="2.1s" begin="0.4s" repeatCount="indefinite"/></circle>
+              <circle cx="158" cy="50" r="3" fill="rgba(26,143,255,0.45)"><animate attributeName="opacity" values="0.25;0.85;0.25" dur="2.6s" begin="0.8s" repeatCount="indefinite"/></circle>
+              <circle cx="218" cy="28" r="2" fill="rgba(26,143,255,0.32)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2s" begin="0.2s" repeatCount="indefinite"/></circle>
+              <circle cx="278" cy="44" r="2.5" fill="rgba(96,164,255,0.4)"><animate attributeName="opacity" values="0.25;0.8;0.25" dur="2.3s" begin="1s" repeatCount="indefinite"/></circle>
+              <circle cx="335" cy="32" r="2" fill="rgba(26,143,255,0.32)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.2s" begin="0.6s" repeatCount="indefinite"/></circle>
+              <!-- Upper-mid -->
+              <circle cx="68" cy="100" r="2" fill="rgba(96,164,255,0.32)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.1s" begin="1.1s" repeatCount="indefinite"/></circle>
+              <circle cx="125" cy="92" r="3.2" fill="rgba(26,143,255,0.45)"><animate attributeName="opacity" values="0.3;0.85;0.3" dur="2s" begin="0.5s" repeatCount="indefinite"/></circle>
+              <circle cx="190" cy="105" r="2.4" fill="rgba(26,143,255,0.38)"><animate attributeName="opacity" values="0.2;0.75;0.2" dur="2.4s" begin="0.9s" repeatCount="indefinite"/></circle>
+              <circle cx="252" cy="88" r="2.8" fill="rgba(96,164,255,0.35)"><animate attributeName="opacity" values="0.25;0.75;0.25" dur="1.7s" begin="0.6s" repeatCount="indefinite"/></circle>
+              <circle cx="312" cy="100" r="2.2" fill="rgba(26,143,255,0.36)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.3s" begin="0.3s" repeatCount="indefinite"/></circle>
+              <!-- Center band -->
+              <circle cx="42" cy="148" r="2" fill="rgba(26,143,255,0.32)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.5s" begin="1.3s" repeatCount="indefinite"/></circle>
+              <circle cx="105" cy="160" r="3" fill="rgba(26,143,255,0.42)"><animate attributeName="opacity" values="0.25;0.8;0.25" dur="2.2s" begin="0.2s" repeatCount="indefinite"/></circle>
+              <circle cx="172" cy="148" r="2.4" fill="rgba(96,164,255,0.35)"><animate attributeName="opacity" values="0.2;0.75;0.2" dur="1.9s" begin="0.7s" repeatCount="indefinite"/></circle>
+              <circle cx="232" cy="170" r="2" fill="rgba(26,143,255,0.3)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.3s" begin="1s" repeatCount="indefinite"/></circle>
+              <circle cx="295" cy="155" r="2.6" fill="rgba(26,143,255,0.4)"><animate attributeName="opacity" values="0.25;0.78;0.25" dur="2.1s" begin="0.4s" repeatCount="indefinite"/></circle>
+              <!-- Lower-mid -->
+              <circle cx="78" cy="208" r="2.5" fill="rgba(96,164,255,0.38)"><animate attributeName="opacity" values="0.25;0.75;0.25" dur="2s" begin="0.4s" repeatCount="indefinite"/></circle>
+              <circle cx="148" cy="220" r="1.8" fill="rgba(26,143,255,0.32)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.4s" begin="0.6s" repeatCount="indefinite"/></circle>
+              <circle cx="210" cy="200" r="3" fill="rgba(26,143,255,0.42)"><animate attributeName="opacity" values="0.25;0.8;0.25" dur="1.8s" begin="1.2s" repeatCount="indefinite"/></circle>
+              <circle cx="278" cy="218" r="2" fill="rgba(96,164,255,0.3)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.2s" begin="0.3s" repeatCount="indefinite"/></circle>
+              <!-- Bottom band -->
+              <circle cx="55" cy="248" r="2" fill="rgba(26,143,255,0.3)"><animate attributeName="opacity" values="0.2;0.65;0.2" dur="2.3s" begin="0.8s" repeatCount="indefinite"/></circle>
+              <circle cx="125" cy="252" r="2.5" fill="rgba(96,164,255,0.32)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2s" begin="0.2s" repeatCount="indefinite"/></circle>
+              <circle cx="200" cy="245" r="2" fill="rgba(26,143,255,0.28)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.4s" begin="0.5s" repeatCount="indefinite"/></circle>
+              <circle cx="270" cy="248" r="2.5" fill="rgba(26,143,255,0.34)"><animate attributeName="opacity" values="0.25;0.7;0.25" dur="2.2s" begin="1s" repeatCount="indefinite"/></circle>
+              <circle cx="345" cy="242" r="2" fill="rgba(96,164,255,0.28)"><animate attributeName="opacity" values="0.2;0.65;0.2" dur="2s" begin="0.6s" repeatCount="indefinite"/></circle>
+              <circle cx="358" cy="155" r="2.5" fill="rgba(26,143,255,0.36)"><animate attributeName="opacity" values="0.2;0.75;0.2" dur="2.2s" begin="0.8s" repeatCount="indefinite"/></circle>
+            </g>
+
+            <!-- ── RIGHT ZONE: output insights constellation (x: 1020–1370) ── -->
+            <g>
+              <!-- Top band -->
+              <circle cx="1055" cy="48" r="2.5" fill="rgba(34,216,127,0.42)"><animate attributeName="opacity" values="0.25;0.85;0.25" dur="2.3s" begin="0.5s" repeatCount="indefinite"/></circle>
+              <circle cx="1115" cy="32" r="2" fill="rgba(34,216,127,0.32)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2s" begin="0.9s" repeatCount="indefinite"/></circle>
+              <circle cx="1175" cy="50" r="3" fill="rgba(34,216,127,0.45)"><animate attributeName="opacity" values="0.3;0.85;0.3" dur="2.5s" begin="0.2s" repeatCount="indefinite"/></circle>
+              <circle cx="1235" cy="30" r="2" fill="rgba(96,164,255,0.32)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.1s" begin="0.7s" repeatCount="indefinite"/></circle>
+              <circle cx="1290" cy="48" r="2.5" fill="rgba(34,216,127,0.4)"><animate attributeName="opacity" values="0.25;0.78;0.25" dur="2.4s" begin="1s" repeatCount="indefinite"/></circle>
+              <circle cx="1352" cy="34" r="2" fill="rgba(34,216,127,0.3)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.2s" begin="0.3s" repeatCount="indefinite"/></circle>
+              <!-- Upper-mid -->
+              <circle cx="1042" cy="100" r="2.4" fill="rgba(96,164,255,0.38)"><animate attributeName="opacity" values="0.25;0.75;0.25" dur="2.2s" begin="0.4s" repeatCount="indefinite"/></circle>
+              <circle cx="1098" cy="92" r="3.2" fill="rgba(34,216,127,0.5)"><animate attributeName="opacity" values="0.3;0.85;0.3" dur="2.1s" begin="0.7s" repeatCount="indefinite"/></circle>
+              <circle cx="1162" cy="105" r="2.6" fill="rgba(34,216,127,0.42)"><animate attributeName="opacity" values="0.25;0.8;0.25" dur="2.5s" begin="0s" repeatCount="indefinite"/></circle>
+              <circle cx="1228" cy="88" r="2.8" fill="rgba(96,164,255,0.36)"><animate attributeName="opacity" values="0.25;0.75;0.25" dur="2.4s" begin="1.1s" repeatCount="indefinite"/></circle>
+              <circle cx="1295" cy="100" r="2.2" fill="rgba(34,216,127,0.38)"><animate attributeName="opacity" values="0.2;0.75;0.2" dur="2.3s" begin="0.6s" repeatCount="indefinite"/></circle>
+              <circle cx="1355" cy="95" r="2.5" fill="rgba(34,216,127,0.36)"><animate attributeName="opacity" values="0.2;0.75;0.2" dur="2s" begin="0.9s" repeatCount="indefinite"/></circle>
+              <!-- Center band -->
+              <circle cx="1058" cy="148" r="2" fill="rgba(34,216,127,0.32)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.3s" begin="0.4s" repeatCount="indefinite"/></circle>
+              <circle cx="1118" cy="158" r="3" fill="rgba(34,216,127,0.42)"><animate attributeName="opacity" values="0.25;0.8;0.25" dur="2.2s" begin="0.8s" repeatCount="indefinite"/></circle>
+              <circle cx="1185" cy="148" r="2.4" fill="rgba(96,164,255,0.35)"><animate attributeName="opacity" values="0.2;0.75;0.2" dur="1.9s" begin="0.2s" repeatCount="indefinite"/></circle>
+              <circle cx="1248" cy="170" r="2" fill="rgba(34,216,127,0.32)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.4s" begin="1.1s" repeatCount="indefinite"/></circle>
+              <circle cx="1312" cy="155" r="2.6" fill="rgba(34,216,127,0.4)"><animate attributeName="opacity" values="0.25;0.78;0.25" dur="2.1s" begin="0.5s" repeatCount="indefinite"/></circle>
+              <!-- Lower-mid -->
+              <circle cx="1075" cy="208" r="2.5" fill="rgba(96,164,255,0.38)"><animate attributeName="opacity" values="0.25;0.75;0.25" dur="2.3s" begin="0.8s" repeatCount="indefinite"/></circle>
+              <circle cx="1145" cy="220" r="1.8" fill="rgba(34,216,127,0.32)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.1s" begin="0.4s" repeatCount="indefinite"/></circle>
+              <circle cx="1215" cy="200" r="3" fill="rgba(34,216,127,0.45)"><animate attributeName="opacity" values="0.3;0.85;0.3" dur="2.4s" begin="0.1s" repeatCount="indefinite"/></circle>
+              <circle cx="1278" cy="218" r="2" fill="rgba(96,164,255,0.3)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.2s" begin="0.7s" repeatCount="indefinite"/></circle>
+              <circle cx="1342" cy="200" r="2.5" fill="rgba(34,216,127,0.4)"><animate attributeName="opacity" values="0.25;0.78;0.25" dur="2s" begin="1.3s" repeatCount="indefinite"/></circle>
+              <!-- Bottom band -->
+              <circle cx="1062" cy="248" r="2" fill="rgba(34,216,127,0.3)"><animate attributeName="opacity" values="0.2;0.65;0.2" dur="2.3s" begin="0.8s" repeatCount="indefinite"/></circle>
+              <circle cx="1128" cy="252" r="2.5" fill="rgba(96,164,255,0.32)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2s" begin="0.2s" repeatCount="indefinite"/></circle>
+              <circle cx="1198" cy="245" r="2" fill="rgba(34,216,127,0.32)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.4s" begin="0.5s" repeatCount="indefinite"/></circle>
+              <circle cx="1262" cy="248" r="2.5" fill="rgba(34,216,127,0.36)"><animate attributeName="opacity" values="0.25;0.72;0.25" dur="2.2s" begin="1s" repeatCount="indefinite"/></circle>
+              <circle cx="1335" cy="244" r="2" fill="rgba(96,164,255,0.28)"><animate attributeName="opacity" values="0.2;0.65;0.2" dur="2s" begin="0.6s" repeatCount="indefinite"/></circle>
+            </g>
+
+            <!-- ── Converging curves LEFT → CENTER ── -->
+            <path d="M380,140 Q500,138 600,140" stroke="url(#ifLineGrad)" stroke-width="1" stroke-dasharray="3 5" fill="none"/>
+            <path d="M360,55 Q480,90 600,125" stroke="url(#ifLineGrad)" stroke-width="1" stroke-dasharray="3 5" fill="none"/>
+            <path d="M360,225 Q480,180 600,155" stroke="url(#ifLineGrad)" stroke-width="1" stroke-dasharray="3 5" fill="none"/>
+            <path d="M340,32 Q480,75 600,118" stroke="url(#ifLineGrad)" stroke-width="0.8" stroke-dasharray="2 6" fill="none" opacity="0.55"/>
+            <path d="M340,250 Q480,195 600,160" stroke="url(#ifLineGrad)" stroke-width="0.8" stroke-dasharray="2 6" fill="none" opacity="0.55"/>
+
+            <!-- ── Diverging curves CENTER → RIGHT ── -->
+            <path d="M800,140 Q920,138 1020,140" stroke="url(#ifGreenLine)" stroke-width="1" stroke-dasharray="3 5" fill="none"/>
+            <path d="M800,125 Q920,90 1040,55" stroke="url(#ifGreenLine)" stroke-width="1" stroke-dasharray="3 5" fill="none"/>
+            <path d="M800,155 Q920,200 1040,235" stroke="url(#ifGreenLine)" stroke-width="1" stroke-dasharray="3 5" fill="none"/>
+            <path d="M800,118 Q920,72 1060,32" stroke="url(#ifGreenLine)" stroke-width="0.8" stroke-dasharray="2 6" fill="none" opacity="0.55"/>
+            <path d="M800,160 Q920,210 1060,250" stroke="url(#ifGreenLine)" stroke-width="0.8" stroke-dasharray="2 6" fill="none" opacity="0.55"/>
+
+            <!-- ── Animated travel particles LEFT → CENTER ── -->
+            <circle r="3.5" fill="#60aeff" opacity="0.9" filter="url(#ifBlur)">
+              <animateMotion dur="2.9s" begin="0s" repeatCount="indefinite" path="M380,140 Q500,138 600,140"/>
+              <animate attributeName="opacity" values="0;0.95;0" dur="2.9s" begin="0s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="3" fill="#1a8fff" opacity="0.85" filter="url(#ifBlur)">
+              <animateMotion dur="3.3s" begin="0.5s" repeatCount="indefinite" path="M360,55 Q480,90 600,125"/>
+              <animate attributeName="opacity" values="0;0.85;0" dur="3.3s" begin="0.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="3" fill="#60aeff" opacity="0.8" filter="url(#ifBlur)">
+              <animateMotion dur="3.1s" begin="1.1s" repeatCount="indefinite" path="M360,225 Q480,180 600,155"/>
+              <animate attributeName="opacity" values="0;0.85;0" dur="3.1s" begin="1.1s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="2.5" fill="#0a66c2" opacity="0.7" filter="url(#ifBlur)">
+              <animateMotion dur="3.6s" begin="1.7s" repeatCount="indefinite" path="M340,32 Q480,75 600,118"/>
+              <animate attributeName="opacity" values="0;0.75;0" dur="3.6s" begin="1.7s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="2.5" fill="#60aeff" opacity="0.7" filter="url(#ifBlur)">
+              <animateMotion dur="3.4s" begin="0.3s" repeatCount="indefinite" path="M340,250 Q480,195 600,160"/>
+              <animate attributeName="opacity" values="0;0.75;0" dur="3.4s" begin="0.3s" repeatCount="indefinite"/>
+            </circle>
+
+            <!-- ── Animated travel particles CENTER → RIGHT ── -->
+            <circle r="3.5" fill="#22d87f" opacity="0.9" filter="url(#ifBlur)">
+              <animateMotion dur="2.9s" begin="0.4s" repeatCount="indefinite" path="M800,140 Q920,138 1020,140"/>
+              <animate attributeName="opacity" values="0;0.95;0" dur="2.9s" begin="0.4s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="3" fill="#60aeff" opacity="0.8" filter="url(#ifBlur)">
+              <animateMotion dur="3.2s" begin="1s" repeatCount="indefinite" path="M800,125 Q920,90 1040,55"/>
+              <animate attributeName="opacity" values="0;0.85;0" dur="3.2s" begin="1s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="3" fill="#22d87f" opacity="0.78" filter="url(#ifBlur)">
+              <animateMotion dur="3.4s" begin="1.6s" repeatCount="indefinite" path="M800,155 Q920,200 1040,235"/>
+              <animate attributeName="opacity" values="0;0.85;0" dur="3.4s" begin="1.6s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="2.5" fill="#1a8fff" opacity="0.65" filter="url(#ifBlur)">
+              <animateMotion dur="3.6s" begin="0.8s" repeatCount="indefinite" path="M800,118 Q920,72 1060,32"/>
+              <animate attributeName="opacity" values="0;0.75;0" dur="3.6s" begin="0.8s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="2.5" fill="#22d87f" opacity="0.65" filter="url(#ifBlur)">
+              <animateMotion dur="3.5s" begin="2s" repeatCount="indefinite" path="M800,160 Q920,210 1060,250"/>
+              <animate attributeName="opacity" values="0;0.75;0" dur="3.5s" begin="2s" repeatCount="indefinite"/>
+            </circle>
+
+            <!-- ── Core glow background ── -->
+            <circle cx="700" cy="140" r="100" fill="url(#ifCoreGlow)" opacity="0.55"/>
+            <circle cx="700" cy="140" r="105" fill="url(#ifCoreGlow)" filter="url(#ifBlur2)" opacity="0.4"/>
+
+            <!-- ── Rotating orbit rings ── -->
+            <g>
+              <circle cx="700" cy="140" r="82" stroke="rgba(26,143,255,0.09)" stroke-width="1" stroke-dasharray="6 5" fill="none">
+                <animateTransform attributeName="transform" type="rotate" from="0 700 140" to="360 700 140" dur="22s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="700" cy="140" r="60" stroke="rgba(26,143,255,0.14)" stroke-width="1" stroke-dasharray="4 7" fill="none">
+                <animateTransform attributeName="transform" type="rotate" from="360 700 140" to="0 700 140" dur="15s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="700" cy="140" r="40" stroke="rgba(26,143,255,0.22)" stroke-width="1.5" stroke-dasharray="3 5" fill="none">
+                <animateTransform attributeName="transform" type="rotate" from="0 700 140" to="360 700 140" dur="9s" repeatCount="indefinite"/>
+              </circle>
+            </g>
+
+            <!-- ── Orbiting particles ── -->
+            <circle r="4.5" fill="#60aeff" opacity="0.95" filter="url(#ifBlur)">
+              <animateMotion dur="9s" repeatCount="indefinite" path="M700,58 a82,82 0 1,1 -0.1,0z"/>
+              <animate attributeName="opacity" values="0.7;1;0.7" dur="4.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="3.5" fill="rgba(34,216,127,0.95)" opacity="0.9" filter="url(#ifBlur)">
+              <animateMotion dur="15s" begin="5s" repeatCount="indefinite" path="M700,80 a60,60 0 1,0 0.1,0z"/>
+              <animate attributeName="opacity" values="0.55;1;0.55" dur="7.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="3" fill="#1a8fff" opacity="0.85" filter="url(#ifBlur)">
+              <animateMotion dur="13s" begin="2s" repeatCount="indefinite" path="M700,100 a40,40 0 1,1 -0.1,0z"/>
+              <animate attributeName="opacity" values="0.5;0.95;0.5" dur="6.5s" repeatCount="indefinite"/>
+            </circle>
+
+            <!-- ── Core circle ── -->
+            <circle cx="700" cy="140" r="28" fill="rgba(10,102,194,0.28)" stroke="rgba(26,143,255,0.55)" stroke-width="1.5">
+              <animate attributeName="r" values="28;31;28" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="stroke-opacity" values="0.55;0.95;0.55" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <!-- brain/sync icon -->
+            <g transform="translate(686,126)" stroke="#60aeff" stroke-width="1.8" stroke-linecap="round" fill="none">
+              <polyline points="21 4 21 10 15 10"/>
+              <polyline points="3 20 3 14 9 14"/>
+              <path d="M5.51 9a9 9 0 0 1 14.85-3.36L21 10M3 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </g>
+
+            <!-- ── Scanning beam (sweeps across full width) ── -->
+            <rect x="0" y="0" width="80" height="280" fill="url(#ifSweep)" opacity="0.0">
+              <animate attributeName="x" values="-80;1400" dur="7s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0;0.55;0.55;0" keyTimes="0;0.15;0.85;1" dur="7s" repeatCount="indefinite"/>
+            </rect>
+
+            <!-- ── Labels ── -->
+            <text x="200" y="270" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="600" fill="rgba(74,90,122,0.85)" text-anchor="middle" letter-spacing="0.05em">Posts analysés</text>
+            <text x="1200" y="270" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="600" fill="rgba(74,90,122,0.85)" text-anchor="middle" letter-spacing="0.05em">Insights générés</text>
+          </svg>
+
+          <!-- Floating insight pills positioned over SVG right zone -->
+          <div class="if-pills">
+            <div class="if-pill ifp1">
+              <div class="if-pill-val">Jeu · 09h</div>
+              <div class="if-pill-label">Créneau optimal</div>
+            </div>
+            <div class="if-pill ifp2" style="animation-delay:.6s">
+              <div class="if-pill-val">Storytelling</div>
+              <div class="if-pill-label">Format n°1</div>
+            </div>
+            <div class="if-pill ifp3" style="border-color:rgba(34,216,127,.25);animation-delay:1.1s">
+              <div class="if-pill-val" style="color:#22d87f">+34%</div>
+              <div class="if-pill-label">Reach ce mois</div>
+            </div>
+            <div class="if-pill ifp4" style="border-color:rgba(26,143,255,.18);animation-delay:.3s">
+              <div class="if-pill-val">487</div>
+              <div class="if-pill-label">Posts analysés</div>
+            </div>
+            <div class="if-pill ifp5" style="border-color:rgba(26,143,255,.18);animation-delay:.9s">
+              <div class="if-pill-val" style="color:#60aeff">×3.2</div>
+              <div class="if-pill-label">Engagement moyen</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-header centered reveal" style="text-align:center;margin-bottom:56px">
+    <div class="sec-label">Tarifs</div>
+    <h2 class="sec-h">Simple. Transparent. Sans surprise.</h2>
+    <p class="sec-p" style="margin:0 auto">14 jours d'essai gratuit sur tous les plans. Aucune carte de crédit requise.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pc reveal rd1">
+      <div class="pc-name">Starter</div>
+      <div class="pc-price"><sup>€</sup>19<span class="per">/mois</span></div>
+      <div class="pc-desc">Pour les indépendants qui veulent démarrer</div>
+      <div class="pc-divider"></div>
+      <ul class="pc-features">
+        <li class="pc-feat"><div class="pc-feat-check">✓</div>1 compte LinkedIn</li>
+        <li class="pc-feat"><div class="pc-feat-check">✓</div>10 posts IA / mois</li>
+        <li class="pc-feat"><div class="pc-feat-check">✓</div>Planification basique</li>
+        <li class="pc-feat"><div class="pc-feat-check">✓</div>Analytiques 30 jours</li>
+      </ul>
+      <a href="#" class="btn-plan btn-plan-ghost">Commencer gratuitement</a>
+    </div>
+
+    <div class="pc popular reveal rd2">
+      <div class="pc-badge">✦ PLUS POPULAIRE</div>
+      <div class="pc-name">Pro</div>
+      <div class="pc-price"><sup>€</sup>49<span class="per">/mois</span></div>
+      <div class="pc-desc">Pour les professionnels qui veulent dominer</div>
+      <div class="pc-divider"></div>
+      <ul class="pc-features">
+        <li class="pc-feat"><div class="pc-feat-check">✓</div>3 comptes LinkedIn</li>
+        <li class="pc-feat"><div class="pc-feat-check">✓</div>Posts IA illimités</li>
+        <li class="pc-feat"><div class="pc-feat-check">✓</div>Voix IA personnalisée</li>
+        <li class="pc-feat"><div class="pc-feat-check">✓</div>Meilleure heure IA</li>
+        <li class="pc-feat"><div class="pc-feat-check">✓</div>Analytiques avancées</li>
+        <li class="pc-feat"><div class="pc-feat-check">✓</div>Carousel automatique</li>
+      </ul>
+      <a href="#" class="btn-plan btn-plan-primary">Commencer gratuitement</a>
+    </div>
+
+    <div class="pc reveal rd3">
+      <div class="pc-name">Agency</div>
+      <div class="pc-price"><sup>€</sup>149<span class="per">/mois</span></div>
+      <div class="pc-desc">Pour les équipes et agences en croissance</div>
+      <div class="pc-divider"></div>
+      <ul class="pc-features">
+        <li class="pc-feat"><div class="pc-feat-check">✓</div>Comptes illimités</li>
+        <li class="pc-feat"><div class="pc-feat-check">✓</div>Tout le plan Pro</li>
+        <li class="pc-feat"><div class="pc-feat-check">✓</div>Gestion d'équipe</li>
+        <li class="pc-feat"><div class="pc-feat-check">✓</div>API & Webhooks</li>
+        <li class="pc-feat"><div class="pc-feat-check">✓</div>Support prioritaire</li>
+      </ul>
+      <a href="#" class="btn-plan btn-plan-ghost">Contacter l'équipe</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section id="final-cta">
+  <div class="cta-orb"></div>
+  <div class="cta-inner reveal">
+    <div class="hero-badge" style="animation:none;opacity:1;margin-bottom:24px">
+      <span class="badge-dot"></span>
+      Essai gratuit 14 jours — sans CB
+    </div>
+    <h2 class="cta-h">Votre LinkedIn en<br>pilote automatique —<br><span class="grad-text">100% votre voix.</span></h2>
+    <p class="cta-sub">Capturez vos idées, publiez sans écrire, mesurez ce qui marche. Rejoignez 2 400+ professionnels qui font confiance à InKognito.</p>
+    <div class="hero-actions" style="opacity:1;animation:none">
+      <a href="#" class="btn-hero">Démarrer gratuitement →</a>
+      <a href="#" class="btn-hero-out">Voir la démo en live</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="foot-logo">
+    <img src="uploads/Untitled_design-removebg-preview.png" width="24" height="24" alt="InKognito" style="object-fit:contain">
+    <span class="foot-name">In<span>K</span>ognito</span>
+  </a>
+  <ul class="foot-links">
+    <li><a href="#">Fonctionnalités</a></li>
+    <li><a href="#">Tarifs</a></li>
+    <li><a href="#">Blog</a></li>
+    <li><a href="#">Confidentialité</a></li>
+    <li><a href="#">CGU</a></li>
+  </ul>
+  <div class="foot-legal">© 2025 InKognito. Tous droits réservés.</div>
+</footer>
+
+<script>
+// ─── NAV SCROLL ───
+window.addEventListener('scroll', () => {
+  document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// ─── REVEAL ON SCROLL ───
+const revEls = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.12 });
+revEls.forEach(el => obs.observe(el));
+
+// ─── COUNTER ANIMATION ───
+function animateCounter(el, target, duration = 1600) {
+  let start = null;
+  const isFloat = String(target).includes('.');
+  const step = ts => {
+    if(!start) start = ts;
+    const progress = Math.min((ts - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    const val = isFloat ? (target * ease).toFixed(1) : Math.floor(target * ease);
+    el.textContent = val;
+    if(progress < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+const counterObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.querySelectorAll('[data-count]').forEach(el => {
+        animateCounter(el, parseFloat(el.dataset.count));
+      });
+      counterObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.stats-grid').forEach(el => counterObs.observe(el));
+
+// ─── AI TYPING ───
+const typedEl = document.getElementById('ai-typed');
+if (typedEl) {
+  const phrases = [
+    "J'ai commis 3 erreurs en lançant mon SaaS. Voici ce que j'aurais fait différemment ↓",
+    "Le secret des fondateurs qui closent facilement ? Ils ne vendent pas. Ils éduquent.",
+    "5 frameworks de copywriting qui ont multiplié mes leads par 4 en 60 jours.",
+  ];
+  let phraseIdx = 0, charIdx = 0, isDeleting = false;
+  function typeLoop() {
+    const phrase = phrases[phraseIdx];
+    if(!isDeleting) {
+      typedEl.textContent = phrase.slice(0, charIdx + 1);
+      charIdx++;
+      if(charIdx === phrase.length) { isDeleting = true; setTimeout(typeLoop, 2400); return; }
+    } else {
+      typedEl.textContent = phrase.slice(0, charIdx - 1);
+      charIdx--;
+      if(charIdx === 0) { isDeleting = false; phraseIdx = (phraseIdx + 1) % phrases.length; setTimeout(typeLoop, 400); return; }
+    }
+    setTimeout(typeLoop, isDeleting ? 28 : 52);
+  }
+  setTimeout(typeLoop, 1800);
+}
+
+// ─── PREVIEW TABS ───
+document.querySelectorAll('.ptab').forEach((tab, i) => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+
+// ─── CHART BARS ANIMATE ON SCROLL ───
+const chartObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.querySelectorAll('.bar').forEach(b => b.style.animation = b.style.animation || 'barrise 1.2s ease-out forwards');
+    }
+  });
+}, { threshold: 0.4 });
+document.querySelectorAll('#chart-bars').forEach(el => chartObs.observe(el));
+</script>
+</body>
+</html>

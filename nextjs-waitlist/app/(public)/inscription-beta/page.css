@@ -1,0 +1,88 @@
+.ib-main {
+  min-height: 100vh;
+  background: #070C17;
+  color: #E8EDF5;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 6vw 80px;
+}
+
+.ib-wrap {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ib-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(120deg, rgba(26, 143, 255, 0.28), rgba(96, 174, 255, 0.14));
+  border: 1px solid rgba(26, 143, 255, 0.65);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  color: #bcdcff;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.ib-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #1a8fff;
+  box-shadow: 0 0 10px 3px rgba(26, 143, 255, 0.75);
+}
+
+.ib-title {
+  font-size: clamp(34px, 4.8vw, 48px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+.ib-grad-white {
+  background: linear-gradient(130deg, #ffffff 0%, #c8deff 55%, #9ec4ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.ib-grad-blue {
+  background: linear-gradient(110deg, #1a8fff 0%, #60aeff 50%, #93d4ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.ib-sub {
+  font-size: 16px;
+  color: #7c8aa8;
+  max-width: 460px;
+  margin: 0 auto 44px;
+  line-height: 1.65;
+  text-align: center;
+}
+
+.ib-card {
+  width: 100%;
+  background: rgba(9, 15, 28, 0.96);
+  border: 1px solid rgba(26, 143, 255, 0.28);
+  border-radius: 22px;
+  padding: 38px 36px 34px;
+  box-shadow:
+    0 0 0 1px rgba(26, 143, 255, 0.1),
+    0 0 40px 8px rgba(26, 143, 255, 0.1),
+    0 0 100px 24px rgba(10, 102, 194, 0.06);
+}
