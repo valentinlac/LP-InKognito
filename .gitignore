@@ -1,0 +1,7 @@
+# macOS
+.DS_Store
+
+# Build / dépendances Next.js (waitlist)
+nextjs-waitlist/.next/
+nextjs-waitlist/node_modules/
+nextjs-waitlist/.env.local
