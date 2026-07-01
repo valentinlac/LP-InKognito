@@ -135,12 +135,17 @@ section{padding:120px 6vw;max-width:1200px;margin:0 auto;position:relative}
 }
 .hero-inner{position:relative;z-index:2;max-width:780px}
 .hero-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  border:1px solid rgba(26,143,255,.3);background:rgba(10,102,194,.07);
-  padding:6px 14px;border-radius:999px;font-size:12px;font-weight:500;letter-spacing:.04em;
-  color:var(--blue3);margin-bottom:30px;
+  display:inline-flex;align-items:center;gap:12px;
+  border:none;background:none;padding:0;border-radius:0;
+  font-size:11px;font-weight:400;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.62);margin-bottom:36px;
 }
-.badge-dot{width:6px;height:6px;background:var(--blue2);border-radius:50%}
+.hero-badge::before{
+  content:'';display:block;width:28px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(112,181,249,.85));
+  flex-shrink:0;
+}
+.badge-dot{display:none}
 h1.hero-h1{
   font-size:clamp(42px,6.4vw,76px);
   font-weight:500;line-height:1.05;letter-spacing:-.045em;
@@ -1252,6 +1257,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <img class="hero-proof-av" src="screens/nicolas.jpg" alt="" width="34" height="34" loading="lazy">
         <img class="hero-proof-av" src="screens/francois.jpg" alt="" width="34" height="34" loading="lazy">
         <img class="hero-proof-av" src="screens/jonathan.jpg" alt="" width="34" height="34" loading="lazy">
+        <img class="hero-proof-av" src="screens/amine.jpg" alt="" width="34" height="34" loading="lazy">
+        <img class="hero-proof-av" src="screens/pauline.jpg" alt="" width="34" height="34" loading="lazy">
       </div>
       <div class="hero-proof-meta">
         <div class="hero-proof-stars">★★★★★</div>
@@ -1688,6 +1695,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
 
+    <!-- AVIS ÉCRIT (carte texte) -->
+    <div class="testi-card reveal d7">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">Un immense merci pour l'accès à InKognito ! Grâce à l'analyse précise des données et à l'identification de la structure qui résonne réellement avec l'audience LinkedIn, j'ai pu franchir un cap.<br><br>Le travail de InKognito est concret, efficace, et le résultat est au-delà de mes attentes. Si tu cherches un outil qui maîtrise la création de contenu et qui te permet d'avoir une stratégie complète en auto, je recommande à 100% !</p>
+      <div class="testi-author">
+        <img class="testi-avatar" src="screens/axery.jpg" alt="Axery Agency" width="42" height="42" loading="lazy">
+        <div>
+          <div class="testi-name">Axery Agency</div>
+          <div class="testi-role">Gérant · SDR &amp; Business Development</div>
+        </div>
+      </div>
+    </div>
+
     <!-- SCREENSHOTS groupe 1 -->
     <div class="testi-shots-col">
       <div class="testi-shot reveal d5">
@@ -1700,6 +1720,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
       <div class="testi-shot reveal d10">
         <img src="screens/avis-6.jpg" alt="Message d'un utilisateur sur la création de contenu avec InKognito" loading="lazy">
+        <div class="testi-shot-cap">Message reçu d'un utilisateur</div>
+      </div>
+      <div class="testi-shot reveal d12">
+        <img src="screens/avis-8.jpg" alt="Message privé d'un utilisateur complimentant l'app InKognito" loading="lazy">
         <div class="testi-shot-cap">Message reçu d'un utilisateur</div>
       </div>
     </div>
@@ -1721,6 +1745,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="testi-shot reveal d11">
         <img src="screens/avis-7.jpg" alt="Message d'un utilisateur qualifiant InKognito de meilleur SaaS et partenaire au quotidien" loading="lazy">
         <div class="testi-shot-cap">Message reçu d'un utilisateur</div>
+      </div>
+      <div class="testi-shot reveal d13">
+        <img src="screens/avis-9.jpg" alt="Post LinkedIn d'un utilisateur recommandant InKognito" loading="lazy">
+        <div class="testi-shot-cap">Recommandation publique sur LinkedIn</div>
       </div>
     </div>
 
