@@ -1783,7 +1783,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <span class="pc-beta-arrow" aria-hidden="true"><svg width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4h11.2"/><path d="M9 1l3 3-3 3"/></svg></span>
               <span class="pc-beta-save">19€/mois</span>
             </div>
-            <div class="pc-beta-note">Réservé aux 20 premiers early adopters, tarif gelé à vie</div>
+            <div class="pc-beta-note"><strong id="spots-taken">4</strong>/20 early adopters déjà inscrits · <strong id="spots-remaining">16</strong> places restantes au tarif gelé à vie</div>
           </div>
           <div class="pc-solo-desc" style="width: 278px; height: 73px; font-size: 13px">
             Tout ce qu'il vous faut pour être présent chaque jour sur LinkedIn, dans votre voix, sans y passer vos journées.
@@ -1913,7 +1913,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         Offre early adopter · 19€/mois
       </div>
       <h2 class="cta-h" style="max-width: 900px; margin-left: auto; margin-right: auto;"><span class="grad-white">Présent chaque jour sur LinkedIn.</span><br><span class="grad-text" style="font-size: 59px">100% votre voix.</span></h2>
-      <p class="cta-sub">Capturez vos idées, publiez sans écrire, mesurez ce qui marche.<br>Plus que 20 places au tarif early adopter</p>
+      <p class="cta-sub">Capturez vos idées, publiez sans écrire, mesurez ce qui marche.<br>Plus que <span id="spots-remaining-2">16</span> places au tarif early adopter</p>
       <div class="hero-actions">
         <a href="https://buy.stripe.com/fZu28s2nObdI5NZgBO2sM07" class="btn-hero">Commencer maintenant <span class="btn-hero-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></a>
       </div>
@@ -2206,6 +2206,17 @@ revEls.forEach(el => obs.observe(el));
   // Expose pour debug éventuel
   window.__lenis = lenis;
 })();
+</script>
+
+<!-- Compteur de places early adopter en direct (fallback = valeurs codées en dur ci-dessus si l'appel échoue) -->
+<script>
+  fetch('https://app.inkognito.fr/api/spots-remaining')
+    .then(function (r) { return r.json() })
+    .then(function (d) {
+      document.querySelectorAll('#spots-taken').forEach(function (el) { el.textContent = d.taken })
+      document.querySelectorAll('#spots-remaining, #spots-remaining-2').forEach(function (el) { el.textContent = d.remaining })
+    })
+    .catch(function () { /* on garde les valeurs statiques par défaut */ })
 </script>
 
 <!-- Tracking des clics CTA vers l'inscription -->
