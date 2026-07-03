@@ -497,21 +497,24 @@ h1.hero-h1{
 .pc-beta-note::before{
   content:'✦';color:var(--blue3);font-size:10px;
 }
-.ea-progress{margin-top:14px}
+.ea-progress{margin-top:18px}
 .ea-progress-track{
-  height:8px;background:rgba(255,255,255,.08);border-radius:999px;
-  overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.35);
+  height:14px;background:rgba(255,255,255,.1);border-radius:999px;
+  overflow:visible;box-shadow:inset 0 1px 3px rgba(0,0,0,.4);
+  border:1px solid rgba(255,255,255,.08);
 }
 .ea-progress-fill{
   height:100%;border-radius:999px;
   background:linear-gradient(90deg,#0a66c2 0%,#1a8fff 55%,#60aeff 100%);
-  box-shadow:0 0 10px 2px rgba(26,143,255,.45);
+  box-shadow:
+    0 0 14px 3px rgba(26,143,255,.6),
+    0 0 26px 7px rgba(26,143,255,.28);
   transition:width 1s cubic-bezier(.4,0,.2,1);
 }
 .ea-progress-label{
-  margin-top:8px;font-size:11.5px;color:var(--muted);letter-spacing:.02em;
+  margin-top:10px;font-size:13px;color:var(--text);letter-spacing:.01em;
 }
-.ea-progress-label strong{color:#E8EDF5;font-weight:600}
+.ea-progress-label strong{color:#60aeff;font-weight:700}
 
 .pc-solo-desc{
   font-size:15px;color:var(--muted);line-height:1.55;max-width:260px;
@@ -1799,11 +1802,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <span class="pc-beta-save">19€/mois</span>
             </div>
             <div class="pc-beta-note">Réservé aux 20 premiers early adopters, tarif gelé à vie</div>
-            <div class="ea-progress" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="20" aria-label="Places early adopter prises">
+            <div class="ea-progress" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="20" aria-label="Places early adopter restantes">
               <div class="ea-progress-track">
                 <div class="ea-progress-fill" id="ea-progress-fill" style="width:20%"></div>
               </div>
-              <div class="ea-progress-label"><strong id="spots-taken">4</strong>/20 places prises</div>
+              <div class="ea-progress-label"><strong id="spots-remaining">16</strong> places restantes</div>
             </div>
           </div>
           <div class="pc-solo-desc" style="width: 278px; height: 73px; font-size: 13px">
@@ -2229,7 +2232,7 @@ revEls.forEach(el => obs.observe(el));
 })();
 </script>
 
-<!-- Barre de progression places early adopter en direct (fallback = 4/20 codé en dur ci-dessus si l'appel échoue) -->
+<!-- Barre de progression places early adopter en direct (fallback = 16 restantes codé en dur ci-dessus si l'appel échoue) -->
 <script>
   fetch('https://app.inkognito.fr/api/spots-remaining')
     .then(function (r) { return r.json() })
@@ -2237,10 +2240,10 @@ revEls.forEach(el => obs.observe(el));
       var pct = Math.min(100, (d.taken / d.max) * 100)
       var fill = document.getElementById('ea-progress-fill')
       var bar = document.querySelector('.ea-progress[role="progressbar"]')
-      var taken = document.getElementById('spots-taken')
+      var remaining = document.getElementById('spots-remaining')
       if (fill) fill.style.width = pct + '%'
       if (bar) bar.setAttribute('aria-valuenow', d.taken)
-      if (taken) taken.textContent = d.taken
+      if (remaining) remaining.textContent = d.remaining
     })
     .catch(function () { /* on garde 4/20 par défaut */ })
 </script>
