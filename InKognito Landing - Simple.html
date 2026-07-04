@@ -1046,24 +1046,21 @@ h1.hero-h1{animation:fadeIn .8s .25s ease both}
 /* ─── TÉMOIGNAGES · marquee mobile (3 rangées auto-défilantes) ─── */
 /* Déclaré AVANT le @media mobile pour que display:block l'emporte sur mobile */
 .testi-marquee{display:none}
-.testi-marquee .testi-row{overflow:hidden;position:relative}
+/* Chaque rangée défile toute seule (JS) MAIS reste scrollable au doigt (overflow-x:auto) */
+.testi-marquee .testi-row{
+  overflow-x:auto;overflow-y:hidden;position:relative;
+  -webkit-overflow-scrolling:touch;touch-action:pan-x;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+.testi-marquee .testi-row::-webkit-scrollbar{display:none}
 .testi-marquee .testi-row + .testi-row{margin-top:14px}
-.testi-marquee .testi-track{display:flex;width:max-content;align-items:flex-start;will-change:transform}
-.testi-marquee .testi-track:hover,
-.testi-marquee .testi-track:active{animation-play-state:paused}
+.testi-marquee .testi-track{display:flex;width:max-content;align-items:flex-start}
 /* Cellule = 1 avis écrit, OU 2 screenshots empilés (≈ même hauteur qu'un avis écrit) */
 .testi-marquee .testi-cell{flex:0 0 auto;margin-right:14px;display:flex;flex-direction:column;gap:12px}
 .testi-marquee .testi-cell-card{width:300px}
 .testi-marquee .testi-cell-shots{width:238px}
 .testi-marquee .testi-card,
 .testi-marquee .testi-shot{margin:0;width:100%}
-.testi-track.testi-left{animation:testi-scroll-left linear infinite}
-.testi-track.testi-right{animation:testi-scroll-right linear infinite}
-@keyframes testi-scroll-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@keyframes testi-scroll-right{from{transform:translateX(-50%)}to{transform:translateX(0)}}
-@media (prefers-reduced-motion:reduce){
-  .testi-track.testi-left,.testi-track.testi-right{animation:none}
-}
 
 @media (max-width:900px){
   .hero-badge{font-size:11px;padding:6px 12px}
@@ -2567,9 +2564,8 @@ revEls.forEach(el => obs.observe(el));
 
           var track = document.createElement('div');
           track.className = 'testi-track testi-' + dirs[r];
-          track.style.animationDuration = durations[r] + 's';
 
-          // Deux copies pour une boucle sans couture (translateX -50%)
+          // Deux copies identiques pour une boucle sans couture
           for (var copy = 0; copy < 2; copy++) {
             rowCells.forEach(function (cell) {
               var c = cell.cloneNode(true);
@@ -2581,7 +2577,83 @@ revEls.forEach(el => obs.observe(el));
           row.appendChild(track);
           marquee.appendChild(row);
         });
+
+        // Une fois la mise en page faite, on active le défilement auto + le scroll manuel
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () { initTestiAutoScroll(marquee, dirs, durations); });
+        });
       });
+    }
+
+    /* Défilement auto piloté par scrollLeft : la rangée reste scrollable au doigt
+       (gauche ET droite), l'auto se met en pause pendant l'interaction puis reprend,
+       et la boucle est sans couture (2 copies identiques, on recale au milieu). */
+    function initTestiAutoScroll(marquee, dirs, durations) {
+      var rows = Array.prototype.slice.call(marquee.querySelectorAll('.testi-row'));
+      if (!rows.length) return;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+      var states = rows.map(function (row, r) {
+        var track = row.firstElementChild;
+        var st = {
+          row: row,
+          track: track,
+          half: track.scrollWidth / 2,                      // largeur d'UNE copie
+          dir: dirs[r % dirs.length] === 'right' ? -1 : 1,  // 'left' => scrollLeft croît
+          duration: durations[r % durations.length],        // secondes pour parcourir une copie
+          pos: 0,
+          paused: false,
+          idle: null
+        };
+        st.pos = st.half * 0.75;                            // départ dans la fenêtre sûre
+        row.scrollLeft = st.pos;
+
+        function pause() { st.paused = true; if (st.idle) { clearTimeout(st.idle); st.idle = null; } }
+        function scheduleResume() {
+          if (st.idle) clearTimeout(st.idle);
+          st.idle = setTimeout(function () { st.paused = false; }, 1500);
+        }
+        row.addEventListener('pointerdown', pause);
+        row.addEventListener('touchstart', pause, { passive: true });
+        window.addEventListener('pointerup', scheduleResume);
+        row.addEventListener('touchend', scheduleResume, { passive: true });
+        row.addEventListener('mouseenter', pause);
+        row.addEventListener('mouseleave', scheduleResume);
+
+        // Quand l'utilisateur scrolle, on recale dans la fenêtre [0.5H, 1.5H) sans couture
+        row.addEventListener('scroll', function () {
+          if (!st.paused || !st.half) return; // ignore les scrolls provoqués par l'auto
+          var sl = row.scrollLeft;
+          if (sl >= st.half * 1.5) row.scrollLeft = sl - st.half;
+          else if (sl < st.half * 0.5) row.scrollLeft = sl + st.half;
+          st.pos = row.scrollLeft;
+        }, { passive: true });
+
+        return st;
+      });
+
+      if (reduce) return; // pas de défilement auto, le scroll manuel reste dispo
+
+      var last = 0;
+      function frame(now) {
+        if (!last) last = now;
+        var dt = Math.min((now - last) / 1000, 0.05);
+        last = now;
+        states.forEach(function (st) {
+          if (st.paused) return;
+          if (!st.half) {                                   // mesure tardive (ex: desktop -> mobile)
+            st.half = st.track.scrollWidth / 2;
+            if (!st.half) return;
+            st.pos = st.half * 0.75;
+          }
+          st.pos += st.dir * (st.half / st.duration) * dt;  // px/s = largeur d'une copie / durée
+          if (st.pos >= st.half * 1.5) st.pos -= st.half;
+          else if (st.pos < st.half * 0.5) st.pos += st.half;
+          st.row.scrollLeft = st.pos;
+        });
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
     }
 
     function start() {
