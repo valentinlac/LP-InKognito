@@ -1046,32 +1046,30 @@ h1.hero-h1{animation:fadeIn .8s .25s ease both}
 /* ─── TÉMOIGNAGES · marquee mobile (3 rangées auto-défilantes) ─── */
 /* Déclaré AVANT le @media mobile pour que display:block l'emporte sur mobile */
 .testi-marquee{display:none}
-/* Chaque rangée défile toute seule (JS) MAIS reste scrollable au doigt (overflow-x:auto) */
+/* Rangée : défile toute seule (JS via transform, fluide GPU) et se pilote au doigt
+   (pointer events, avec inertie). touch-action:pan-y => le scroll vertical de la
+   page reste natif, on n'intercepte que l'horizontal. */
 .testi-marquee .testi-row{
-  overflow-x:auto;overflow-y:hidden;position:relative;
-  -webkit-overflow-scrolling:touch;touch-action:pan-x;
-  scrollbar-width:none;-ms-overflow-style:none;
+  overflow:hidden;position:relative;
+  touch-action:pan-y;
+  -webkit-tap-highlight-color:transparent;
+  -webkit-user-select:none;user-select:none;
+  cursor:grab;
 }
-.testi-marquee .testi-row::-webkit-scrollbar{display:none}
+.testi-marquee .testi-row.is-dragging{cursor:grabbing}
 .testi-marquee .testi-row + .testi-row{margin-top:14px}
-.testi-marquee .testi-track{display:flex;width:max-content;align-items:flex-start}
+.testi-marquee .testi-track{display:flex;width:max-content;align-items:flex-start;will-change:transform}
 /* Cellule = 1 avis écrit, OU 2 screenshots empilés (≈ même hauteur qu'un avis écrit) */
 .testi-marquee .testi-cell{flex:0 0 auto;margin-right:14px;display:flex;flex-direction:column;gap:12px}
 .testi-marquee .testi-cell-card{width:300px}
 .testi-marquee .testi-cell-shots{width:238px}
 .testi-marquee .testi-card,
 .testi-marquee .testi-shot{margin:0;width:100%}
-/* Pas d'interaction sur les avis du marquee : ni clic, ni survol/surélévation.
-   Les taps passent à la rangée (qui gère le scroll) au lieu de la carte. */
+/* Pas d'interaction sur les avis : ni clic, ni survol/surélévation. Les pointeurs
+   passent à la rangée (qui gère le défilement) au lieu de la carte. */
 .testi-marquee .testi-cell,
 .testi-marquee .testi-card,
 .testi-marquee .testi-shot{pointer-events:none}
-.testi-marquee .testi-card:hover,
-.testi-marquee .testi-shot:hover{transform:none;box-shadow:none;border-color:rgba(255,255,255,.1)}
-.testi-marquee .testi-row{
-  -webkit-tap-highlight-color:transparent;
-  -webkit-user-select:none;user-select:none;
-}
 
 @media (max-width:900px){
   .hero-badge{font-size:11px;padding:6px 12px}
@@ -2596,54 +2594,76 @@ revEls.forEach(el => obs.observe(el));
       });
     }
 
-    /* Défilement auto piloté par scrollLeft : la rangée reste scrollable au doigt
-       (gauche ET droite), l'auto se met en pause pendant l'interaction puis reprend,
-       et la boucle est sans couture (2 copies identiques, on recale au milieu). */
+    /* Défilement auto FLUIDE via transform: translate3d (composité GPU, sous-pixel),
+       + pilotage manuel au doigt gauche/droite (pointer events) avec inertie.
+       Boucle sans couture : 2 copies identiques, position ramenée modulo une copie.
+       touch-action:pan-y laisse le scroll vertical de la page natif ; on ne saisit
+       le geste horizontal qu'une fois qu'il est clairement horizontal. */
     function initTestiAutoScroll(marquee, dirs, durations) {
       var rows = Array.prototype.slice.call(marquee.querySelectorAll('.testi-row'));
       if (!rows.length) return;
       var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+      function norm(p, half) { if (!half) return p; p = p % half; if (p < 0) p += half; return p; }
+      function apply(st) { st.track.style.transform = 'translate3d(' + (-st.p) + 'px,0,0)'; }
 
       var states = rows.map(function (row, r) {
         var track = row.firstElementChild;
         var st = {
           row: row,
           track: track,
-          half: track.scrollWidth / 2,                      // largeur d'UNE copie
-          dir: dirs[r % dirs.length] === 'right' ? -1 : 1,  // 'left' => scrollLeft croît
-          duration: durations[r % durations.length],        // secondes pour parcourir une copie
-          pos: 0,
-          paused: false,
-          idle: null
+          half: track.scrollWidth / 2,                       // largeur d'UNE copie
+          dir: dirs[r % dirs.length] === 'right' ? -1 : 1,   // 1 => contenu vers la gauche
+          duration: durations[r % durations.length],         // secondes pour parcourir une copie
+          p: 0,                                              // position (px) ; contenu décalé de -p
+          v: 0,                                              // vélocité manuelle (px/s) pour l'inertie
+          pending: false, dragging: false,
+          startX: 0, startY: 0, lastX: 0, lastT: 0
         };
-        st.pos = st.half * 0.75;                            // départ dans la fenêtre sûre
-        row.scrollLeft = st.pos;
+        apply(st);
 
-        function pause() { st.paused = true; if (st.idle) { clearTimeout(st.idle); st.idle = null; } }
-        function scheduleResume() {
-          if (st.idle) clearTimeout(st.idle);
-          st.idle = setTimeout(function () { st.paused = false; }, 1500);
+        row.addEventListener('pointerdown', function (e) {
+          if (e.isPrimary === false) return;
+          st.pending = true; st.dragging = false; st.v = 0;
+          st.startX = st.lastX = e.clientX; st.startY = e.clientY;
+          st.lastT = e.timeStamp || performance.now();
+        });
+
+        row.addEventListener('pointermove', function (e) {
+          if (!st.pending && !st.dragging) return;
+          var now = e.timeStamp || performance.now();
+
+          // Disambiguation : on ne prend la main que si le geste est franchement horizontal
+          if (st.pending && !st.dragging) {
+            var adx = Math.abs(e.clientX - st.startX), ady = Math.abs(e.clientY - st.startY);
+            if (ady > adx && ady > 6) { st.pending = false; return; } // vertical -> laisse la page
+            if (adx > 6 && adx >= ady) {
+              st.dragging = true; st.pending = false;
+              row.classList.add('is-dragging');
+              try { row.setPointerCapture(e.pointerId); } catch (_) {}
+            } else { return; }
+          }
+
+          var dx = e.clientX - st.lastX;
+          var dtm = Math.max(now - st.lastT, 1) / 1000;
+          st.p = norm(st.p - dx, st.half);       // glisser vers la droite => contenu à droite
+          st.v = (-dx) / dtm;                    // vélocité dans l'espace de p
+          st.lastX = e.clientX; st.lastT = now;
+          apply(st);
+        });
+
+        function endDrag(e) {
+          st.pending = false;
+          if (!st.dragging) return;
+          st.dragging = false;
+          row.classList.remove('is-dragging');
+          try { row.releasePointerCapture(e.pointerId); } catch (_) {}
         }
-        row.addEventListener('pointerdown', pause);
-        row.addEventListener('touchstart', pause, { passive: true });
-        window.addEventListener('pointerup', scheduleResume);
-        row.addEventListener('touchend', scheduleResume, { passive: true });
-        row.addEventListener('mouseenter', pause);
-        row.addEventListener('mouseleave', scheduleResume);
-
-        // Quand l'utilisateur scrolle, on recale dans la fenêtre [0.5H, 1.5H) sans couture
-        row.addEventListener('scroll', function () {
-          if (!st.paused || !st.half) return; // ignore les scrolls provoqués par l'auto
-          var sl = row.scrollLeft;
-          if (sl >= st.half * 1.5) row.scrollLeft = sl - st.half;
-          else if (sl < st.half * 0.5) row.scrollLeft = sl + st.half;
-          st.pos = row.scrollLeft;
-        }, { passive: true });
+        row.addEventListener('pointerup', endDrag);
+        row.addEventListener('pointercancel', endDrag);
 
         return st;
       });
-
-      if (reduce) return; // pas de défilement auto, le scroll manuel reste dispo
 
       var last = 0;
       function frame(now) {
@@ -2651,16 +2671,23 @@ revEls.forEach(el => obs.observe(el));
         var dt = Math.min((now - last) / 1000, 0.05);
         last = now;
         states.forEach(function (st) {
-          if (st.paused) return;
-          if (!st.half) {                                   // mesure tardive (ex: desktop -> mobile)
+          if (!st.half) {                        // mesure tardive (ex: desktop -> mobile)
             st.half = st.track.scrollWidth / 2;
             if (!st.half) return;
-            st.pos = st.half * 0.75;
           }
-          st.pos += st.dir * (st.half / st.duration) * dt;  // px/s = largeur d'une copie / durée
-          if (st.pos >= st.half * 1.5) st.pos -= st.half;
-          else if (st.pos < st.half * 0.5) st.pos += st.half;
-          st.row.scrollLeft = st.pos;
+          if (st.dragging) return;               // l'utilisateur pilote
+
+          if (Math.abs(st.v) > 6) {              // inertie après un lâcher
+            st.p = norm(st.p + st.v * dt, st.half);
+            st.v *= Math.pow(0.93, dt * 60);     // friction quasi indépendante du framerate
+            apply(st);
+          } else {
+            st.v = 0;
+            if (!reduce) {                        // défilement auto continu
+              st.p = norm(st.p + st.dir * (st.half / st.duration) * dt, st.half);
+              apply(st);
+            }
+          }
         });
         requestAnimationFrame(frame);
       }
