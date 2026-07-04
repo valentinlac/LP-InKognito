@@ -112,6 +112,114 @@ nav.scrolled{background:rgba(7,12,23,.92);border-color:var(--border);backdrop-fi
 .btn-cta{padding:9px 20px;background:linear-gradient(120deg,#0A66C2 0%,#1a8fff 60%,#60aeff 100%);border-radius:999px;color:#fff;font-size:13.5px;font-weight:500;transition:filter .2s,transform .15s}
 .btn-cta:hover{filter:brightness(1.15);transform:translateY(-1px)}
 
+/* ─── NAV · menu burger mobile ─── */
+.nav-burger{
+  display:none;width:42px;height:42px;flex-direction:column;
+  align-items:center;justify-content:center;gap:5px;
+  border:1px solid var(--border);border-radius:12px;
+  background:rgba(255,255,255,.03);cursor:pointer;padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
+.nav-burger span{
+  display:block;width:18px;height:2px;border-radius:2px;background:var(--text);
+  transition:transform .3s ease,opacity .2s ease;
+}
+.nav-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-burger.open span:nth-child(2){opacity:0}
+.nav-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* !important pour battre la règle globale « body > * { position:relative;z-index:2 } » */
+.mobile-menu{
+  position:fixed !important;inset:0;z-index:1500 !important;
+  background:
+    radial-gradient(120% 60% at 100% 0%, rgba(26,143,255,.10), transparent 60%),
+    radial-gradient(90% 50% at 0% 100%, rgba(10,102,194,.10), transparent 60%),
+    var(--bg);
+  display:flex;flex-direction:column;justify-content:flex-start;
+  padding:17vh 7vw calc(48px + env(safe-area-inset-bottom));
+  opacity:0;visibility:hidden;
+  transition:opacity .35s ease,visibility .35s;
+}
+.mobile-menu.open{opacity:1;visibility:visible}
+
+/* En-tête : logo + bouton fermer, séparé par un filet */
+.mobile-menu-head{
+  position:absolute;top:0;left:0;right:0;height:64px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 6vw;
+  border-bottom:1px solid var(--border);
+}
+.mobile-menu-head .nav-logo-mark{height:40px;width:auto;display:block}
+.mobile-menu-close{
+  width:44px;height:44px;position:relative;flex-shrink:0;
+  border:1px solid var(--border);border-radius:12px;
+  background:rgba(255,255,255,.03);cursor:pointer;padding:0;
+  transition:border-color .2s,background .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.mobile-menu-close:hover{border-color:rgba(26,143,255,.45);background:rgba(10,102,194,.08)}
+.mobile-menu-close span{
+  position:absolute;top:50%;left:50%;width:17px;height:2px;border-radius:2px;background:var(--text);
+}
+.mobile-menu-close span:nth-child(1){transform:translate(-50%,-50%) rotate(45deg)}
+.mobile-menu-close span:nth-child(2){transform:translate(-50%,-50%) rotate(-45deg)}
+
+/* Liens : alignés à gauche, filets hairline + chevron.
+   position/height/padding/align-items resetés car la règle globale « nav {} » fuite ici */
+.mobile-menu-nav{
+  position:static;height:auto;padding:0;border:0;
+  display:flex;flex-direction:column;align-items:stretch;
+  width:100%;max-width:520px;margin:0 auto;
+}
+.mobile-menu-nav a{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;text-align:left;
+  padding:15px 2px;font-size:18px;font-weight:500;letter-spacing:-.02em;
+  color:var(--text);border-top:1px solid var(--border);
+  opacity:0;transform:translateY(10px);
+  transition:opacity .5s ease,transform .5s ease,color .25s ease,padding-left .25s ease;
+}
+.mobile-menu-nav a:last-of-type{border-bottom:1px solid var(--border)}
+.mobile-menu-nav a:hover,.mobile-menu-nav a:active{color:var(--blue3);padding-left:8px}
+.mobile-menu-nav a::after{
+  content:'';width:7px;height:7px;flex-shrink:0;
+  border-right:2px solid var(--muted2);border-top:2px solid var(--muted2);
+  transform:rotate(45deg);transition:transform .25s ease,border-color .25s ease;
+}
+.mobile-menu-nav a:hover::after,.mobile-menu-nav a:active::after{
+  border-color:var(--blue3);transform:rotate(45deg) translate(2px,-2px);
+}
+
+/* Bas de panneau : CTA + note */
+.mobile-menu-foot{
+  display:flex;flex-direction:column;gap:14px;margin:40px auto 0;
+  width:100%;max-width:520px;
+  opacity:0;transform:translateY(10px);
+  transition:opacity .5s ease,transform .5s ease;
+}
+.mobile-menu-cta{
+  text-align:center;color:#fff;font-size:16px;font-weight:600;padding:17px 20px;
+  border-radius:999px;letter-spacing:-.01em;
+  background:linear-gradient(120deg,#0A66C2 0%,#1a8fff 60%,#60aeff 100%);
+  box-shadow:0 14px 34px -10px rgba(26,143,255,.55);
+  transition:filter .2s,transform .15s;
+}
+.mobile-menu-cta:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.mobile-menu-note{text-align:center;font-size:12.5px;color:var(--muted);letter-spacing:.01em}
+
+/* Apparition en cascade à l'ouverture */
+.mobile-menu.open .mobile-menu-nav a,
+.mobile-menu.open .mobile-menu-foot{opacity:1;transform:none}
+.mobile-menu.open .mobile-menu-nav a:nth-child(1){transition-delay:.08s}
+.mobile-menu.open .mobile-menu-nav a:nth-child(2){transition-delay:.14s}
+.mobile-menu.open .mobile-menu-nav a:nth-child(3){transition-delay:.20s}
+.mobile-menu.open .mobile-menu-nav a:nth-child(4){transition-delay:.26s}
+.mobile-menu.open .mobile-menu-foot{transition-delay:.34s}
+@media (prefers-reduced-motion:reduce){
+  .mobile-menu-nav a,.mobile-menu-foot{transition:color .2s ease}
+  .mobile-menu-nav a,.mobile-menu-foot{opacity:1;transform:none}
+}
+
+body.menu-open{overflow:hidden}
+
 /* ─── REUSABLE ─── */
 section{padding:120px 6vw;max-width:1200px;margin:0 auto;position:relative}
 .sec-label{display:inline-block;font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--blue3);margin-bottom:18px}
@@ -935,6 +1043,28 @@ h1.hero-h1{animation:fadeIn .8s .25s ease both}
 .testi-name{font-size:14px;font-weight:500;color:var(--text)}
 .testi-role{font-size:12.5px;color:var(--muted)}
 
+/* ─── TÉMOIGNAGES · marquee mobile (3 rangées auto-défilantes) ─── */
+/* Déclaré AVANT le @media mobile pour que display:block l'emporte sur mobile */
+.testi-marquee{display:none}
+.testi-marquee .testi-row{overflow:hidden;position:relative}
+.testi-marquee .testi-row + .testi-row{margin-top:14px}
+.testi-marquee .testi-track{display:flex;width:max-content;align-items:flex-start;will-change:transform}
+.testi-marquee .testi-track:hover,
+.testi-marquee .testi-track:active{animation-play-state:paused}
+/* Cellule = 1 avis écrit, OU 2 screenshots empilés (≈ même hauteur qu'un avis écrit) */
+.testi-marquee .testi-cell{flex:0 0 auto;margin-right:14px;display:flex;flex-direction:column;gap:12px}
+.testi-marquee .testi-cell-card{width:300px}
+.testi-marquee .testi-cell-shots{width:238px}
+.testi-marquee .testi-card,
+.testi-marquee .testi-shot{margin:0;width:100%}
+.testi-track.testi-left{animation:testi-scroll-left linear infinite}
+.testi-track.testi-right{animation:testi-scroll-right linear infinite}
+@keyframes testi-scroll-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes testi-scroll-right{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+@media (prefers-reduced-motion:reduce){
+  .testi-track.testi-left,.testi-track.testi-right{animation:none}
+}
+
 @media (max-width:900px){
   .hero-badge{font-size:11px;padding:6px 12px}
   .pc-beta-badge{font-size:9.5px;letter-spacing:.06em;padding:5px 12px}
@@ -944,19 +1074,10 @@ h1.hero-h1{animation:fadeIn .8s .25s ease both}
   .cta-h{white-space:normal;font-size:clamp(27px,7.4vw,44px)}
   .cta-h .grad-text{font-size:inherit !important}
   .nav-links{display:none}
+  .nav-burger{display:flex}
   .steps-grid,.features-grid,.pricing-grid{grid-template-columns:1fr;gap:16px}
-  .testi-grid{
-    column-count:unset;
-    display:flex;
-    flex-direction:row;
-    overflow-x:auto;
-    scroll-snap-type:x mandatory;
-    -webkit-overflow-scrolling:touch;
-    gap:14px;
-    padding-bottom:16px;
-    scrollbar-width:none;
-  }
-  .testi-grid::-webkit-scrollbar{display:none}
+  .testi-grid{display:none}
+  .testi-marquee{display:block}
   .testi-card{
     flex:0 0 80vw;
     max-width:320px;
@@ -1121,8 +1242,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </ul>
   <div class="nav-right">
     <a href="https://buy.stripe.com/fZu28s2nObdI5NZgBO2sM07" class="btn-cta">19€/mois</a>
+    <button class="nav-burger" id="nav-burger" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- MENU MOBILE (burger) -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <div class="mobile-menu-head">
+    <img class="nav-logo-mark" src="logo.png" alt="InKognito" width="44" height="44">
+    <button class="mobile-menu-close" id="mobile-menu-close" type="button" aria-label="Fermer le menu">
+      <span></span><span></span>
+    </button>
+  </div>
+  <nav class="mobile-menu-nav" aria-label="Navigation mobile">
+    <a href="#features">Fonctionnalités</a>
+    <a href="#steps3">Comment ça marche ?</a>
+    <a href="#testimonials">Témoignages</a>
+    <a href="#pricing">Tarifs</a>
+  </nav>
+  <div class="mobile-menu-foot">
+    <a href="https://buy.stripe.com/fZu28s2nObdI5NZgBO2sM07" class="mobile-menu-cta">Commencer · 19 €/mois</a>
+    <p class="mobile-menu-note">Tarif gelé à vie · sans engagement</p>
+  </div>
+</div>
 
 <!-- HERO VISUAL · ghostwriter au travail (pur CSS/SVG) -->
 <style>
@@ -1783,6 +1927,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 
   </div>
+
+  <!-- Marquee mobile · 3 rangées auto-défilantes (construit depuis .testi-grid) -->
+  <div class="testi-marquee"></div>
 </section>
 
 <!-- PRICING -->
@@ -2273,6 +2420,178 @@ revEls.forEach(el => obs.observe(el));
       });
     });
   });
+</script>
+
+<!-- Menu burger mobile : ouverture / fermeture -->
+<script>
+  (function () {
+    var burger = document.getElementById('nav-burger');
+    var menu = document.getElementById('mobile-menu');
+    if (!burger || !menu) return;
+
+    function setOpen(open) {
+      burger.classList.toggle('open', open);
+      menu.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      burger.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+      menu.setAttribute('aria-hidden', open ? 'false' : 'true');
+      document.body.classList.toggle('menu-open', open);
+    }
+
+    burger.addEventListener('click', function () {
+      setOpen(!menu.classList.contains('open'));
+    });
+
+    var closeBtn = document.getElementById('mobile-menu-close');
+    if (closeBtn) closeBtn.addEventListener('click', function () { setOpen(false); });
+
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () { setOpen(false); });
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setOpen(false);
+    });
+
+    // Referme si on repasse en desktop
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 900) setOpen(false);
+    });
+  })();
+</script>
+
+<!-- Marquee témoignages mobile : 3 rangées auto-défilantes construites depuis .testi-grid -->
+<script>
+  (function () {
+    var CARD_W = 300;   // largeur cellule avis écrit
+    var SHOT_W = 238;   // largeur cellule screenshots
+    var GAP = 12;       // gap vertical entre 2 screenshots empilés
+    var CAP_H = 44;     // hauteur approx de la légende sous un screenshot
+    var MAX_SHOTS = 3;  // plafond de screenshots par cellule
+    var built = false;
+
+    function prepClone(el) {
+      var clone = el.cloneNode(true);
+      clone.classList.remove('reveal');
+      clone.className = clone.className.replace(/\bd\d+\b/g, '').replace(/\s+/g, ' ').trim();
+      return clone;
+    }
+
+    // Hauteur médiane rendue des avis écrits (largeur CARD_W) → hauteur cible
+    function measureCardTarget(cards) {
+      var box = document.createElement('div');
+      box.style.cssText = 'position:absolute;left:-9999px;top:0;display:block;visibility:hidden;pointer-events:none';
+      document.body.appendChild(box);
+      var heights = [];
+      cards.forEach(function (el) {
+        var clone = prepClone(el);
+        clone.style.width = CARD_W + 'px';
+        clone.style.margin = '0';
+        box.appendChild(clone);
+        if (clone.offsetHeight > 0) heights.push(clone.offsetHeight);
+      });
+      document.body.removeChild(box);
+      if (!heights.length) return 460;
+      heights.sort(function (a, b) { return a - b; });
+      return heights[Math.floor(heights.length / 2)];
+    }
+
+    // Charge les dimensions naturelles pour estimer la hauteur rendue de chaque screenshot
+    function loadShotHeights(shots) {
+      return Promise.all(shots.map(function (el) {
+        return new Promise(function (resolve) {
+          var src = (el.querySelector('img') || {}).src || '';
+          var probe = new Image();
+          function done() {
+            var ratio = probe.naturalWidth ? (probe.naturalHeight / probe.naturalWidth) : 1.4;
+            resolve({ el: prepClone(el), h: SHOT_W * ratio + CAP_H });
+          }
+          probe.onload = done;
+          probe.onerror = function () { resolve({ el: prepClone(el), h: SHOT_W * 1.4 + CAP_H }); };
+          probe.src = src;
+          if (probe.complete && probe.naturalWidth) done();
+        });
+      }));
+    }
+
+    function buildTestiMarquee() {
+      if (built) return;
+      var marquee = document.querySelector('.testi-marquee');
+      var grid = document.querySelector('.testi-grid');
+      if (!marquee || !grid || marquee.children.length) return;
+
+      var cardEls = Array.prototype.slice.call(grid.querySelectorAll('.testi-card'));
+      var shotEls = Array.prototype.slice.call(grid.querySelectorAll('.testi-shot'));
+      if (!cardEls.length && !shotEls.length) return;
+      built = true;
+
+      var target = measureCardTarget(cardEls);
+
+      loadShotHeights(shotEls).then(function (shotData) {
+        var cells = [];
+
+        // Chaque avis écrit = une cellule
+        cardEls.forEach(function (el) {
+          var cell = document.createElement('div');
+          cell.className = 'testi-cell testi-cell-card';
+          cell.appendChild(prepClone(el));
+          cells.push(cell);
+        });
+
+        // Screenshots empilés en s'adaptant à leur hauteur pour approcher la cible
+        var i = 0;
+        while (i < shotData.length) {
+          var cell = document.createElement('div');
+          cell.className = 'testi-cell testi-cell-shots';
+          var h = 0, count = 0;
+          while (i < shotData.length && count < MAX_SHOTS) {
+            var next = shotData[i].h + (count > 0 ? GAP : 0);
+            // Toujours au moins 1 ; on arrête d'empiler dès qu'on dépasserait la cible
+            if (count > 0 && (h + next) > target * 1.05) break;
+            cell.appendChild(shotData[i].el);
+            h += next; count++; i++;
+          }
+          cells.push(cell);
+        }
+
+        // Répartition round-robin sur 3 rangées
+        var rows = [[], [], []];
+        cells.forEach(function (cell, idx) { rows[idx % 3].push(cell); });
+
+        var dirs = ['left', 'right', 'left'];
+        var durations = [64, 56, 70]; // secondes, défilement lent
+
+        rows.forEach(function (rowCells, r) {
+          var row = document.createElement('div');
+          row.className = 'testi-row';
+
+          var track = document.createElement('div');
+          track.className = 'testi-track testi-' + dirs[r];
+          track.style.animationDuration = durations[r] + 's';
+
+          // Deux copies pour une boucle sans couture (translateX -50%)
+          for (var copy = 0; copy < 2; copy++) {
+            rowCells.forEach(function (cell) {
+              var c = cell.cloneNode(true);
+              if (copy === 1) c.setAttribute('aria-hidden', 'true');
+              track.appendChild(c);
+            });
+          }
+
+          row.appendChild(track);
+          marquee.appendChild(row);
+        });
+      });
+    }
+
+    function start() {
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(buildTestiMarquee);
+      else buildTestiMarquee();
+    }
+
+    if (document.readyState !== 'loading') start();
+    else document.addEventListener('DOMContentLoaded', start);
+  })();
 </script>
 </body>
 </html>
