@@ -1061,6 +1061,17 @@ h1.hero-h1{animation:fadeIn .8s .25s ease both}
 .testi-marquee .testi-cell-shots{width:238px}
 .testi-marquee .testi-card,
 .testi-marquee .testi-shot{margin:0;width:100%}
+/* Pas d'interaction sur les avis du marquee : ni clic, ni survol/surélévation.
+   Les taps passent à la rangée (qui gère le scroll) au lieu de la carte. */
+.testi-marquee .testi-cell,
+.testi-marquee .testi-card,
+.testi-marquee .testi-shot{pointer-events:none}
+.testi-marquee .testi-card:hover,
+.testi-marquee .testi-shot:hover{transform:none;box-shadow:none;border-color:rgba(255,255,255,.1)}
+.testi-marquee .testi-row{
+  -webkit-tap-highlight-color:transparent;
+  -webkit-user-select:none;user-select:none;
+}
 
 @media (max-width:900px){
   .hero-badge{font-size:11px;padding:6px 12px}
