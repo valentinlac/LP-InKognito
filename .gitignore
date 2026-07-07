@@ -1,6 +1,9 @@
 # macOS
 .DS_Store
 
+# git worktrees (scratch, used by superpowers subagent-driven-development)
+.worktrees/
+
 # Build / dépendances Next.js (waitlist)
 nextjs-waitlist/.next/
 nextjs-waitlist/node_modules/
