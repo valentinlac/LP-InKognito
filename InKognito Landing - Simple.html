@@ -2412,6 +2412,29 @@ revEls.forEach(el => obs.observe(el));
     .catch(function () { /* on garde 4/20 par défaut */ })
 </script>
 
+<!-- Attribution affiliation : relaie ?ref=<code> (lien /affiliation de l'app) vers le lien de paiement Stripe -->
+<script>
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var ref = params.get('ref');
+    if (ref) {
+      try { localStorage.setItem('ik_ref', ref); } catch (e) {}
+    } else {
+      try { ref = localStorage.getItem('ik_ref'); } catch (e) {}
+    }
+    if (!ref) return;
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('a[href*="buy.stripe.com"]').forEach(function (a) {
+        try {
+          var url = new URL(a.getAttribute('href'));
+          url.searchParams.set('client_reference_id', ref);
+          a.setAttribute('href', url.toString());
+        } catch (e) {}
+      });
+    });
+  })();
+</script>
+
 <!-- Tracking des clics CTA vers l'inscription -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
