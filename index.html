@@ -1486,7 +1486,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section id="stats">
   <div class="stats-strip reveal">
     <div class="stat-item">
-      <div class="stat-num">247 000</div>
+      <div class="stat-num" id="impressions-total">247 000</div>
       <div class="stat-label">impressions générées par les utilisateurs d'InKognito</div>
     </div>
     <div class="stat-item">
@@ -2410,6 +2410,19 @@ revEls.forEach(el => obs.observe(el));
       if (remaining) remaining.textContent = d.remaining
     })
     .catch(function () { /* on garde 4/20 par défaut */ })
+</script>
+
+<!-- Chiffre d'impressions réel en direct (fallback = 247 000 codé en dur ci-dessus si l'appel échoue) -->
+<script>
+  fetch('https://app.inkognito.fr/api/impressions-total')
+    .then(function (r) { return r.json() })
+    .then(function (d) {
+      var el = document.getElementById('impressions-total')
+      if (el && typeof d.impressions === 'number') {
+        el.textContent = d.impressions.toLocaleString('fr-FR')
+      }
+    })
+    .catch(function () { /* on garde 247 000 par défaut */ })
 </script>
 
 <!-- Attribution affiliation : relaie ?ref=<code> (lien /affiliation de l'app) vers l'inscription gratuite via ?aff=, lu par app/login/page.tsx puis reporté sur le profil pour la commission au paiement (cf. docs/superpowers/specs/2026-07-07-free-signup-paid-gate-design.md côté app) -->
