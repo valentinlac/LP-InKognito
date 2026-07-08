@@ -1966,6 +1966,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <span class="pc-beta-save">19€/mois</span>
             </div>
             <div class="pc-beta-note">Réservé aux 20 premiers early adopters, tarif gelé à vie</div>
+            <div class="ea-progress" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="20" aria-label="Places early adopter restantes">
+              <div class="ea-progress-track">
+                <div class="ea-progress-fill" id="ea-progress-fill" style="width:20%"></div>
+              </div>
+              <div class="ea-progress-label"><strong id="spots-remaining">16</strong> places restantes</div>
+            </div>
           </div>
           <div class="pc-solo-desc" style="width: 278px; height: 73px; font-size: 13px">
             Tout ce qu'il vous faut pour être présent chaque jour sur LinkedIn, dans votre voix, sans y passer vos journées.
@@ -2388,6 +2394,22 @@ revEls.forEach(el => obs.observe(el));
   // Expose pour debug éventuel
   window.__lenis = lenis;
 })();
+</script>
+
+<!-- Barre de progression places early adopter en direct (fallback = 16 restantes codé en dur ci-dessus si l'appel échoue) -->
+<script>
+  fetch('https://app.inkognito.fr/api/spots-remaining')
+    .then(function (r) { return r.json() })
+    .then(function (d) {
+      var pct = Math.min(100, (d.taken / d.max) * 100)
+      var fill = document.getElementById('ea-progress-fill')
+      var bar = document.querySelector('.ea-progress[role="progressbar"]')
+      var remaining = document.getElementById('spots-remaining')
+      if (fill) fill.style.width = pct + '%'
+      if (bar) bar.setAttribute('aria-valuenow', d.taken)
+      if (remaining) remaining.textContent = d.remaining
+    })
+    .catch(function () { /* on garde 4/20 par défaut */ })
 </script>
 
 <!-- Attribution affiliation : relaie ?ref=<code> (lien /affiliation de l'app) vers l'inscription gratuite via ?aff=, lu par app/login/page.tsx puis reporté sur le profil pour la commission au paiement (cf. docs/superpowers/specs/2026-07-07-free-signup-paid-gate-design.md côté app) -->
