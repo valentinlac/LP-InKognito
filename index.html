@@ -527,6 +527,46 @@ h1.hero-h1{
 .pc-solo-period{
   font-size:14px;color:var(--muted);margin-bottom:12px;
 }
+.pc-billing-toggle{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:999px;
+  padding:4px;
+  margin-bottom:18px;
+}
+.pc-billing-opt{
+  appearance:none;border:none;cursor:pointer;
+  background:transparent;color:var(--muted);
+  font:inherit;font-size:13px;font-weight:600;
+  padding:8px 16px;border-radius:999px;
+  display:inline-flex;align-items:center;gap:7px;
+  transition:background .2s ease,color .2s ease;
+}
+.pc-billing-opt.is-active{
+  background:linear-gradient(120deg,#0a66c2,#1a8fff);
+  color:#fff;
+  box-shadow:0 4px 14px rgba(26,143,255,.4);
+}
+.pc-billing-save{
+  font-size:11px;font-weight:700;color:#22d87f;
+  background:rgba(34,216,127,.14);
+  border:1px solid rgba(34,216,127,.35);
+  padding:2px 7px;border-radius:999px;
+}
+.pc-billing-opt.is-active .pc-billing-save{
+  color:#bdf7d8;background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.3);
+}
+.pc-solo-billing-note{
+  margin-top:6px;font-size:13px;color:var(--muted);
+}
+.pc-price-wrap .pc-solo-billing-note{
+  transition:opacity .2s ease, transform .2s ease;
+}
+.pc-price-wrap.is-flipping .pc-solo-billing-note{
+  opacity:0;
+  transform:translateY(6px);
+}
 .pc-solo-trial{
   margin-top:12px;
   display:inline-flex;align-items:center;gap:7px;
@@ -1144,9 +1184,9 @@ h1.hero-h1{animation:fadeIn .8s .25s ease both}
       "description": "InKognito écrit, publie et programme vos posts LinkedIn dans votre voix exacte et vos vraies expériences, jamais dans un style IA générique. Apprend de vos vraies stats LinkedIn pour s'améliorer à chaque post.",
       "offers": {
         "@type": "Offer",
-        "price": "19",
+        "price": "44",
         "priceCurrency": "EUR",
-        "description": "Offre early adopter, 19€/mois, tarif gelé à vie"
+        "description": "Abonnement 44€/mois, sans engagement"
       },
       "publisher": { "@id": "https://inkognito.fr/#organization" }
     }
@@ -1202,10 +1242,10 @@ h1.hero-h1{animation:fadeIn .8s .25s ease both}
     },
     {
       "@type": "Question",
-      "name": "Le tarif de 19 €/mois est-il garanti dans le temps ?",
+      "name": "Puis-je annuler à tout moment ?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Oui. En tant qu'early adopter, vous gardez 19 €/mois à vie, même quand le tarif passera à 44 €/mois pour les nouveaux inscrits. Sans engagement : annulable à tout moment."
+        "text": "Oui. L'abonnement à 44 €/mois est sans engagement. Vous pouvez annuler quand vous voulez depuis votre compte, sans justification."
       }
     }
   ]
@@ -1267,7 +1307,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </nav>
   <div class="mobile-menu-foot">
     <a href="https://app.inkognito.fr/login" class="mobile-menu-cta">Créer un compte gratuit</a>
-    <p class="mobile-menu-note">Tarif gelé à vie · sans engagement</p>
+    <p class="mobile-menu-note">Sans engagement · Annulez à tout moment</p>
   </div>
 </div>
 
@@ -1948,7 +1988,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="section-header centered reveal">
     <div class="sec-label grad-blue-label">Tarifs</div>
     <h2 class="sec-h grad-white">Simple. Transparent. Sans surprise.</h2>
-    <p class="sec-p">Tout InKognito pour faire grandir votre LinkedIn dans votre voix, avec une régularité sans faille. Tarif early adopter à 19 €/mois, gelé à vie, réservé aux 20 premiers. Sans engagement.</p>
+    <p class="sec-p">Tout InKognito pour faire grandir votre LinkedIn dans votre voix, avec une régularité sans faille. 44 €/mois, ou 33 €/mois en engagement annuel.</p>
   </div>
 
   <div class="pricing-solo reveal">
@@ -1957,25 +1997,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <div class="pc-solo-top">
           <div class="pc-solo-left">
-            <div class="pc-beta-badge">
-              Offre Early Adopter · Tarif gelé à vie
+            <div class="pc-billing-toggle" role="tablist" aria-label="Choix de facturation">
+              <button type="button" class="pc-billing-opt is-active" data-billing="monthly" role="tab" aria-selected="true">Mensuel</button>
+              <button type="button" class="pc-billing-opt" data-billing="annual" role="tab" aria-selected="false">Annuel <span class="pc-billing-save">-25%</span></button>
             </div>
-            <div class="pc-solo-price">
-              <span class="pc-solo-curr">€</span>
-              <span class="pc-solo-amount">19</span>
-              <span class="pc-solo-period">/mois</span>
-            </div>
-            <div class="pc-beta-old">
-              <span class="pc-beta-old-price">44€/mois</span>
-              <span class="pc-beta-arrow" aria-hidden="true"><svg width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4h11.2"/><path d="M9 1l3 3-3 3"/></svg></span>
-              <span class="pc-beta-save">19€/mois</span>
-            </div>
-            <div class="pc-beta-note">Réservé aux 20 premiers early adopters, tarif gelé à vie</div>
-            <div class="ea-progress" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="20" aria-label="Places early adopter restantes">
-              <div class="ea-progress-track">
-                <div class="ea-progress-fill" id="ea-progress-fill" style="width:20%"></div>
+            <div class="pc-price-wrap">
+              <div class="pc-solo-price">
+                <span class="pc-solo-curr">€</span>
+                <span class="pc-solo-amount" id="pc-price-amount">44</span>
+                <span class="pc-solo-period">/mois</span>
               </div>
-              <div class="ea-progress-label"><strong id="spots-remaining">16</strong> places restantes</div>
+              <p class="pc-solo-billing-note" id="pc-billing-note">Facturé mensuellement</p>
             </div>
           </div>
           <div class="pc-solo-desc" style="width: 278px; height: 73px; font-size: 13px">
@@ -2087,11 +2119,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <div class="faq-item">
       <button class="faq-q" aria-expanded="false">
-        <span style="font-weight: 500">Le tarif de 19 €/mois est-il garanti dans le temps ?</span>
+        <span style="font-weight: 500">Puis-je annuler à tout moment ?</span>
         <span class="faq-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </button>
       <div class="faq-a">
-        <p>Oui. En tant qu'early adopter, vous gardez 19 €/mois à vie, même quand le tarif passera à 44 €/mois pour les nouveaux inscrits. Sans engagement : annulable à tout moment.</p>
+        <p>Oui. L'abonnement à 44 €/mois est sans engagement. Vous pouvez annuler quand vous voulez depuis votre compte, sans justification.</p>
       </div>
     </div>
   </div>
@@ -2103,10 +2135,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="cta-block-inner">
       <div class="hero-badge" style="margin: 0 auto 32px;">
         <span class="badge-dot"></span>
-        Offre early adopter · 19€/mois
+        InKognito · 44€/mois
       </div>
       <h2 class="cta-h" style="max-width: 900px; margin-left: auto; margin-right: auto;"><span class="grad-white">Présent chaque jour sur LinkedIn.</span><br><span class="grad-text" style="font-size: 59px">100% votre voix.</span></h2>
-      <p class="cta-sub">Capturez vos idées, publiez sans écrire, mesurez ce qui marche.<br>Tarif early adopter, places limitées</p>
+      <p class="cta-sub">Capturez vos idées, publiez sans écrire, mesurez ce qui marche.<br>Sans engagement</p>
       <div class="hero-actions">
         <a href="https://app.inkognito.fr/login" class="btn-hero">Commencer maintenant <span class="btn-hero-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></a>
       </div>
@@ -2203,7 +2235,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 }
 </style>
 <a id="floating-cta" class="floating-cta" href="https://app.inkognito.fr/login">
-  <span class="floating-cta-label">InKognito · <b>19€/mois</b></span>
+  <span class="floating-cta-label">InKognito · <b>44€/mois</b></span>
   <span class="floating-cta-btn">Commencer <span aria-hidden="true"><svg width="16" height="9" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></span>
 </a>
 <script>
@@ -2429,20 +2461,58 @@ revEls.forEach(el => obs.observe(el));
 })();
 </script>
 
-<!-- Barre de progression places early adopter en direct (fallback = 16 restantes codé en dur ci-dessus si l'appel échoue) -->
+<!-- Toggle mensuel/annuel de la carte tarif -->
 <script>
-  fetch('https://app.inkognito.fr/api/spots-remaining')
-    .then(function (r) { return r.json() })
-    .then(function (d) {
-      var pct = Math.min(100, (d.taken / d.max) * 100)
-      var fill = document.getElementById('ea-progress-fill')
-      var bar = document.querySelector('.ea-progress[role="progressbar"]')
-      var remaining = document.getElementById('spots-remaining')
-      if (fill) fill.style.width = pct + '%'
-      if (bar) bar.setAttribute('aria-valuenow', d.taken)
-      if (remaining) remaining.textContent = d.remaining
-    })
-    .catch(function () { /* on garde 4/20 par défaut */ })
+(() => {
+  const toggle = document.querySelector('.pc-billing-toggle');
+  if (!toggle) return;
+  const amountEl = document.getElementById('pc-price-amount');
+  const noteEl = document.getElementById('pc-billing-note');
+  const wrap = document.querySelector('.pc-price-wrap');
+  const plans = {
+    monthly: { amount: '44', note: 'Facturé mensuellement' },
+    annual: { amount: '33', note: 'Facturé 396 €/an' }
+  };
+  function animateCount(el, from, to, duration) {
+    if (from === to) { el.textContent = to; return; }
+    const start = performance.now();
+    const change = to - from;
+    function step(now) {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(from + change * eased);
+      if (t < 1) requestAnimationFrame(step);
+      else el.textContent = to;
+    }
+    requestAnimationFrame(step);
+  }
+
+  toggle.querySelectorAll('.pc-billing-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.classList.contains('is-active')) return;
+      toggle.querySelectorAll('.pc-billing-opt').forEach(b => {
+        b.classList.remove('is-active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('is-active');
+      btn.setAttribute('aria-selected', 'true');
+      const plan = plans[btn.dataset.billing];
+      if (amountEl) {
+        const from = parseInt(amountEl.textContent, 10) || 0;
+        animateCount(amountEl, from, parseInt(plan.amount, 10), 550);
+      }
+      if (wrap) {
+        wrap.classList.add('is-flipping');
+        setTimeout(() => {
+          if (noteEl) noteEl.textContent = plan.note;
+          wrap.classList.remove('is-flipping');
+        }, 180);
+      } else if (noteEl) {
+        noteEl.textContent = plan.note;
+      }
+    });
+  });
+})();
 </script>
 
 <!-- Chiffre d'impressions réel en direct (fallback = 247 000 codé en dur ci-dessus si l'appel échoue) -->
