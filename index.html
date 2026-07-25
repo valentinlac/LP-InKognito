@@ -2576,6 +2576,29 @@ revEls.forEach(el => obs.observe(el));
   })();
 </script>
 
+<!-- Attribution marketing (lead magnets, posts...) : relaie ?src=<code> vers l'inscription gratuite tel quel, lu par app/login/page.tsx puis posé une seule fois sur le profil (profiles.signup_source) à la création du compte. Distinct de ref/aff ci-dessus : aucune commission ni point, juste savoir quelle ressource convertit -->
+<script>
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var src = params.get('src');
+    if (src) {
+      try { localStorage.setItem('ik_src', src); } catch (e) {}
+    } else {
+      try { src = localStorage.getItem('ik_src'); } catch (e) {}
+    }
+    if (!src) return;
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('a[href*="app.inkognito.fr/login"]').forEach(function (a) {
+        try {
+          var url = new URL(a.getAttribute('href'));
+          url.searchParams.set('src', src);
+          a.setAttribute('href', url.toString());
+        } catch (e) {}
+      });
+    });
+  })();
+</script>
+
 <!-- Tracking des clics CTA vers l'inscription -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
