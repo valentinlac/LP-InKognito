@@ -2599,6 +2599,64 @@ revEls.forEach(el => obs.observe(el));
   })();
 </script>
 
+<!-- Bandeau promo one-off "1er mois à 19€" pour le lien partenaire Rolly.
+     Spec : docs/superpowers/specs/2026-07-27-promo-first-month-banner-design.md.
+     Détection du code sur le même modèle que ?ref=/?src= ci-dessus (persistance
+     localStorage pour survivre à la navigation), mais un seul code en dur et pas
+     de mapping générique : one-off assumé, pas d'infra de codes promo réutilisable. -->
+<style>
+  .promo-banner{position:fixed;top:0;left:0;right:0;z-index:900;background:linear-gradient(120deg,var(--blue) 0%,var(--blue2) 60%,var(--blue3) 100%)}
+  .promo-banner-inner{max-width:1200px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;text-align:center}
+  .promo-banner-text{color:#fff;font-size:13.5px;font-weight:400;line-height:1.4}
+  .promo-banner-text strong{font-weight:700}
+  .promo-banner-btn{flex-shrink:0;padding:7px 18px;background:#fff;color:var(--blue);border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;transition:filter .2s,transform .15s}
+  .promo-banner-btn:hover{filter:brightness(.95);transform:translateY(-1px)}
+  body.has-promo-banner nav{top:var(--promo-banner-h,0px)}
+  body.has-promo-banner #hero{padding-top:calc(140px + var(--promo-banner-h,0px))}
+  @media (max-width:900px){
+    .promo-banner-inner{padding:8px 16px}
+    .promo-banner-text{font-size:12px}
+    .promo-banner-btn{padding:6px 14px;font-size:12.5px}
+  }
+</style>
+<script>
+  (function () {
+    var PROMO_CODE = 'rolly19';
+    // TODO Valentin : remplacer par le Payment Link Stripe dédié (coupon 25€ off,
+    // une fois, sur le prix mensuel 44€) avant de partager le lien inkognito.fr/?promo=rolly19
+    var STRIPE_PROMO_LINK = 'https://buy.stripe.com/REMPLACER_PAR_LE_LIEN_STRIPE_DEDIE';
+
+    var params = new URLSearchParams(window.location.search);
+    var promo = params.get('promo');
+    if (promo) {
+      try { localStorage.setItem('ik_promo', promo); } catch (e) {}
+    } else {
+      try { promo = localStorage.getItem('ik_promo'); } catch (e) {}
+    }
+    if (promo !== PROMO_CODE) return;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var banner = document.createElement('div');
+      banner.id = 'promo-banner';
+      banner.className = 'promo-banner';
+      banner.setAttribute('role', 'banner');
+      banner.innerHTML =
+        '<div class="promo-banner-inner">' +
+          '<p class="promo-banner-text">Offre spéciale : <strong>19&nbsp;€</strong> le premier mois (au lieu de 44&nbsp;€), puis 44&nbsp;€/mois. Sans engagement.</p>' +
+          '<a href="' + STRIPE_PROMO_LINK + '" class="promo-banner-btn">Profiter de l\'offre</a>' +
+        '</div>';
+      document.body.insertBefore(banner, document.body.firstChild);
+      document.body.classList.add('has-promo-banner');
+
+      function syncBannerHeight() {
+        document.documentElement.style.setProperty('--promo-banner-h', banner.getBoundingClientRect().height + 'px');
+      }
+      syncBannerHeight();
+      window.addEventListener('resize', syncBannerHeight);
+    });
+  })();
+</script>
+
 <!-- Tracking des clics CTA vers l'inscription -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
