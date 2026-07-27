@@ -2622,9 +2622,9 @@ revEls.forEach(el => obs.observe(el));
 <script>
   (function () {
     var PROMO_CODE = 'rolly19';
-    // TODO Valentin : remplacer par le Payment Link Stripe dédié (coupon 25€ off,
-    // une fois, sur le prix mensuel 44€) avant de partager le lien inkognito.fr/?promo=rolly19
-    var STRIPE_PROMO_LINK = 'https://buy.stripe.com/REMPLACER_PAR_LE_LIEN_STRIPE_DEDIE';
+    // Lien de paiement mensuel existant (STRIPE_PAYMENT_LINK dans linkedin-saas/lib/pricing.ts)
+    // + code promo ROLLY19 (coupon 25€ off, une fois) pré-rempli via prefilled_promo_code.
+    var STRIPE_PROMO_LINK = 'https://buy.stripe.com/eVq14o1jKdlQ0tFbhu2sM08?prefilled_promo_code=ROLLY19';
 
     var params = new URLSearchParams(window.location.search);
     var promo = params.get('promo');
