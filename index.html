@@ -2653,6 +2653,57 @@ revEls.forEach(el => obs.observe(el));
       }
       syncBannerHeight();
       window.addEventListener('resize', syncBannerHeight);
+
+      // Visiteur venu du lien de Rolly : plus aucun CTA "essai gratuit" sur la
+      // page, tout mène à l'offre à 19€. On réécrit href + libellé de chaque
+      // CTA existant plutôt que d'en ajouter de nouveaux.
+      var OFFER_LABEL = "Profiter de l'offre";
+
+      document.querySelectorAll('a[href*="app.inkognito.fr/login"]').forEach(function (a) {
+        a.setAttribute('href', STRIPE_PROMO_LINK);
+      });
+
+      // CTA texte simple (nav, menu mobile, hero x3, bouton carte tarifs) :
+      // on ne remplace que le texte du bouton, jamais l'icône/flèche qui
+      // l'accompagne parfois (on ne touche que le 1er nœud texte non-vide).
+      document.querySelectorAll('.btn-cta, .mobile-menu-cta, .btn-hero, .pc-solo-btn').forEach(function (el) {
+        for (var i = 0; i < el.childNodes.length; i++) {
+          var node = el.childNodes[i];
+          if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim()) {
+            node.nodeValue = OFFER_LABEL + ' ';
+            break;
+          }
+        }
+      });
+
+      // CTA flottant : structure dédiée (label de prix + bouton séparés).
+      var fcLabel = document.querySelector('.floating-cta-label');
+      if (fcLabel) fcLabel.innerHTML = 'InKognito · <b>19€ le 1er mois</b>';
+      var fcBtn = document.querySelector('.floating-cta-btn');
+      if (fcBtn) {
+        for (var j = 0; j < fcBtn.childNodes.length; j++) {
+          var fcNode = fcBtn.childNodes[j];
+          if (fcNode.nodeType === Node.TEXT_NODE && fcNode.nodeValue.trim()) {
+            fcNode.nodeValue = 'Profiter ';
+            break;
+          }
+        }
+      }
+
+      // Carte tarifs : le prix affiché (44) et la note de facturation
+      // parlaient encore de l'essai gratuit standard, juste au-dessus du
+      // bouton qu'on vient de réécrire. Bascule sur 19€ + masque le toggle
+      // mensuel/annuel (non pertinent pour cette offre à durée fixe).
+      var priceEl = document.getElementById('pc-price-amount');
+      if (priceEl) priceEl.textContent = '19';
+      var billingNoteEl = document.getElementById('pc-billing-note');
+      if (billingNoteEl) billingNoteEl.textContent = 'Premier mois, puis 44 €/mois';
+      var billingToggleEl = document.querySelector('.pc-billing-toggle');
+      if (billingToggleEl) billingToggleEl.style.display = 'none';
+      var pricingIntroEl = document.querySelector('#pricing .sec-p');
+      if (pricingIntroEl) {
+        pricingIntroEl.textContent = 'Tout InKognito pour faire grandir votre LinkedIn dans votre voix, avec une régularité sans faille. Offre spéciale : 19 € le premier mois, puis 44 €/mois.';
+      }
     });
   })();
 </script>
