@@ -2614,9 +2614,11 @@ revEls.forEach(el => obs.observe(el));
 
 <!-- Bandeau promo one-off "1er mois à 19€" pour le lien partenaire Rolly.
      Spec : docs/superpowers/specs/2026-07-27-promo-first-month-banner-design.md.
-     Détection du code sur le même modèle que ?ref=/?src= ci-dessus (persistance
-     localStorage pour survivre à la navigation), mais un seul code en dur et pas
-     de mapping générique : one-off assumé, pas d'infra de codes promo réutilisable. -->
+     Détection du code sur le même modèle que ?ref=/?src= ci-dessus, mais persisté
+     en sessionStorage (pas localStorage) : survit à la navigation pendant la
+     visite, mais ne reste jamais actif au-delà de la fermeture de l'onglet, même
+     sans le code dans l'URL. Un seul code en dur et pas de mapping générique :
+     one-off assumé, pas d'infra de codes promo réutilisable. -->
 <style>
   .promo-banner{position:fixed;top:0;left:0;right:0;z-index:900;background:linear-gradient(120deg,var(--blue) 0%,var(--blue2) 60%,var(--blue3) 100%)}
   .promo-banner-inner{max-width:1200px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;text-align:center}
@@ -2642,9 +2644,9 @@ revEls.forEach(el => obs.observe(el));
     var params = new URLSearchParams(window.location.search);
     var promo = params.get('promo');
     if (promo) {
-      try { localStorage.setItem('ik_promo', promo); } catch (e) {}
+      try { sessionStorage.setItem('ik_promo', promo); } catch (e) {}
     } else {
-      try { promo = localStorage.getItem('ik_promo'); } catch (e) {}
+      try { promo = sessionStorage.getItem('ik_promo'); } catch (e) {}
     }
     if (promo !== PROMO_CODE) return;
 
