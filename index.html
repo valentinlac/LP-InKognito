@@ -334,17 +334,39 @@ h1.hero-h1{
 
 /* ─── OFFRE DE LANCEMENT v2 (temporaire, cf. commit) ─── */
 @keyframes v2Pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.v2-price-row{display:flex;align-items:flex-end;justify-content:center;gap:18px;flex-wrap:wrap;margin:0 auto 28px}
-.v2-price-now{font-size:clamp(30px,4.6vw,42px);font-weight:500;letter-spacing:-.03em;color:var(--text)}
-.v2-price-now span{font-size:14px;font-weight:400;color:var(--muted);margin-left:4px}
-.v2-price-old{font-size:15px;color:var(--muted2);display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding-bottom:6px;text-decoration:line-through;text-decoration-color:var(--muted2)}
-.v2-price-old i{font-style:normal;font-size:11.5px;color:var(--muted2);text-decoration:none;letter-spacing:.04em;text-transform:uppercase}
-.v2-spots-card{max-width:340px;margin:34px auto 0;border:1px solid rgba(255,255,255,.1);background:rgba(11,18,34,.6);border-radius:12px;padding:16px 18px}
-.v2-spots-head{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:var(--muted);margin-bottom:9px}
-.v2-spots-head b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
-.v2-spots-track{height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
-.v2-spots-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#e8a94a,#f4c47a);transition:width .6s ease}
-.v2-pricing-badge{display:inline-block;font-size:11.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#e8a94a;background:rgba(232,169,74,.1);border:1px solid rgba(232,169,74,.28);padding:5px 11px;border-radius:7px;margin-bottom:16px}
+
+.v2-eyebrow{font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--blue3);margin-bottom:16px}
+
+/* Comparatif de prix hero (pleine largeur, centré) */
+.v2-price-row{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin:0 auto 10px}
+.v2-price-row .v2-price-was{margin:0}
+.v2-price-now{font-size:clamp(38px,5.4vw,52px);font-weight:600;letter-spacing:-.03em;background:linear-gradient(130deg,#ffffff 0%,#d0e8ff 50%,#90c0ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.v2-price-now span{font-size:15px;font-weight:400;-webkit-text-fill-color:var(--muted);color:var(--muted);margin-left:4px}
+.v2-hero-savings{text-align:center;font-size:14.5px;color:var(--blue3);font-weight:500;margin-bottom:26px}
+.v2-hero-savings b{color:#fff}
+
+/* Comparatif de prix carte tarif (empilé) */
+.v2-price-was{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.v2-price-was span{font-size:28px;font-weight:500;color:#a7b8d6;text-decoration:line-through;text-decoration-color:#5c6a8c;text-decoration-thickness:2px;line-height:1}
+.v2-price-was span i{font-style:normal;font-size:14px;color:#5c6a8c;text-decoration:none;margin-left:2px}
+.v2-price-arrow{color:var(--blue3);flex-shrink:0}
+.v2-price-savings{margin-top:10px;font-size:14.5px;color:var(--blue3);font-weight:500}
+.v2-price-savings b{color:#fff}
+
+/* Compteur de places — 20 segments, pas une simple barre */
+.v2-spots-card{margin-top:26px;border:1px solid rgba(112,181,249,.16);background:linear-gradient(165deg,rgba(26,143,255,.07),rgba(11,18,34,.5));border-radius:14px;padding:18px 20px;position:relative;overflow:hidden}
+.v2-spots-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+.v2-spots-count{font-size:14px;color:var(--muted)}
+.v2-spots-count b{font-size:23px;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums;margin-right:3px}
+.v2-spots-left{font-size:12.5px;font-weight:500;color:var(--blue3)}
+.v2-spots-ticks{display:flex;gap:4px}
+.v2-tick{flex:1;height:24px;border-radius:4px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);transform:scaleY(.55);opacity:0;transition:transform .45s cubic-bezier(.22,.61,.36,1),opacity .45s ease,background .3s ease,box-shadow .3s ease}
+.v2-tick.v2-tick-in{transform:scaleY(1);opacity:1}
+.v2-tick.is-taken{background:linear-gradient(180deg,#3aa2ff,#0a66c2);border-color:transparent;box-shadow:0 0 8px 0 rgba(26,143,255,.55),0 0 18px 2px rgba(26,143,255,.25)}
+.v2-tick.is-next{background:rgba(26,143,255,.16);border-color:rgba(112,181,249,.55);animation:tickPulse 1.7s ease-in-out infinite}
+@keyframes tickPulse{0%,100%{opacity:1}50%{opacity:.4}}
+.v2-spots-card::after{content:'';position:absolute;top:0;left:-40%;width:30%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.05),transparent);transform:skewX(-18deg);animation:v2CardSheen 5s ease-in-out infinite}
+@keyframes v2CardSheen{0%{left:-40%}30%,100%{left:130%}}
 
 /* ─── HOW IT WORKS — 3 steps ─── */
 #steps3{padding-top:60px}
@@ -1472,17 +1494,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p class="hero-sub" style="font-size: 15.5px">Connexion LinkedIn sans extension, votre empreinte de style visible avant de payer, illustrations générées à la demande, plannings testés en vrai A/B. Pour les 20 premiers qui rejoignent au lancement, le tarif ne remonte jamais.</p>
 
     <div class="v2-price-row">
+      <div class="v2-price-was"><span>44&nbsp;€<i>/mois</i></span></div>
+      <svg class="v2-price-arrow" width="24" height="15" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h19"/><path d="M14 1l6 6-6 6"/></svg>
       <div class="v2-price-now">29&nbsp;€<span>/mois, à vie</span></div>
-      <div class="v2-price-old">44&nbsp;€/mois<i>tarif standard</i></div>
     </div>
+    <p class="v2-hero-savings">Vous économisez <b>15&nbsp;€/mois</b>, pour toujours.</p>
 
     <div class="hero-actions">
       <a href="https://buy.stripe.com/REMPLACER_LIEN_29E" class="btn-hero">Réserver ma place à 29€/mois <span class="btn-hero-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></a>
     </div>
 
-    <div class="v2-spots-card" id="v2-spots-hero">
-      <div class="v2-spots-head"><span>Places de lancement</span><b id="v2-spots-label">0 / 20 prises</b></div>
-      <div class="v2-spots-track"><div class="v2-spots-fill" id="v2-spots-fill" style="width:0%"></div></div>
+    <div class="v2-spots-card" id="v2-spots-hero" style="max-width:420px;margin-left:auto;margin-right:auto">
+      <div class="v2-spots-head">
+        <span class="v2-spots-count"><b id="v2-spots-taken">0</b>/20 places prises</span>
+        <span class="v2-spots-left" id="v2-spots-left">20 places restantes</span>
+      </div>
+      <div class="v2-spots-ticks" id="v2-spots-ticks"></div>
     </div>
 
     <div class="hero-proof">
@@ -2095,14 +2122,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <div class="pc-solo-top">
           <div class="pc-solo-left">
-            <div class="v2-pricing-badge">Offre de lancement · 20 places</div>
+            <div class="v2-eyebrow">Offre de lancement · 20 places</div>
             <div class="pc-price-wrap">
+              <div class="v2-price-was">
+                <span>44&nbsp;€<i>/mois</i></span>
+                <svg class="v2-price-arrow" width="22" height="14" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h19"/><path d="M14 1l6 6-6 6"/></svg>
+              </div>
               <div class="pc-solo-price">
                 <span class="pc-solo-curr">€</span>
                 <span class="pc-solo-amount" id="pc-price-amount">29</span>
                 <span class="pc-solo-period">/mois, à vie</span>
               </div>
-              <p class="pc-solo-billing-note" id="pc-billing-note"><span style="text-decoration:line-through;color:var(--muted2)">44 €/mois</span> tarif standard</p>
+              <p class="v2-price-savings">Vous économisez <b>15&nbsp;€/mois</b>, pour toujours.</p>
             </div>
           </div>
           <div class="pc-solo-desc" style="width: 278px; height: 73px; font-size: 13px">
@@ -2153,9 +2184,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <i class="pc-solo-btn-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></i>
         </a>
         <p class="pc-solo-note">Sans engagement · Prix bloqué à vie</p>
-        <div class="v2-spots-card" id="v2-spots-pricing" style="max-width:none;margin-top:22px">
-          <div class="v2-spots-head"><span>Places de lancement</span><b id="v2-spots-label-pricing">0 / 20 prises</b></div>
-          <div class="v2-spots-track"><div class="v2-spots-fill" id="v2-spots-fill-pricing" style="width:0%"></div></div>
+        <div class="v2-spots-card" id="v2-spots-pricing" style="margin-top:22px">
+          <div class="v2-spots-head">
+            <span class="v2-spots-count"><b id="v2-spots-taken-pricing">0</b>/20 places prises</span>
+            <span class="v2-spots-left" id="v2-spots-left-pricing">20 places restantes</span>
+          </div>
+          <div class="v2-spots-ticks" id="v2-spots-ticks-pricing"></div>
         </div>
 
       </div>
@@ -2250,9 +2284,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="hero-actions">
         <a href="https://buy.stripe.com/REMPLACER_LIEN_29E" class="btn-hero">Réserver ma place à 29€/mois <span class="btn-hero-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></a>
       </div>
-      <div class="v2-spots-card" id="v2-spots-final">
-        <div class="v2-spots-head"><span>Places de lancement</span><b id="v2-spots-label-final">0 / 20 prises</b></div>
-        <div class="v2-spots-track"><div class="v2-spots-fill" id="v2-spots-fill-final" style="width:0%"></div></div>
+      <div class="v2-spots-card" id="v2-spots-final" style="max-width:380px">
+        <div class="v2-spots-head">
+          <span class="v2-spots-count"><b id="v2-spots-taken-final">0</b>/20 places prises</span>
+          <span class="v2-spots-left" id="v2-spots-left-final">20 places restantes</span>
+        </div>
+        <div class="v2-spots-ticks" id="v2-spots-ticks-final"></div>
       </div>
       <div class="cta-meta">
         <span class="cta-meta-item"><span class="cta-meta-dot"></span>Prix bloqué pour toujours</span>
@@ -2632,23 +2669,54 @@ revEls.forEach(el => obs.observe(el));
 (function () {
   var STRIPE_V2_LINK = 'https://buy.stripe.com/REMPLACER_LIEN_29E';
   var MAX_SPOTS = 20;
+  var WIDGETS = ['', '-pricing', '-final'];
+
+  // Construit les 20 segments (vides) une fois, tout de suite au chargement —
+  // le remplissage réel n'arrive qu'au retour du fetch, jamais inventé.
+  WIDGETS.forEach(function (suffix) {
+    var track = document.getElementById('v2-spots-ticks' + suffix);
+    if (!track) return;
+    for (var i = 0; i < MAX_SPOTS; i++) {
+      var tick = document.createElement('span');
+      tick.className = 'v2-tick';
+      track.appendChild(tick);
+    }
+  });
+
+  function renderSpots(taken) {
+    taken = Math.max(0, Math.min(MAX_SPOTS, taken));
+    var remaining = MAX_SPOTS - taken;
+
+    WIDGETS.forEach(function (suffix) {
+      var takenEl = document.getElementById('v2-spots-taken' + suffix);
+      var leftEl = document.getElementById('v2-spots-left' + suffix);
+      var track = document.getElementById('v2-spots-ticks' + suffix);
+      if (takenEl) takenEl.textContent = taken;
+      if (leftEl) leftEl.textContent = remaining <= 0 ? 'Offre complète' : (remaining + (remaining === 1 ? ' place restante' : ' places restantes'));
+      if (!track) return;
+      var ticks = track.querySelectorAll('.v2-tick');
+      ticks.forEach(function (tick, i) {
+        tick.classList.remove('is-taken', 'is-next');
+        if (i < taken) tick.classList.add('is-taken');
+        else if (i === taken && remaining > 0) tick.classList.add('is-next');
+        // Anime l'apparition en cascade, une seule fois.
+        if (!tick.classList.contains('v2-tick-in')) {
+          tick.style.transitionDelay = (i * 28) + 'ms';
+          requestAnimationFrame(function () { tick.classList.add('v2-tick-in'); });
+        }
+      });
+    });
+  }
+
+  renderSpots(0);
 
   fetch('https://app.inkognito.fr/api/v2-spots-remaining')
     .then(function (r) { return r.json(); })
     .then(function (d) {
       if (typeof d.taken !== 'number') return;
-      var taken = Math.min(MAX_SPOTS, d.taken);
-      var remaining = typeof d.remaining === 'number' ? d.remaining : (MAX_SPOTS - taken);
-      var pct = Math.round((taken / MAX_SPOTS) * 100);
+      renderSpots(d.taken);
 
-      [['v2-spots-label', 'v2-spots-fill'], ['v2-spots-label-pricing', 'v2-spots-fill-pricing'], ['v2-spots-label-final', 'v2-spots-fill-final']].forEach(function (pair) {
-        var label = document.getElementById(pair[0]);
-        var fill = document.getElementById(pair[1]);
-        if (label) label.textContent = taken + ' / ' + MAX_SPOTS + ' prises';
-        if (fill) fill.style.width = pct + '%';
-      });
-
-      if (remaining <= 0) {
+      if ((typeof d.remaining === 'number' ? d.remaining : (MAX_SPOTS - d.taken)) <= 0) {
         document.querySelectorAll('a[href="' + STRIPE_V2_LINK + '"]').forEach(function (a) {
           a.href = 'https://app.inkognito.fr/register';
           for (var i = 0; i < a.childNodes.length; i++) {
