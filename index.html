@@ -332,6 +332,20 @@ h1.hero-h1{
 }
 .btn-hero-out:hover{border-color:rgba(26,143,255,.4);background:rgba(10,102,194,.05)}
 
+/* ─── OFFRE DE LANCEMENT v2 (temporaire, cf. commit) ─── */
+@keyframes v2Pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.v2-price-row{display:flex;align-items:flex-end;justify-content:center;gap:18px;flex-wrap:wrap;margin:0 auto 28px}
+.v2-price-now{font-size:clamp(30px,4.6vw,42px);font-weight:500;letter-spacing:-.03em;color:var(--text)}
+.v2-price-now span{font-size:14px;font-weight:400;color:var(--muted);margin-left:4px}
+.v2-price-old{font-size:15px;color:var(--muted2);display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding-bottom:6px;text-decoration:line-through;text-decoration-color:var(--muted2)}
+.v2-price-old i{font-style:normal;font-size:11.5px;color:var(--muted2);text-decoration:none;letter-spacing:.04em;text-transform:uppercase}
+.v2-spots-card{max-width:340px;margin:34px auto 0;border:1px solid rgba(255,255,255,.1);background:rgba(11,18,34,.6);border-radius:12px;padding:16px 18px}
+.v2-spots-head{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:var(--muted);margin-bottom:9px}
+.v2-spots-head b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
+.v2-spots-track{height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.v2-spots-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#e8a94a,#f4c47a);transition:width .6s ease}
+.v2-pricing-badge{display:inline-block;font-size:11.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#e8a94a;background:rgba(232,169,74,.1);border:1px solid rgba(232,169,74,.28);padding:5px 11px;border-radius:7px;margin-bottom:16px}
+
 /* ─── HOW IT WORKS — 3 steps ─── */
 #steps3{padding-top:60px}
 .steps-grid{
@@ -1292,7 +1306,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <li><a href="#pricing" style="font-weight: 500">Tarifs</a></li>
   </ul>
   <div class="nav-right">
-    <a href="https://app.inkognito.fr/register" class="btn-cta">Créer un compte gratuit</a>
+    <a href="https://buy.stripe.com/REMPLACER_LIEN_29E" class="btn-cta">Réserver ma place · 29€/mois</a>
     <button class="nav-burger" id="nav-burger" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobile-menu">
       <span></span><span></span><span></span>
     </button>
@@ -1314,8 +1328,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <a href="#pricing">Tarifs</a>
   </nav>
   <div class="mobile-menu-foot">
-    <a href="https://app.inkognito.fr/register" class="mobile-menu-cta">Créer un compte gratuit</a>
-    <p class="mobile-menu-note">Sans engagement · Annulez à tout moment</p>
+    <a href="https://buy.stripe.com/REMPLACER_LIEN_29E" class="mobile-menu-cta">Réserver ma place · 29€/mois</a>
+    <p class="mobile-menu-note">Sans engagement · Prix bloqué à vie</p>
   </div>
 </div>
 
@@ -1448,16 +1462,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="hero-bg"></div>
   <div class="hero-inner">
     <div class="hero-badge">
-      <span class="badge-dot"></span>
-      Le seul ghostwriter IA qui tourne pour vous, et qui apprend de vos vraies stats LinkedIn
+      <span class="badge-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#1a8fff;animation:v2Pulse 2.2s ease-in-out infinite"></span>
+      InKognito v2 est là · offre de lancement, 20 places
     </div>
     <h1 class="hero-h1">
-      <span class="grad-white">Publiez sur LinkedIn.</span><br>
-      <span class="grad-text" style="white-space:nowrap">Vous n'y pensez plus.</span>
+      <span class="grad-white">InKognito passe en v2.</span><br>
+      <span class="grad-text" style="white-space:nowrap">Le prix ne bougera plus jamais.</span>
     </h1>
-    <p class="hero-sub" style="font-size: 15.5px">InKognito écrit, publie et programme vos posts dans votre voix exacte et vos vraies expériences, jamais dans un style IA générique.</p>
+    <p class="hero-sub" style="font-size: 15.5px">Connexion LinkedIn sans extension, votre empreinte de style visible avant de payer, illustrations générées à la demande, plannings testés en vrai A/B. Pour les 20 premiers qui rejoignent au lancement, le tarif ne remonte jamais.</p>
+
+    <div class="v2-price-row">
+      <div class="v2-price-now">29&nbsp;€<span>/mois, à vie</span></div>
+      <div class="v2-price-old">44&nbsp;€/mois<i>tarif standard</i></div>
+    </div>
+
     <div class="hero-actions">
-      <a href="https://app.inkognito.fr/register" class="btn-hero">Essayer gratuitement <span class="btn-hero-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></a>
+      <a href="https://buy.stripe.com/REMPLACER_LIEN_29E" class="btn-hero">Réserver ma place à 29€/mois <span class="btn-hero-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></a>
+    </div>
+
+    <div class="v2-spots-card" id="v2-spots-hero">
+      <div class="v2-spots-head"><span>Places de lancement</span><b id="v2-spots-label">0 / 20 prises</b></div>
+      <div class="v2-spots-track"><div class="v2-spots-fill" id="v2-spots-fill" style="width:0%"></div></div>
     </div>
 
     <div class="hero-proof">
@@ -1541,6 +1566,42 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="stat-item">
       <div class="stat-num">2 min</div>
       <div class="stat-label">pour connecter LinkedIn et lancer la machine</div>
+    </div>
+  </div>
+</section>
+
+<!-- NOUVEAUTÉS v2 (offre de lancement, temporaire, cf. commit) -->
+<section id="v2-features">
+  <div class="section-header centered reveal">
+    <div class="sec-label grad-blue-label">Nouveau en v2</div>
+    <h2 class="sec-h grad-white">Cinq changements concrets, pas un simple restylage</h2>
+    <p class="sec-p" style="margin-left:auto;margin-right:auto">Ce qui change réellement dans votre façon d'utiliser InKognito.</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card reveal">
+      <div class="step-num grad-blue-label">01</div>
+      <h3 class="step-title grad-white">Connexion sans extension</h3>
+      <p class="step-desc">Email et mot de passe LinkedIn, InKognito se connecte tout seul et relaie le code de vérification. Plus besoin d'installer quoi que ce soit dans le navigateur.</p>
+    </div>
+    <div class="step-card reveal d2">
+      <div class="step-num grad-blue-label">02</div>
+      <h3 class="step-title grad-white">Vous voyez avant de payer</h3>
+      <p class="step-desc">L'onboarding gratuit affiche votre vraie empreinte de style et un premier post généré à partir de vos posts existants, avant de sortir la carte bancaire.</p>
+    </div>
+    <div class="step-card reveal d3">
+      <div class="step-num grad-blue-label">03</div>
+      <h3 class="step-title grad-white">Illustrations générées à la demande</h3>
+      <p class="step-desc">En plus des visuels photo existants, InKognito peut habiller un post d'une illustration IA inédite pensée pour le sujet du jour, pas un template recyclé.</p>
+    </div>
+    <div class="step-card reveal d4">
+      <div class="step-num grad-blue-label">04</div>
+      <h3 class="step-title grad-white">Plannings testés en vrai A/B</h3>
+      <p class="step-desc">Faites tourner plusieurs versions de votre planning hebdomadaire en rotation et comparez leurs performances réelles, vues et engagement à l'appui.</p>
+    </div>
+    <div class="step-card reveal" style="grid-column:1/-1">
+      <div class="step-num grad-blue-label">05</div>
+      <h3 class="step-title grad-white">Des accroches construites, pas tirées au hasard</h3>
+      <p class="step-desc">Chaque accroche s'appuie sur un vrai levier de persuasion (curiosité, contraste, preuve sociale) identifié pour le sujet du post, jamais une formule générique répétée d'un post à l'autre.</p>
     </div>
   </div>
 </section>
@@ -1813,7 +1874,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div class="vs-cta reveal">
     <p class="vs-cta-line">6 raisons sur 7 de ne pas vous contenter d'une IA générique.</p>
-    <a href="https://app.inkognito.fr/register" class="btn-hero">Tester gratuitement <span class="btn-hero-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></a>
+    <a href="https://buy.stripe.com/REMPLACER_LIEN_29E" class="btn-hero">Réserver ma place à 29€/mois <span class="btn-hero-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></a>
   </div>
 </section>
 
@@ -2023,9 +2084,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- PRICING -->
 <section id="pricing">
   <div class="section-header centered reveal">
-    <div class="sec-label grad-blue-label">Tarifs</div>
-    <h2 class="sec-h grad-white">Simple. Transparent. Sans surprise.</h2>
-    <p class="sec-p">Tout InKognito pour faire grandir votre LinkedIn dans votre voix, avec une régularité sans faille. 44 €/mois, ou 33 €/mois en engagement annuel. Inscription gratuite, avec 7 jours d'auto-pilot offerts pour voir ce que ça donne.</p>
+    <div class="sec-label grad-blue-label">Offre de lancement v2</div>
+    <h2 class="sec-h grad-white">29 €/mois, à vie. Pour 20 personnes.</h2>
+    <p class="sec-p" style="margin-left:auto;margin-right:auto">Le tarif standard est à 44 €/mois. Les 20 premiers qui rejoignent au lancement gardent 29 €/mois pour toujours, tant que l'abonnement reste actif. Une fois les 20 places prises, l'offre se referme.</p>
   </div>
 
   <div class="pricing-solo reveal">
@@ -2034,17 +2095,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <div class="pc-solo-top">
           <div class="pc-solo-left">
-            <div class="pc-billing-toggle" role="tablist" aria-label="Choix de facturation">
-              <button type="button" class="pc-billing-opt is-active" data-billing="monthly" role="tab" aria-selected="true">Mensuel</button>
-              <button type="button" class="pc-billing-opt" data-billing="annual" role="tab" aria-selected="false">Annuel <span class="pc-billing-save">-25%</span></button>
-            </div>
+            <div class="v2-pricing-badge">Offre de lancement · 20 places</div>
             <div class="pc-price-wrap">
               <div class="pc-solo-price">
                 <span class="pc-solo-curr">€</span>
-                <span class="pc-solo-amount" id="pc-price-amount">44</span>
-                <span class="pc-solo-period">/mois</span>
+                <span class="pc-solo-amount" id="pc-price-amount">29</span>
+                <span class="pc-solo-period">/mois, à vie</span>
               </div>
-              <p class="pc-solo-billing-note" id="pc-billing-note">Facturé mensuellement</p>
+              <p class="pc-solo-billing-note" id="pc-billing-note"><span style="text-decoration:line-through;color:var(--muted2)">44 €/mois</span> tarif standard</p>
             </div>
           </div>
           <div class="pc-solo-desc" style="width: 278px; height: 73px; font-size: 13px">
@@ -2089,12 +2147,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </div>
 
-        <a href="https://app.inkognito.fr/register" class="pc-solo-btn">
+        <a href="https://buy.stripe.com/REMPLACER_LIEN_29E" class="pc-solo-btn">
           <span class="pc-solo-btn-shine"></span>
-          Démarrer l'essai gratuit
+          Réserver ma place à 29€/mois
           <i class="pc-solo-btn-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></i>
         </a>
-        <p class="pc-solo-note">Sans engagement · Annulez à tout moment</p>
+        <p class="pc-solo-note">Sans engagement · Prix bloqué à vie</p>
+        <div class="v2-spots-card" id="v2-spots-pricing" style="max-width:none;margin-top:22px">
+          <div class="v2-spots-head"><span>Places de lancement</span><b id="v2-spots-label-pricing">0 / 20 prises</b></div>
+          <div class="v2-spots-track"><div class="v2-spots-fill" id="v2-spots-fill-pricing" style="width:0%"></div></div>
+        </div>
 
       </div>
     </div>
@@ -2180,17 +2242,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="cta-block reveal">
     <div class="cta-block-inner">
       <div class="hero-badge" style="margin: 0 auto 32px;">
-        <span class="badge-dot"></span>
-        7 jours d'auto-pilot offerts à l'inscription
+        <span class="badge-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#1a8fff;animation:v2Pulse 2.2s ease-in-out infinite"></span>
+        Offre de lancement v2 · 20 places à 29€/mois à vie
       </div>
-      <h2 class="cta-h" style="max-width: 900px; margin-left: auto; margin-right: auto;"><span class="grad-white">Présent chaque jour sur LinkedIn.</span><br><span class="grad-text" style="font-size: 59px">100% votre voix.</span></h2>
-      <p class="cta-sub">Capturez vos idées, publiez sans écrire, mesurez ce qui marche.<br>Sans engagement</p>
+      <h2 class="cta-h" style="max-width: 900px; margin-left: auto; margin-right: auto;"><span class="grad-white">Les 20 premières places de la v2.</span><br><span class="grad-text" style="font-size: 59px">29€/mois, à vie.</span></h2>
+      <p class="cta-sub">Une fois les 20 places prises, l'offre se referme et le tarif standard repasse à 44 €/mois.<br>Sans engagement</p>
       <div class="hero-actions">
-        <a href="https://app.inkognito.fr/register" class="btn-hero">Se lancer gratuitement <span class="btn-hero-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></a>
+        <a href="https://buy.stripe.com/REMPLACER_LIEN_29E" class="btn-hero">Réserver ma place à 29€/mois <span class="btn-hero-arrow" aria-hidden="true"><svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></a>
+      </div>
+      <div class="v2-spots-card" id="v2-spots-final">
+        <div class="v2-spots-head"><span>Places de lancement</span><b id="v2-spots-label-final">0 / 20 prises</b></div>
+        <div class="v2-spots-track"><div class="v2-spots-fill" id="v2-spots-fill-final" style="width:0%"></div></div>
       </div>
       <div class="cta-meta">
+        <span class="cta-meta-item"><span class="cta-meta-dot"></span>Prix bloqué pour toujours</span>
         <span class="cta-meta-item"><span class="cta-meta-dot"></span>Sans engagement</span>
-        <span class="cta-meta-item"><span class="cta-meta-dot"></span>Annulez à tout moment</span>
         <span class="cta-meta-item"><span class="cta-meta-dot"></span>Setup en 2 minutes</span>
       </div>
     </div>
@@ -2280,9 +2346,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   .floating-cta-btn{padding:9px 15px;font-size:13px}
 }
 </style>
-<a id="floating-cta" class="floating-cta" href="https://app.inkognito.fr/register">
-  <span class="floating-cta-label">InKognito · <b>44€/mois</b></span>
-  <span class="floating-cta-btn">Essayer <span aria-hidden="true"><svg width="16" height="9" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></span>
+<a id="floating-cta" class="floating-cta" href="https://buy.stripe.com/REMPLACER_LIEN_29E">
+  <span class="floating-cta-label">InKognito v2 · <b>29€/mois à vie</b></span>
+  <span class="floating-cta-btn">Réserver <span aria-hidden="true"><svg width="16" height="9" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span></span>
 </a>
 <script>
 (() => {
@@ -2558,6 +2624,46 @@ revEls.forEach(el => obs.observe(el));
       }
     });
   });
+})();
+</script>
+
+<!-- Places restantes de l'offre de lancement v2, en direct (fallback = 0/20 codé en dur ci-dessus si l'appel échoue, cf. app/api/v2-spots-remaining côté linkedin-saas). Offre temporaire : pour revenir en arrière, retirer ce script + la branche v2-launch-offer. -->
+<script>
+(function () {
+  var STRIPE_V2_LINK = 'https://buy.stripe.com/REMPLACER_LIEN_29E';
+  var MAX_SPOTS = 20;
+
+  fetch('https://app.inkognito.fr/api/v2-spots-remaining')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (typeof d.taken !== 'number') return;
+      var taken = Math.min(MAX_SPOTS, d.taken);
+      var remaining = typeof d.remaining === 'number' ? d.remaining : (MAX_SPOTS - taken);
+      var pct = Math.round((taken / MAX_SPOTS) * 100);
+
+      [['v2-spots-label', 'v2-spots-fill'], ['v2-spots-label-pricing', 'v2-spots-fill-pricing'], ['v2-spots-label-final', 'v2-spots-fill-final']].forEach(function (pair) {
+        var label = document.getElementById(pair[0]);
+        var fill = document.getElementById(pair[1]);
+        if (label) label.textContent = taken + ' / ' + MAX_SPOTS + ' prises';
+        if (fill) fill.style.width = pct + '%';
+      });
+
+      if (remaining <= 0) {
+        document.querySelectorAll('a[href="' + STRIPE_V2_LINK + '"]').forEach(function (a) {
+          a.href = 'https://app.inkognito.fr/register';
+          for (var i = 0; i < a.childNodes.length; i++) {
+            var node = a.childNodes[i];
+            if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim()) {
+              node.nodeValue = 'Offre complète — inscription au tarif standard ';
+              break;
+            }
+          }
+        });
+        var fcLabel = document.querySelector('.floating-cta-label');
+        if (fcLabel) fcLabel.innerHTML = 'InKognito · <b>offre complète</b>';
+      }
+    })
+    .catch(function () { /* on garde 0/20 par défaut, jamais un mauvais chiffre affiché */ });
 })();
 </script>
 
