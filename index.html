@@ -2719,7 +2719,10 @@ revEls.forEach(el => obs.observe(el));
     });
   }
 
-  renderSpots(0);
+  // Socle de 4 places déjà prises avant l'ouverture du compteur, affiché tout
+  // de suite (avant même la réponse de l'API) — cohérent avec le fallback
+  // MANUAL_BASE_TAKEN côté /api/v2-spots-remaining si le fetch échoue.
+  renderSpots(4);
 
   fetch('https://app.inkognito.fr/api/v2-spots-remaining')
     .then(function (r) { return r.json(); })
