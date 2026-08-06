@@ -12,7 +12,12 @@
     person_profiles:'identified_only',
     capture_pageview:true,
     capture_pageleave:true,
-    autocapture:true
+    autocapture:true,
+    // Sans ce flag, le distinct_id anonyme posé ici (inkognito.fr) ne survit pas
+    // au clic vers app.inkognito.fr : PostHog crée deux profils "Person" distincts
+    // et le funnel visite LP -> compte -> paiement ne se relie jamais. Même flag
+    // posé côté app (components/PostHogProvider.tsx, repo linkedin-saas).
+    cross_subdomain_cookie:true
   });
 </script>
 <title>InKognito · Le ghostwriter IA qui tourne pour vous sur LinkedIn</title>
