@@ -1210,10 +1210,20 @@ h1.hero-h1{animation:fadeIn .8s .25s ease both}
       "@id": "https://inkognito.fr/#organization",
       "name": "InKognito",
       "url": "https://inkognito.fr",
+      "founder": { "@id": "https://inkognito.fr/a-propos.html#valentin-lacaille" },
+      "email": "valentin@inkognito.fr",
       "logo": {
         "@type": "ImageObject",
         "url": "https://inkognito.fr/logo.png"
       }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://inkognito.fr/a-propos.html#valentin-lacaille",
+      "name": "Valentin Lacaille",
+      "url": "https://inkognito.fr/a-propos.html",
+      "jobTitle": "Fondateur d'InKognito",
+      "worksFor": { "@id": "https://inkognito.fr/#organization" }
     },
     {
       "@type": "WebSite",
@@ -1225,11 +1235,24 @@ h1.hero-h1{animation:fadeIn .8s .25s ease both}
     {
       "@type": "SoftwareApplication",
       "name": "InKognito",
+      "@id": "https://inkognito.fr/#software",
       "applicationCategory": "BusinessApplication",
+      "applicationSubCategory": "Outil de création et d'automatisation de contenu LinkedIn",
       "operatingSystem": "Web",
       "url": "https://inkognito.fr",
+      "sameAs": "https://app.inkognito.fr",
       "description": "InKognito transforme votre expertise, vos preuves et vos ressources en un système de contenu LinkedIn qui écrit et publie dans votre voix, sans charge mentale, puis apprend de vos vraies statistiques.",
-      "publisher": { "@id": "https://inkognito.fr/#organization" }
+      "publisher": { "@id": "https://inkognito.fr/#organization" },
+      "creator": { "@id": "https://inkognito.fr/a-propos.html#valentin-lacaille" },
+      "featureList": "Voix IA personnalisée, planification, publication LinkedIn, analyse des performances, visuels générés par IA et tests de contenus",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://app.inkognito.fr/offre-v2",
+        "price": "29",
+        "priceCurrency": "EUR",
+        "availability": "https://schema.org/LimitedAvailability",
+        "description": "Offre de lancement v2 à 29 € par mois, tarif conservé tant que l'abonnement reste actif, dans la limite de 20 places."
+      }
     }
   ]
 }
@@ -1270,7 +1293,7 @@ h1.hero-h1{animation:fadeIn .8s .25s ease both}
       "name": "Combien de temps faut-il pour voir des résultats ?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "La plupart des utilisateurs constatent une augmentation significative de leur portée dès les 2-3 premières semaines. La régularité de publication, facilitée par InKognito, est le principal moteur de croissance sur LinkedIn."
+        "text": "Les résultats dépendent du profil, de l'audience, de la fréquence et des sujets publiés. InKognito mesure les impressions et l'engagement de chaque compte afin d'identifier ce qui fonctionne pour cet utilisateur ; aucun délai ni niveau de performance n'est garanti."
       }
     },
     {
@@ -1612,8 +1635,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="stat-label">impressions générées par les utilisateurs d'InKognito</div>
     </div>
     <div class="stat-item">
-      <div class="stat-num">×3,2</div>
-      <div class="stat-label">d'engagement en moyenne sur vos posts</div>
+      <div class="stat-num">100 %</div>
+      <div class="stat-label">de vos posts analysés après publication</div>
     </div>
     <div class="stat-item">
       <div class="stat-num">2 min</div>
@@ -2256,7 +2279,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="faq-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </button>
       <div class="faq-a">
-        <p>La plupart des utilisateurs constatent une augmentation significative de leur portée dès les 2-3 premières semaines. La régularité de publication, facilitée par InKognito, est le principal moteur de croissance sur LinkedIn.</p>
+        <p>Les résultats dépendent de votre profil, de votre audience, de votre fréquence et des sujets publiés. InKognito mesure les impressions et l'engagement de chaque compte pour identifier ce qui fonctionne chez vous ; aucun délai ni niveau de performance n'est garanti. Consultez notre <a href="resultats-methodologie.html">méthodologie de mesure</a>.</p>
       </div>
     </div>
     <div class="faq-item">
@@ -2349,6 +2372,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <a href="confidentialite.html">Confidentialité</a>
       <a href="cgu.html">CGU</a>
       <a href="mentions-legales.html">Mentions légales</a>
+      <a href="a-propos.html">À propos</a>
+      <a href="resultats-methodologie.html">Résultats et méthodologie</a>
     </div>
     <div class="foot-col">
       <span class="foot-col-title">Alternatives</span>
