@@ -2934,19 +2934,115 @@ revEls.forEach(el => obs.observe(el));
   })();
 </script>
 
-<!-- Tracking des clics CTA vers l'inscription (register en temps normal, Stripe pendant l'offre de lancement v2) -->
+<!-- Attribution + tracking explicite du funnel. L'autocapture PostHog reste active,
+     mais ces événements stables permettent de construire des funnels lisibles et
+     transmettent la source jusqu'au checkout V2. -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('a[href*="app.inkognito.fr/register"], a[href*="buy.stripe.com"]').forEach(function (el) {
+    var params = new URLSearchParams(window.location.search);
+    var attribution = [
+      ['utm_source', 'ik_utm_source'],
+      ['utm_medium', 'ik_utm_medium'],
+      ['utm_campaign', 'ik_utm_campaign'],
+      ['utm_content', 'ik_utm_content'],
+      ['utm_term', 'ik_utm_term'],
+      ['ref', 'ik_ref'],
+      ['src', 'ik_src']
+    ];
+
+    function rememberedParam(name, storageKey) {
+      var value = params.get(name);
+      if (value) {
+        try { sessionStorage.setItem(storageKey, value); } catch (e) {}
+        return value;
+      }
+      try { return sessionStorage.getItem(storageKey) || localStorage.getItem(storageKey) || ''; } catch (e) { return ''; }
+    }
+
+    var values = {};
+    attribution.forEach(function (entry) {
+      var value = rememberedParam(entry[0], entry[1]);
+      if (value) values[entry[0]] = value;
+    });
+
+    function ctaPosition(el) {
+      if (el.id === 'floating-cta' || el.closest('#floating-cta')) return 'floating';
+      if (el.closest('nav')) return 'navigation';
+      var section = el.closest('section');
+      return section && section.id ? section.id : 'unknown';
+    }
+
+    // Le checkout enregistre son URL source : on lui transmet l'acquisition et
+    // l'emplacement précis du CTA, même si le visiteur a navigué dans la LP.
+    document.querySelectorAll('a[href*="app.inkognito.fr/offre-v2"]').forEach(function (el) {
+      try {
+        var url = new URL(el.getAttribute('href'));
+        Object.keys(values).forEach(function (key) { url.searchParams.set(key, values[key]); });
+        url.searchParams.set('cta_origin', ctaPosition(el));
+        el.setAttribute('href', url.toString());
+      } catch (e) {}
+    });
+
+    document.querySelectorAll('a[href*="app.inkognito.fr/offre-v2"], a[href*="app.inkognito.fr/register"], a[href*="buy.stripe.com"]').forEach(function (el) {
       el.addEventListener('click', function () {
+        var position = ctaPosition(el);
+        var destination = el.href.indexOf('/offre-v2') !== -1 ? 'v2_checkout' : (el.href.indexOf('buy.stripe.com') !== -1 ? 'stripe' : 'register');
         if (window.posthog) {
           posthog.capture('cta_click', {
             label: (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 80),
-            section: (el.closest('section') && el.closest('section').id) || 'unknown'
+            section: position,
+            destination: destination,
+            utm_source: values.utm_source || undefined,
+            utm_campaign: values.utm_campaign || undefined,
+            signup_source: values.src || undefined,
+            has_referral: Boolean(values.ref)
           });
+          if (destination === 'v2_checkout') posthog.capture('v2_cta_clicked', { section: position });
         }
         if (window.fbq) {
           fbq('track', 'InitiateCheckout', { value: 29, currency: 'EUR', content_name: 'InKognito v2 · offre de lancement' });
+        }
+      });
+    });
+
+    // Mesure de lecture : une seule exposition par section et par chargement.
+    if ('IntersectionObserver' in window) {
+      var trackedSections = {};
+      var sectionObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting || trackedSections[entry.target.id]) return;
+          trackedSections[entry.target.id] = true;
+          if (window.posthog) posthog.capture('landing_section_viewed', { section: entry.target.id });
+          sectionObserver.unobserve(entry.target);
+        });
+      }, { threshold: 0.35 });
+      ['hero', 'steps3', 'features', 'showcase', 'vs', 'testimonials', 'pricing', 'faq', 'final-cta'].forEach(function (id) {
+        var section = document.getElementById(id);
+        if (section) sectionObserver.observe(section);
+      });
+    }
+
+    var reachedDepths = {};
+    function trackScrollDepth() {
+      var maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (maxScroll <= 0) return;
+      var depth = Math.round((window.scrollY / maxScroll) * 100);
+      [25, 50, 75, 100].forEach(function (threshold) {
+        if (depth >= threshold && !reachedDepths[threshold]) {
+          reachedDepths[threshold] = true;
+          if (window.posthog) posthog.capture('landing_scroll_depth', { percent: threshold });
+        }
+      });
+    }
+    window.addEventListener('scroll', trackScrollDepth, { passive: true });
+
+    document.querySelectorAll('.faq-q').forEach(function (button, index) {
+      button.addEventListener('click', function () {
+        if (button.getAttribute('aria-expanded') === 'true' && window.posthog) {
+          posthog.capture('faq_opened', {
+            index: index + 1,
+            question: (button.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 120)
+          });
         }
       });
     });
