@@ -266,7 +266,10 @@ h1.hero-h1{
   font-weight:500;line-height:1.05;letter-spacing:-.045em;
   margin-bottom:30px;text-wrap:balance;
 }
-@media (min-width:901px){h1.hero-h1 span{white-space:nowrap}}
+@media (min-width:901px){
+  h1.hero-h1{text-wrap:initial}
+  h1.hero-h1 span{display:inline-block;white-space:nowrap}
+}
 /* ── Gradient text utilities ── */
 
 /* Bleu vif → cyan (accent fort, "sans écrire une ligne") */
