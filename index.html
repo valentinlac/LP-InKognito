@@ -1631,8 +1631,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section id="stats">
   <div class="stats-strip reveal">
     <div class="stat-item">
-      <div class="stat-num" id="impressions-total">247 000</div>
-      <div class="stat-label">impressions générées par les utilisateurs d'InKognito</div>
+      <div class="stat-num" id="interactions-total">10 900</div>
+      <div class="stat-label">interactions (likes, commentaires, republications) générées par les utilisateurs d'InKognito</div>
     </div>
     <div class="stat-item">
       <div class="stat-num">100 %</div>
@@ -1641,6 +1641,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="stat-item">
       <div class="stat-num">2 min</div>
       <div class="stat-label">pour connecter LinkedIn et lancer la machine</div>
+    </div>
+  </div>
+</section>
+
+<!-- BANDEAU AVIS COURTS : pont de confiance entre les stats et l'explication du fonctionnement -->
+<style>
+  .quick-testi{max-width:900px;margin:0 auto;padding:0 24px 8px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:700px){.quick-testi{grid-template-columns:1fr}}
+  .quick-testi-card{display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border:1px solid var(--border);border-radius:14px}
+  .quick-testi-avatar{width:38px;height:38px;border-radius:50%;flex-shrink:0;object-fit:cover}
+  .quick-testi-stars{color:var(--blue3);font-size:12px;letter-spacing:1.5px;margin-bottom:4px}
+  .quick-testi-quote{font-size:14px;color:var(--text);line-height:1.55;margin-bottom:8px}
+  .quick-testi-name{font-size:13px;font-weight:500;color:var(--text)}
+  .quick-testi-role{font-size:12px;color:var(--muted)}
+</style>
+<section id="quick-testimonials">
+  <div class="quick-testi reveal">
+    <div class="quick-testi-card">
+      <img class="quick-testi-avatar" src="screens/lilian-martin.png" alt="Lilian Martin" width="38" height="38" loading="lazy">
+      <div>
+        <div class="quick-testi-stars">★★★★★</div>
+        <p class="quick-testi-quote">"La création de contenu prend vite trop de place quand on est fondateur. Cet outil permet de reprendre le contrôle, simplement."</p>
+        <div class="quick-testi-name">Lilian Martin</div>
+        <div class="quick-testi-role">Co-fondateur de Lidmeo</div>
+      </div>
+    </div>
+    <div class="quick-testi-card">
+      <img class="quick-testi-avatar" src="screens/raphael.jpg" alt="Raphael Gerard" width="38" height="38" loading="lazy">
+      <div>
+        <div class="quick-testi-stars">★★★★★</div>
+        <p class="quick-testi-quote">"InKognito m'a permis de ne même plus penser à quand poster. Un vrai gain de temps, et les posts performent vraiment bien !"</p>
+        <div class="quick-testi-name">Raphael Gerard</div>
+        <div class="quick-testi-role">Fondateur · outil pour experts immobiliers</div>
+      </div>
     </div>
   </div>
 </section>
@@ -2830,17 +2864,17 @@ revEls.forEach(el => obs.observe(el));
 })();
 </script>
 
-<!-- Chiffre d'impressions réel en direct (fallback = 247 000 codé en dur ci-dessus si l'appel échoue) -->
+<!-- Chiffre d'interactions réel en direct (fallback = 10 900 codé en dur ci-dessus si l'appel échoue) -->
 <script>
-  fetch('https://app.inkognito.fr/api/impressions-total')
+  fetch('https://app.inkognito.fr/api/interactions-total')
     .then(function (r) { return r.json() })
     .then(function (d) {
-      var el = document.getElementById('impressions-total')
-      if (el && typeof d.impressions === 'number') {
-        el.textContent = d.impressions.toLocaleString('fr-FR')
+      var el = document.getElementById('interactions-total')
+      if (el && typeof d.interactions === 'number') {
+        el.textContent = d.interactions.toLocaleString('fr-FR')
       }
     })
-    .catch(function () { /* on garde 247 000 par défaut */ })
+    .catch(function () { /* on garde 10 900 par défaut */ })
 </script>
 
 <!-- Attribution affiliation : relaie ?ref=<code> (lien /affiliation de l'app) vers l'inscription gratuite via ?aff=, lu par app/login/page.tsx puis reporté sur le profil pour la commission au paiement (cf. docs/superpowers/specs/2026-07-07-free-signup-paid-gate-design.md côté app) -->
