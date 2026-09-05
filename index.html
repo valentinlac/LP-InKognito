@@ -1554,8 +1554,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <div class="v2-spots-card" id="v2-spots-hero" style="max-width:420px;margin-left:auto;margin-right:auto">
       <div class="v2-spots-head">
-        <span class="v2-spots-count"><b id="v2-spots-taken">7</b>/20 places prises</span>
-        <span class="v2-spots-left" id="v2-spots-left">13 places restantes</span>
+        <span class="v2-spots-count"><b id="v2-spots-taken">18</b>/20 places prises</span>
+        <span class="v2-spots-left" id="v2-spots-left">2 places restantes</span>
       </div>
       <div class="v2-spots-ticks" id="v2-spots-ticks"></div>
     </div>
@@ -2298,8 +2298,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p class="pc-solo-note">Sans engagement · Prix bloqué à vie</p>
         <div class="v2-spots-card" id="v2-spots-pricing" style="margin-top:22px">
           <div class="v2-spots-head">
-            <span class="v2-spots-count"><b id="v2-spots-taken-pricing">7</b>/20 places prises</span>
-            <span class="v2-spots-left" id="v2-spots-left-pricing">13 places restantes</span>
+            <span class="v2-spots-count"><b id="v2-spots-taken-pricing">18</b>/20 places prises</span>
+            <span class="v2-spots-left" id="v2-spots-left-pricing">2 places restantes</span>
           </div>
           <div class="v2-spots-ticks" id="v2-spots-ticks-pricing"></div>
         </div>
@@ -2398,8 +2398,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
       <div class="v2-spots-card" id="v2-spots-final" style="max-width:380px">
         <div class="v2-spots-head">
-          <span class="v2-spots-count"><b id="v2-spots-taken-final">7</b>/20 places prises</span>
-          <span class="v2-spots-left" id="v2-spots-left-final">13 places restantes</span>
+          <span class="v2-spots-count"><b id="v2-spots-taken-final">18</b>/20 places prises</span>
+          <span class="v2-spots-left" id="v2-spots-left-final">2 places restantes</span>
         </div>
         <div class="v2-spots-ticks" id="v2-spots-ticks-final"></div>
       </div>
@@ -2784,12 +2784,12 @@ revEls.forEach(el => obs.observe(el));
 })();
 </script>
 
-<!-- Places restantes de l'offre de lancement v2, en direct (fallback = 7/20 codé en dur ci-dessus si l'appel échoue, cf. app/api/v2-spots-remaining côté linkedin-saas). Offre temporaire : pour revenir en arrière, retirer ce script + la branche v2-launch-offer. -->
+<!-- Places restantes de l'offre de lancement v2, en direct (fallback = 18/20 codé en dur ci-dessus si l'appel échoue, cf. app/api/v2-spots-remaining côté linkedin-saas). -->
 <script>
 (function () {
   var STRIPE_V2_LINK = 'https://app.inkognito.fr/offre-v2';
   var MAX_SPOTS = 20;
-  var MIN_TAKEN = 7;
+  var MIN_TAKEN = 18;
   var WIDGETS = ['', '-pricing', '-final'];
 
   // Construit les 20 segments (vides) une fois, tout de suite au chargement —
@@ -2829,38 +2829,102 @@ revEls.forEach(el => obs.observe(el));
     });
   }
 
-  // Socle de 7 places déjà prises avant l'ouverture du compteur, affiché tout
-  // de suite (avant même la réponse de l'API) — cohérent avec le fallback
-  // MANUAL_BASE_TAKEN côté /api/v2-spots-remaining si le fetch échoue.
-  renderSpots(7);
+  function replaceButtonLabel(button, label) {
+    if (!button) return;
+    for (var i = 0; i < button.childNodes.length; i++) {
+      var node = button.childNodes[i];
+      if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim()) {
+        node.nodeValue = label + ' ';
+        return;
+      }
+    }
+  }
+
+  function activateStandardOffer() {
+    var standardUrl = 'https://app.inkognito.fr/register';
+
+    document.querySelectorAll('a[href^="' + STRIPE_V2_LINK + '"]').forEach(function (link) {
+      link.href = standardUrl;
+    });
+    document.querySelectorAll('.btn-cta, .mobile-menu-cta[href*="/register"], a.btn-hero[href*="/register"], .pc-solo-btn').forEach(function (button) {
+      replaceButtonLabel(button, button.classList.contains('pc-solo-btn') ? 'Démarrer mon essai gratuit' : 'Essayer gratuitement pendant 7 jours');
+    });
+
+    var mobileNote = document.querySelector('.mobile-menu-note');
+    if (mobileNote) mobileNote.textContent = '7 jours gratuits · Sans engagement';
+
+    var heroPrice = document.querySelector('.v2-price-row');
+    if (heroPrice) heroPrice.innerHTML = '<div class="v2-price-now">44&nbsp;€<span>/mois</span></div>';
+    var heroSavings = document.querySelector('.v2-hero-savings');
+    if (heroSavings) heroSavings.textContent = '7 jours d’essai gratuit, puis 44 €/mois. Sans engagement.';
+
+    var pricingHeader = document.querySelector('#pricing .section-header');
+    if (pricingHeader) {
+      var pricingLabel = pricingHeader.querySelector('.sec-label');
+      var pricingTitle = pricingHeader.querySelector('.sec-h');
+      var pricingDescription = pricingHeader.querySelector('.sec-p');
+      if (pricingLabel) pricingLabel.textContent = 'Tarif standard';
+      if (pricingTitle) pricingTitle.textContent = '44 €/mois. 7 jours pour essayer gratuitement.';
+      if (pricingDescription) pricingDescription.textContent = 'Testez InKognito sur votre propre LinkedIn. Votre carte est demandée à l’activation, mais vous ne serez débité qu’après les 7 jours d’essai si vous continuez.';
+    }
+    var eyebrow = document.querySelector('#pricing .v2-eyebrow');
+    if (eyebrow) eyebrow.textContent = '7 jours d’essai gratuit';
+    var pricingOldPrice = document.querySelector('#pricing .v2-price-was');
+    if (pricingOldPrice) pricingOldPrice.style.display = 'none';
+    var pricingAmount = document.getElementById('pc-price-amount');
+    if (pricingAmount) pricingAmount.textContent = '44';
+    var pricingPeriod = document.querySelector('#pricing .pc-solo-period');
+    if (pricingPeriod) pricingPeriod.textContent = '/mois';
+    var pricingSavings = document.querySelector('#pricing .v2-price-savings');
+    if (pricingSavings) pricingSavings.textContent = 'Commencez par 7 jours gratuits.';
+    var pricingNote = document.querySelector('#pricing .pc-solo-note');
+    if (pricingNote) pricingNote.textContent = '7 jours gratuits · Puis 44 €/mois · Sans engagement';
+
+    var cancellationAnswer = document.querySelectorAll('.faq-a p');
+    cancellationAnswer.forEach(function (paragraph) {
+      if (paragraph.textContent.indexOf('29€/mois pendant l\'offre de lancement') !== -1) {
+        paragraph.textContent = 'Oui. L’abonnement à 44 €/mois est sans engagement. Vous pouvez annuler quand vous voulez depuis votre compte, sans justification.';
+      }
+    });
+
+    var finalSection = document.getElementById('final-cta');
+    if (finalSection) {
+      var finalBadge = finalSection.querySelector('.hero-badge');
+      var finalTitle = finalSection.querySelector('.cta-h');
+      var finalDescription = finalSection.querySelector('.cta-sub');
+      if (finalBadge) finalBadge.innerHTML = '<span class="badge-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#1a8fff;animation:v2Pulse 2.2s ease-in-out infinite"></span> 7 jours d’essai gratuit';
+      if (finalTitle) finalTitle.innerHTML = '<span class="grad-white">Essayez InKognito gratuitement.</span><br><span class="grad-text" style="font-size:59px">Puis 44€/mois.</span>';
+      if (finalDescription) finalDescription.innerHTML = '7 jours pour tester InKognito sur votre propre LinkedIn.<br>Sans engagement, annulable à tout moment.';
+      var metaItems = finalSection.querySelectorAll('.cta-meta-item');
+      if (metaItems[0]) metaItems[0].innerHTML = '<span class="cta-meta-dot"></span>7 jours gratuits';
+    }
+
+    document.querySelectorAll('.v2-spots-card').forEach(function (card) { card.style.display = 'none'; });
+    var fcLabel = document.querySelector('.floating-cta-label');
+    if (fcLabel) fcLabel.innerHTML = 'InKognito · <b>7 jours gratuits</b>';
+    var fcButton = document.querySelector('.floating-cta-btn');
+    if (fcButton) fcButton.innerHTML = 'Essayer <span aria-hidden="true"><svg width="16" height="9" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h15.2"/><path d="M12.4 1l4 4-4 4"/></svg></span>';
+  }
+
+  // Valeur de secours affichée avant la réponse de l'API et conservée si
+  // l'appel échoue. L'API reste la source de vérité dès qu'elle répond.
+  renderSpots(MIN_TAKEN);
 
   fetch('https://app.inkognito.fr/api/v2-spots-remaining')
     .then(function (r) { return r.json(); })
     .then(function (d) {
       if (typeof d.taken !== 'number') return;
-      // Compatibilité pendant le déploiement : l'ancienne API comptait un socle
-      // de 4. La nouvelle expose manualBaseTaken=7 pour éviter d'ajouter deux fois
-      // les 3 places, tout en continuant à compter les ventes Stripe en direct.
+      // Compatibilité avec l'ancienne API, qui ne renvoyait pas encore le socle
+      // manuel séparément. La nouvelle API fournit directement le total fiable.
       var taken = typeof d.manualBaseTaken === 'number' ? d.taken : d.taken + 3;
       taken = Math.max(MIN_TAKEN, taken);
       renderSpots(taken);
 
       if ((MAX_SPOTS - taken) <= 0) {
-        document.querySelectorAll('a[href="' + STRIPE_V2_LINK + '"]').forEach(function (a) {
-          a.href = 'https://app.inkognito.fr/register';
-          for (var i = 0; i < a.childNodes.length; i++) {
-            var node = a.childNodes[i];
-            if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim()) {
-              node.nodeValue = 'Offre complète — inscription au tarif standard ';
-              break;
-            }
-          }
-        });
-        var fcLabel = document.querySelector('.floating-cta-label');
-        if (fcLabel) fcLabel.innerHTML = 'InKognito · <b>offre complète</b>';
+        activateStandardOffer();
       }
     })
-    .catch(function () { /* on garde 0/20 par défaut, jamais un mauvais chiffre affiché */ });
+    .catch(function () { /* on garde le fallback 18/20 si l'API est indisponible */ });
 })();
 </script>
 
