@@ -19,6 +19,28 @@
     // posé côté app (components/PostHogProvider.tsx, repo linkedin-saas).
     cross_subdomain_cookie:true
   });
+  // Première attribution conservée sur le domaine partagé avec l'application.
+  (function () {
+    var name = 'inkognito_gtm_first=';
+    var existing = document.cookie.split('; ').filter(function (part) { return part.indexOf(name) === 0; })[0];
+    var params = new URLSearchParams(location.search);
+    var attribution;
+    try { attribution = existing ? JSON.parse(decodeURIComponent(existing.slice(name.length))) : null; } catch (_) { attribution = null; }
+    if (!attribution) {
+      attribution = {
+        source: params.get('source') || params.get('utm_source') || params.get('src') || 'direct',
+        campaign: params.get('campaign') || params.get('utm_campaign') || null,
+        angle: params.get('angle') || null,
+        variant: params.get('variant') || null,
+        experiment_id: params.get('experiment_id') || null
+      };
+      Object.keys(attribution).forEach(function (key) {
+        if (attribution[key]) attribution[key] = attribution[key].slice(0, 120);
+      });
+      document.cookie = name + encodeURIComponent(JSON.stringify(attribution)) + '; Path=/; Domain=.inkognito.fr; Max-Age=7776000; SameSite=Lax; Secure';
+    }
+    posthog.capture('landing_viewed', attribution);
+  })();
 </script>
 <title>Contenu LinkedIn automatisé, dans votre voix | InKognito</title>
 <meta name="description" content="Automatisez votre contenu LinkedIn sans charge mentale. InKognito transforme votre expertise, vos preuves et vos ressources en posts publiés dans votre voix.">
